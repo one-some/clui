@@ -6,21 +6,8 @@ namespace Ray {
 #include <vector>
 #include <iostream>
 #include <memory>
-
-
-enum PositionStrategy {
-    RELATIVE,
-    CENTER,
-};
-
-struct Vector2 {
-    uint32_t x;
-    uint32_t y;
-
-    Vector2 operator+(Vector2& that) {
-        return {x + that.x, y + that.y};
-    }
-};
+#include "main.h"
+#include <string.h>
 
 class Color {
     public:
@@ -43,60 +30,37 @@ namespace Colors {
     auto BG = Color(0x0000AA);
 }
 
-class Position {
-    public:
-        uint32_t x = 0;
-        uint32_t y = 0;
-        PositionStrategy strategy;
+void Container::add_child(Container* child) {
+    // TODO: Can't have parent already
+    child->parent = this;
+    children.push_back(child);
+}
 
-        Position(PositionStrategy strat) {
-            strategy = strat;
-        }
+void Container::draw_tree(Vector2 at) {
+    Vector2 pos = at + position->evaluate_local(this);
+    draw_self(pos);
 
-        Vector2 evaluate(Vector2 self_size, Vector2 parent_size) {
-            switch (strategy) {
-                case PositionStrategy::RELATIVE:
-                    Vector2 parent_pos_offset = { 0, 0 };
-                    Container parent = 
-                    while ()
-                    // TODO!
-                    return { x, y };
+    for (auto child : children) {
+        child->draw_tree(pos);
+    }
+}
 
-                case PositionStrategy::CENTER:
-                    return {
-                        (parent_size.x - self_size.x) / 2,
-                        (parent_size.y -self_size.y) / 2,
-                    };
-            }
+Vector2 Position::evaluate_local(Container* container) {
+    switch (strategy) {
+        case PositionStrategy::RELATIVE:
+            return (Vector2) { x, y };
+        case PositionStrategy::CENTER:
+            // TODO: ASSERT PARENT
+            return (Vector2) {
+                (container->parent->size.x - container->size.x) / 2,
+                (container->parent->size.y - container->size.y) / 2,
+            };
+    }
 
-            // TODO: ASSERT FALSE
-            return {0, 0};
-        }
-};
+    // TODO: ASSERT FALSE
+    return {0, 0};
+}
 
-class Container {
-    public:
-        std::vector<Container*> children;
-        Container* parent;
-        Position* position = new Position(PositionStrategy::RELATIVE);
-        Vector2 size = {0, 0};
-
-        void add_child(Container* child) {
-            // TODO: Can't have parent already
-            child->parent = this;
-            children.push_back(child);
-        }
-
-        void draw_tree() {
-            draw_self();
-
-            for (auto child : children) {
-                child->draw_tree();
-            }
-        }
-
-        virtual void draw_self() { }
-};
 
 class TextureRect : public Container {
     public:
@@ -104,21 +68,16 @@ class TextureRect : public Container {
 
         TextureRect(const char* file_name) {
             texture = std::make_unique<Ray::Texture2D>(Ray::LoadTexture(file_name));
-            size = {
-                (uint32_t) texture->width,
-                (uint32_t) texture->height
-            };
+            size = { texture->width, texture->height };
         }
 
-        void draw_self() override {
+        void draw_self(Vector2 at) override {
             if (!texture) return;
-
-            Vector2 pos = position->evaluate(size, parent->size);
 
             Ray::DrawTexturePro(
                 *texture,
                 { 0.0, 0.0, (float)texture->width, (float)texture->height },
-                { (float)pos.x, (float)pos.y, (float)size.x, (float)size.y },
+                { (float)at.x, (float)at.y, (float)size.x, (float)size.y },
                 { 0, 0 },
                 0.0,
                 Ray::WHITE
@@ -130,21 +89,26 @@ class ColorRect : public Container {
     public:
         Ray::Color color = Ray::RED;
 
-        void draw_self() override {
-            Vector2 pos = position->evaluate(size, parent->size);
-            Ray::DrawRectangle(pos.x, pos.y, size.x, size.y, color);
+        void draw_self(Vector2 at) override {
+            Ray::DrawRectangle(at.x, at.y, size.x, size.y, color);
         }
 };
 
 int main() {
-    auto root = new Container();
-
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
+    Ray::SetConfigFlags(Ray::FLAG_WINDOW_RESIZABLE);
     Ray::InitWindow(500, 500, "clui test");
     Ray::SetTargetFPS(60);
+    uint64_t frames = 0;
+
+    auto root = new Container();
+    root->size = { 500, 500 };
 
     auto rect = new ColorRect();
+    rect->position->strategy = PositionStrategy::CENTER;
     rect->size = {200, 200};
+    rect->position->x = 50;
+    rect->position->y = 50;
     root->add_child(rect);
 
     auto rect2 = new TextureRect("claire.png");
@@ -158,13 +122,18 @@ int main() {
     rect2->add_child(rect3);
 
     while (!Ray::WindowShouldClose()) {
+        root->size = {Ray::GetRenderWidth(), Ray::GetRenderHeight()};
+
         Ray::BeginDrawing();
 
         Ray::ClearBackground(Colors::BG.to_ray());
 
-        root->draw_tree();
+        // if (frames % 2 == 0) rect->position->x += 1;
+
+        root->draw_tree({0, 0});
 
         Ray::EndDrawing();
+        frames++;
     }
 
     Ray::CloseWindow();
