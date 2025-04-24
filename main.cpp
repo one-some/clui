@@ -36,12 +36,23 @@ void Container::add_child(Container* child) {
     children.push_back(child);
 }
 
-void Container::draw_tree(Vector2 at) {
-    Vector2 pos = at + position->evaluate_local(this);
-    draw_self(pos);
+Vector2 Container::global_position() {
+    Vector2 pos = {0, 0};
+    Container* target = this;
+
+    while (target) {
+        pos = pos + target->position->evaluate_local(target);
+        target = target->parent;
+    }
+    
+    return pos;
+}
+
+void Container::draw_tree() {
+    draw_self();
 
     for (auto child : children) {
-        child->draw_tree(pos);
+        child->draw_tree();
     }
 }
 
@@ -71,13 +82,14 @@ class TextureRect : public Container {
             size = { texture->width, texture->height };
         }
 
-        void draw_self(Vector2 at) override {
+        void draw_self() override {
             if (!texture) return;
 
+            Vector2 pos = global_position();
             Ray::DrawTexturePro(
                 *texture,
                 { 0.0, 0.0, (float)texture->width, (float)texture->height },
-                { (float)at.x, (float)at.y, (float)size.x, (float)size.y },
+                { (float)pos.x, (float)pos.y, (float)size.x, (float)size.y },
                 { 0, 0 },
                 0.0,
                 Ray::WHITE
@@ -89,8 +101,9 @@ class ColorRect : public Container {
     public:
         Ray::Color color = Ray::RED;
 
-        void draw_self(Vector2 at) override {
-            Ray::DrawRectangle(at.x, at.y, size.x, size.y, color);
+        void draw_self() override {
+            Vector2 pos = global_position();
+            Ray::DrawRectangle(pos.x, pos.y, size.x, size.y, color);
         }
 };
 
@@ -104,19 +117,64 @@ class TextLabel : public Container {
             this->font = _font;
         }
 
-        void draw_self(Vector2 at) override {
+        void draw_self() override {
             if (!font) return;
+            
+            Vector2 pos = global_position();
 
             Ray::DrawTextEx(
                 *font,
                 text,
-                { (float)at.x, (float)at.y },
+                { (float)pos.x, (float)pos.y },
                 (float)font->baseSize,
                 1,
                 Ray::BLACK
             );
         }
 };
+
+class Button : public Container {
+    public:
+        void draw_tree() override {
+            // Override draw_tree to change order..... a bit hacky
+
+            for (auto child : children) {
+                child->draw_tree();
+            }
+
+            if (!is_hovered()) return;
+            
+            bool mouse_held = Ray::IsMouseButtonDown(0);
+            float alpha = mouse_held ? 0.3 : 0.2;
+
+            Vector2 pos = global_position();
+            Ray::DrawRectangle(pos.x, pos.y, size.x, size.y, Ray::ColorAlpha(Ray::BLACK, alpha));
+        }
+        
+    private:
+        void on_click() override {
+            printf("CLICK!\n");
+        }
+};
+
+void Container::propagate_mouse_motion(Vector2 pos) {
+    // Update mouse
+    bool in = pos.in_rectangle(global_position(), size);
+    _is_hovered = in;
+    on_hover_change(_is_hovered);
+
+    for (auto child : children) {
+        child->propagate_mouse_motion(pos);
+    }
+}
+
+void Container::propagate_click() {
+    if (is_hovered()) on_click();
+
+    for (auto child : children) {
+        child->propagate_click();
+    }
+}
 
 int main() {
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
@@ -128,7 +186,7 @@ int main() {
     auto root = new Container();
     root->size = { 500, 500 };
 
-    auto rect = new ColorRect();
+    auto rect = new Button();
     rect->position->strategy = PositionStrategy::CENTER;
     rect->size = {200, 200};
     rect->position->x = 50;
@@ -152,13 +210,15 @@ int main() {
     while (!Ray::WindowShouldClose()) {
         root->size = {Ray::GetRenderWidth(), Ray::GetRenderHeight()};
 
-        Ray::BeginDrawing();
+        root->propagate_mouse_motion({Ray::GetMouseX(), Ray::GetMouseY()});
+        if (Ray::IsMouseButtonPressed(0)) root->propagate_click();
 
+        Ray::BeginDrawing();
         Ray::ClearBackground(Colors::BG.to_ray());
 
         // if (frames % 2 == 0) rect->position->x += 1;
 
-        root->draw_tree({0, 0});
+        root->draw_tree();
 
         Ray::EndDrawing();
         frames++;
