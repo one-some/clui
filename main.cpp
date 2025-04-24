@@ -94,6 +94,30 @@ class ColorRect : public Container {
         }
 };
 
+class TextLabel : public Container {
+    public:
+        const char* text = "Test";
+        Ray::Font* font = nullptr;
+
+        TextLabel(const char* _text, Ray::Font* _font) {
+            this->text = _text;
+            this->font = _font;
+        }
+
+        void draw_self(Vector2 at) override {
+            if (!font) return;
+
+            Ray::DrawTextEx(
+                *font,
+                text,
+                { (float)at.x, (float)at.y },
+                (float)font->baseSize,
+                1,
+                Ray::BLACK
+            );
+        }
+};
+
 int main() {
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
     Ray::SetConfigFlags(Ray::FLAG_WINDOW_RESIZABLE);
@@ -115,6 +139,10 @@ int main() {
     // rect2->size = {100, 100};
     rect2->position->strategy = PositionStrategy::CENTER;
     rect->add_child(rect2);
+
+    auto font = Ray::LoadFont("tnr.ttf");
+    auto text = new TextLabel("Hella world", &font);
+    rect->add_child(text);
 
     auto rect3 = new ColorRect();
     rect3->color = Color(0xFF00FF).to_ray();
