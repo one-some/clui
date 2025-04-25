@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -std=c++17 # Feel free to add more flags
 # Directories
 SRC_DIR = src
 BUILD_DIR = build
-BIN_DIR = . # Current directory for the final executable
+BIN_DIR =.
 
 # Executable name
 TARGET = main
@@ -32,10 +32,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 
 # Link object files into the final executable
 $(BIN_DIR)/$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $^ -o $(BIN_DIR)/$(TARGET) $(LIBS)
 
 # Clean target to remove build files and the executable
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)/$(TARGET)
+
+run: $(TARGET)
+	./main
 
 .PHONY: all clean

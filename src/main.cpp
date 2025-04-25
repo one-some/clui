@@ -118,7 +118,7 @@ int main() {
     rect->add_child(rect2);
 
     auto font = Ray::LoadFont("tnr.ttf");
-    auto text = new TextLabel("Hella world", &font);
+    auto text = new TextLabel("Hellaoo world", &font);
     rect->add_child(text);
 
     auto rect3 = new ColorRect();
