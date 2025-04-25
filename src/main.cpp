@@ -6,72 +6,10 @@ namespace Ray {
 #include <vector>
 #include <iostream>
 #include <memory>
-#include "main.h"
 #include <string.h>
 
-class Color {
-    public:
-        uint8_t r = 0;
-        uint8_t g = 0;
-        uint8_t b = 0;
-
-        Color(uint32_t color) {
-            b = color & 0xFF;
-            g = color >> 8 & 0xFF;
-            r = color >> 16 & 0xFF;
-        }
-
-        Ray::Color to_ray() {
-            return { r, g, b, 0xFF };
-        }
-};
-
-namespace Colors {
-    auto BG = Color(0x0000AA);
-}
-
-void Container::add_child(Container* child) {
-    // TODO: Can't have parent already
-    child->parent = this;
-    children.push_back(child);
-}
-
-Vector2 Container::global_position() {
-    Vector2 pos = {0, 0};
-    Container* target = this;
-
-    while (target) {
-        pos = pos + target->position->evaluate_local(target);
-        target = target->parent;
-    }
-    
-    return pos;
-}
-
-void Container::draw_tree() {
-    draw_self();
-
-    for (auto child : children) {
-        child->draw_tree();
-    }
-}
-
-Vector2 Position::evaluate_local(Container* container) {
-    switch (strategy) {
-        case PositionStrategy::RELATIVE:
-            return (Vector2) { x, y };
-        case PositionStrategy::CENTER:
-            // TODO: ASSERT PARENT
-            return (Vector2) {
-                (container->parent->size.x - container->size.x) / 2,
-                (container->parent->size.y - container->size.y) / 2,
-            };
-    }
-
-    // TODO: ASSERT FALSE
-    return {0, 0};
-}
-
+#include "container.h"
+#include "color.h"
 
 class TextureRect : public Container {
     public:
@@ -156,25 +94,6 @@ class Button : public Container {
             printf("CLICK!\n");
         }
 };
-
-void Container::propagate_mouse_motion(Vector2 pos) {
-    // Update mouse
-    bool in = pos.in_rectangle(global_position(), size);
-    _is_hovered = in;
-    on_hover_change(_is_hovered);
-
-    for (auto child : children) {
-        child->propagate_mouse_motion(pos);
-    }
-}
-
-void Container::propagate_click() {
-    if (is_hovered()) on_click();
-
-    for (auto child : children) {
-        child->propagate_click();
-    }
-}
 
 int main() {
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
