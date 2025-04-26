@@ -6,6 +6,7 @@ namespace Ray {
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <string.h>
 
 #include "container.h"
@@ -95,6 +96,25 @@ class Button : public Container {
         }
 };
 
+class Stack : public Container {
+    private:
+        virtual void reposition_children() { }
+
+        void on_child_added(Container* child) override {
+            reposition_children();
+        }
+};
+
+class HStack : public Stack {
+    private:
+        void reposition_children() override {
+            for (auto [i, child] : std::views::enumerate(children)) {
+                child->size.x = size.x;
+                child->size.y = size.y / (float)children.size();
+            }
+        }
+};
+
 int main() {
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
     Ray::SetConfigFlags(Ray::FLAG_WINDOW_RESIZABLE);
@@ -125,6 +145,22 @@ int main() {
     rect3->color = Color(0xFF00FF).to_ray();
     rect3->size = {100, 100};
     rect2->add_child(rect3);
+
+    auto stack = new HStack();
+    stack->size = {100, 300};
+    root->add_child(stack);
+
+    auto sc1 = new ColorRect();
+    sc1->color = Color(0xFF0000).to_ray();
+    stack->add_child(sc1);
+
+    auto sc2 = new ColorRect();
+    sc2->color = Color(0x00FF00).to_ray();
+    stack->add_child(sc2);
+
+    auto sc3 = new ColorRect();
+    sc3->color = Color(0x0000FF).to_ray();
+    stack->add_child(sc3);
 
     while (!Ray::WindowShouldClose()) {
         root->size = {Ray::GetRenderWidth(), Ray::GetRenderHeight()};

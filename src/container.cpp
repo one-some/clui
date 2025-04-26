@@ -4,6 +4,8 @@ void Container::add_child(Container* child) {
     // TODO: Can't have parent already
     child->parent = this;
     children.push_back(child);
+
+    on_child_added(child);
 }
 
 Vector2 Container::global_position() {
