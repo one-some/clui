@@ -7,7 +7,8 @@ class Container;
 
 enum SizeStrategy {
     ABSOLUTE,
-    EXPAND
+    FORCE,
+    EXPAND,
 };
 
 class Size {

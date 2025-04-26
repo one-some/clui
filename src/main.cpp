@@ -114,11 +114,28 @@ class Stack : public Container {
 class HStack : public Stack {
     private:
         void reposition_children() override {
-            for (size_t i=0; i < children.size(); i++) {
-                children[i]->size->set_x(size->get().x);
-                children[i]->size->set_y(size->get().y / (float)children.size());
+            int32_t height_budget = size->get().y;
+            int32_t flimsy_child_count = 0;
 
-                children[i]->position->set_y(size->get().y / (float)children.size() * i);
+            for (auto child : children) {
+                if (child->size->strategy_y != SizeStrategy::FORCE) {
+                    flimsy_child_count++;
+                    continue;
+                }
+
+                height_budget -= child->size->get().y;
+            }
+
+            int32_t current_y = 0;
+            for (auto child : children) {
+                child->size->set_x(size->get().x);
+                
+                if (child->size->strategy_y != SizeStrategy::FORCE) {
+                    child->size->set_y(height_budget / flimsy_child_count);
+                }
+
+                child->position->set_y(current_y);
+                current_y += child->size->get().y;
             }
         }
 };
@@ -159,6 +176,8 @@ int main() {
 
     auto sc1 = ColorRect();
     sc1.color = Color(0xFF0000).to_ray();
+    sc1.size->strategy_y = SizeStrategy::FORCE;
+    sc1.size->set_y(30);
     stack.add_child(&sc1);
 
     auto sc2 = ColorRect();

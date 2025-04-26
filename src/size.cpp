@@ -6,6 +6,7 @@ Vector2 Size::get() {
     Vector2 out;
 
     switch (strategy_x) {
+        case SizeStrategy::FORCE:
         case SizeStrategy::ABSOLUTE:
             out.x = raw.x;
             break;
@@ -15,6 +16,7 @@ Vector2 Size::get() {
     }
 
     switch (strategy_y) {
+        case SizeStrategy::FORCE:
         case SizeStrategy::ABSOLUTE:
             out.y = raw.y;
             break;
