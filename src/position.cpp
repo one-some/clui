@@ -2,18 +2,27 @@
 #include "vector2.h"
 #include "container.h"
 
-Vector2 Position::evaluate_local(Container* container) {
+Vector2 Position::get_local() {
     switch (strategy) {
         case PositionStrategy::RELATIVE:
-            return Vector2 { x, y };
+            return raw;
         case PositionStrategy::CENTER:
             // TODO: ASSERT PARENT
-            return Vector2 {
-                (container->parent->size.x - container->size.x) / 2,
-                (container->parent->size.y - container->size.y) / 2,
-            };
+            return (owner->parent->size->get() - owner->size->get()) / 2;
     }
 
     // TODO: ASSERT FALSE
     return {0, 0};
+}
+
+Vector2 Position::get_global() {
+    Container* target = owner;
+    Vector2 pos = {0, 0};
+
+    while (target) {
+        pos = pos + target->position->get_local();
+        target = target->parent;
+    }
+    
+    return pos;
 }

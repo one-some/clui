@@ -2,12 +2,15 @@
 #include <vector>
 
 #include "position.h"
+#include "size.h"
 #include "vector2.h"
 
 class Container {
     public:
-        Position* position = new Position(PositionStrategy::RELATIVE);
-        Vector2 size = {0, 0};
+        // Don't allow setting the whole position...
+        Position* const position = new Position(this);
+        Size* const size = new Size(this);
+
         // TODO: Private?
         Container* parent;
         std::vector<Container*> children;
@@ -20,8 +23,6 @@ class Container {
         virtual void draw_tree();
         virtual void draw_self() { }
 
-        Vector2 global_position();
-        
         bool is_hovered() { return _is_hovered; }
     
     private:

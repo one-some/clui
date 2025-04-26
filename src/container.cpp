@@ -8,18 +8,6 @@ void Container::add_child(Container* child) {
     on_child_added(child);
 }
 
-Vector2 Container::global_position() {
-    Vector2 pos = {0, 0};
-    Container* target = this;
-
-    while (target) {
-        pos = pos + target->position->evaluate_local(target);
-        target = target->parent;
-    }
-    
-    return pos;
-}
-
 void Container::draw_tree() {
     draw_self();
 
@@ -30,7 +18,7 @@ void Container::draw_tree() {
 
 void Container::propagate_mouse_motion(Vector2 pos) {
     // Update mouse
-    bool in = pos.in_rectangle(global_position(), size);
+    bool in = pos.in_rectangle(position->get_global(), size->get());
     _is_hovered = in;
     on_hover_change(_is_hovered);
 
