@@ -10,7 +10,7 @@ Vector2 Size::get() {
             out.x = raw.x;
             break;
         case SizeStrategy::EXPAND:
-            out.x = owner->parent->size->raw.x;
+            out.x = owner->parent->size->get().x;
             break;
     }
 
@@ -19,7 +19,7 @@ Vector2 Size::get() {
             out.y = raw.y;
             break;
         case SizeStrategy::EXPAND:
-            out.y = owner->parent->size->raw.y;
+            out.y = owner->parent->size->get().y;
             break;
     }
 

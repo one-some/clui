@@ -12,7 +12,7 @@ class Container {
         Size* const size = new Size(this);
 
         // TODO: Private?
-        Container* parent;
+        Container* parent = nullptr;
         std::vector<Container*> children;
 
         void add_child(Container* child);

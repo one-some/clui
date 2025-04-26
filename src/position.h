@@ -27,7 +27,7 @@ class Position {
         void set_y(int32_t y) { this->raw.y = y; }
     private:
         Container* owner;
-        Vector2 raw;
+        Vector2 raw = {0, 0};
 };
 
 // MAYBE A WORSE HACK!!

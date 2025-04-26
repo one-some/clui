@@ -97,6 +97,12 @@ class Button : public Container {
 };
 
 class Stack : public Container {
+    public:
+        void draw_self() override {
+            // WE ARE EVIL
+            reposition_children();
+        }
+
     private:
         virtual void reposition_children() { }
 

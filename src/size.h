@@ -27,7 +27,7 @@ class Size {
     
     private:
         Container* owner;
-        Vector2 raw;
+        Vector2 raw = {0, 0};
 };
 
 // HACK
