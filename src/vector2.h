@@ -35,6 +35,10 @@ struct Vector2 {
         return { (float)x, (float)y };
     }
 
+    static Vector2 from_ray(Ray::Vector2 vec) {
+        return { (int32_t)vec.x, (int32_t)vec.y };
+    }
+
     const static Ray::Rectangle to_ray_rect(Vector2 pos, Vector2 size) {
         return { (float)pos.x, (float)pos.y, (float)size.x, (float)size.y };
     }
