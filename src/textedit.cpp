@@ -1,5 +1,6 @@
 #include <cstring>
 #include <stdio.h>
+#include "color.h"
 #include "textedit.h"
 #include "string.h"
 #include <vector>
@@ -11,9 +12,9 @@ void TextEdit::draw_self() {
     Ray::DrawRectangle(
         pos.x,
         pos.y,
-        3,
+        1,
         size->get().y,
-        Ray::ColorAlpha(Ray::BLACK, 0.4)
+        Ray::ColorAlpha(Colors::FG, 0.2)
     );
 
     std::vector<String> lines = text.split('\n');
@@ -22,10 +23,10 @@ void TextEdit::draw_self() {
         Ray::DrawTextEx(
             *font,
             lines[i].as_c(),
-            { (float)pos.x, (float)pos.y + (font->baseSize * i) },
+            { (float)pos.x + 4, (float)pos.y + (font->baseSize * i) },
             (float)font->baseSize,
             0,
-            Ray::BLACK
+            Colors::FG
         );
     }
 }
@@ -43,7 +44,6 @@ void TextEdit::on_click() {
 
     for (size_t i=1; i < strlen(line.as_c()); i++) {
         int32_t width = Ray::MeasureTextEx(*font, line.first_n(i).as_c(), font->baseSize, 0).x;
-        printf("%i\n", width);
 
         if (width < x_left) continue;
 

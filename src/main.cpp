@@ -152,29 +152,11 @@ int main() {
     auto root = Container();
     root.size->set_raw({ 500, 500 });
 
-    // auto rect = Button();
-    // rect.position->strategy = PositionStrategy::CENTER;
-    // rect.size->set_raw({200, 200});
-    // root.add_child(&rect);
-
-    // auto rect2 = TextureRect("claire.png");
-    // // rect2->size = {100, 100};
-    // rect2.position->strategy = PositionStrategy::CENTER;
-    // rect.add_child(&rect2);
-
     auto font = Ray::LoadFont("tnr.ttf");
-    // auto text = TextLabel("Hellaoo world", &font);
-    // rect.add_child(&text);
-
-    // auto rect3 = ColorRect();
-    // rect3.color = Color(0xFF00FF).to_ray();
-    // rect3.size->set_raw({100, 100});
-    // rect2.add_child(&rect3);
-
     auto stack = HStack();
     stack.size->set_raw({300, 300});
+    stack.size->strategy_x = SizeStrategy::EXPAND;
     stack.size->strategy_y = SizeStrategy::EXPAND;
-    stack.position->set_x(30);
     root.add_child(&stack);
 
     auto sc1 = ColorRect();
@@ -199,7 +181,7 @@ int main() {
         if (Ray::IsMouseButtonPressed(0)) root.propagate_click();
 
         Ray::BeginDrawing();
-        Ray::ClearBackground(Colors::BG.to_ray());
+        Ray::ClearBackground(Colors::BG);
 
         // if (frames % 2 == 0) rect->position.x += 1;
 

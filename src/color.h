@@ -11,17 +11,11 @@ class Color {
         uint8_t g = 0;
         uint8_t b = 0;
 
-        Color(uint32_t color) {
-            b = color & 0xFF;
-            g = color >> 8 & 0xFF;
-            r = color >> 16 & 0xFF;
-        }
-
-        Ray::Color to_ray() {
-            return { r, g, b, 0xFF };
-        }
+        Color(uint32_t color);
+        Ray::Color to_ray();
 };
 
 namespace Colors {
-    auto BG = Color(0x0000AA);
+    extern Ray::Color BG;
+    extern Ray::Color FG;
 }
