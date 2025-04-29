@@ -8,6 +8,16 @@
 void TextEdit::draw_self() {
     if (!font) return;
 
+    caret_blink_timer++;
+
+    bool caret_visible = true;
+
+    if (caret_blink_timer > CARET_BLINK_DURATION) {
+        caret_blink_timer = 0;
+    } else if (caret_blink_timer > CARET_BLINK_DURATION / 2) {
+        caret_visible = false;
+    }
+
     Vector2 pos = position->get_global();
     Ray::DrawRectangle(
         pos.x,
@@ -23,9 +33,20 @@ void TextEdit::draw_self() {
         Ray::DrawTextEx(
             *font,
             lines[i].as_c(),
-            { (float)pos.x + 4, (float)pos.y + (font->baseSize * i) },
-            (float)font->baseSize,
+            { (float)pos.x + 4, (float)pos.y + (font_size_px * i) },
+            (float)font_size_px,
             0,
+            Colors::FG
+        );
+    }
+
+
+    if (caret_visible) {
+        Ray::DrawRectangle(
+            pos.x + caret_position_px.x + 1,
+            pos.y + caret_position_px.y,
+            2,
+            font_size_px,
             Colors::FG
         );
     }
@@ -35,7 +56,7 @@ void TextEdit::on_click() {
     Vector2 mouse_pos = Vector2::from_ray(Ray::GetMousePosition());
     mouse_pos = mouse_pos - position->get_global();
 
-    size_t line_number = mouse_pos.y / font->baseSize;
+    size_t line_number = mouse_pos.y / font_size_px;
     std::vector<String> lines = text.split('\n');
     if (line_number > lines.size() - 1) line_number = lines.size() - 1;
 
@@ -43,10 +64,15 @@ void TextEdit::on_click() {
     int32_t x_left = mouse_pos.x;
 
     for (size_t i=1; i < strlen(line.as_c()); i++) {
-        int32_t width = Ray::MeasureTextEx(*font, line.first_n(i).as_c(), font->baseSize, 0).x;
+        int32_t width = Ray::MeasureTextEx(*font, line.first_n(i).as_c(), font_size_px, 0).x;
 
         if (width < x_left) continue;
 
+        caret_position_px.x = width;
+        caret_position_px.y = line_number * font_size_px;
+        caret_blink_timer = 0;
+
+        printf("(%i, %i)\n", caret_position_px.x, caret_position_px.y);
         printf("%c\n", line.as_c()[i - 1]);
         break;
     }

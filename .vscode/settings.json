@@ -46,6 +46,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "*.m": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "assert.h": "c"
     }
 }

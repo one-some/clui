@@ -1,13 +1,22 @@
 #pragma once
 #include "container.h"
 #include "string.h"
+#include "file.h"
 
 class TextEdit : public Container {
     public:
-        String text = String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
+        String text = File("src/textedit.h").read();
+        //String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
         Ray::Font* font = nullptr;
 
+        Vector2 caret_position_px = {0, 0};
+        int32_t caret_blink_timer = 0;
+
+        int32_t font_size_px = 16;
+
         virtual void draw_self();
+
+        static const int32_t CARET_BLINK_DURATION = 530 / 8;
     
     private:
         void on_click() override;

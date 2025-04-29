@@ -1,3 +1,4 @@
+#include "assert.h"
 #include <stdio.h>
 namespace Ray {
     #include "raylib.h"
@@ -12,6 +13,8 @@ namespace Ray {
 #include "container.h"
 #include "textedit.h"
 #include "color.h"
+#include "cpp.h"
+#include "file.h"
 #include "string.h"
 
 class TextureRect : public Container {
@@ -152,7 +155,7 @@ int main() {
     auto root = Container();
     root.size->set_raw({ 500, 500 });
 
-    auto font = Ray::LoadFont("tnr.ttf");
+    auto font = Ray::LoadFont("ibm.ttf");
     auto stack = HStack();
     stack.size->set_raw({300, 300});
     stack.size->strategy_x = SizeStrategy::EXPAND;
@@ -171,7 +174,13 @@ int main() {
 
     auto sc3 = ColorRect();
     sc3.color = Color(0x0000FF).to_ray();
+    sc3.size->strategy_y = SizeStrategy::FORCE;
+    sc3.size->set_y(20);
     stack.add_child(&sc3);
+
+
+    auto parser = CPPParser(File("src/textedit.h").read());
+    parser.parse();
 
     while (!Ray::WindowShouldClose()) {
         root.size->set_x(Ray::GetRenderWidth());

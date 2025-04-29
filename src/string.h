@@ -6,8 +6,30 @@
 
 class String {
     public:
-        String(const char* c_str) {
+        String() {
+            this->c_str = (char*)malloc(16);
+            capacity = 16;
+        }
+
+        String(char* c_str) {
             this->c_str = c_str;
+            capacity = strlen(c_str);
+        }
+
+        void append(char c) {
+            if (capacity < (strlen(c_str) + 2)) {
+                capacity *= 2;
+
+                char* new_string = (char*)malloc(capacity);
+                memcpy(new_string, c_str, capacity);
+                free(c_str);
+
+                c_str = new_string;
+            }
+
+            size_t len = strlen(c_str);
+            c_str[len] = c;
+            c_str[len + 1] = '\0';
         }
 
         std::vector<String> split(const char dilemeter) {
@@ -51,5 +73,6 @@ class String {
         }
 
     private:
-        const char* c_str = nullptr;
+        char* c_str = nullptr;
+        size_t capacity = 0;
 };
