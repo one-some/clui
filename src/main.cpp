@@ -178,10 +178,6 @@ int main() {
     sc3.size->set_y(20);
     stack.add_child(&sc3);
 
-
-    auto parser = CPPParser(File("src/textedit.h").read());
-    parser.parse();
-
     while (!Ray::WindowShouldClose()) {
         root.size->set_x(Ray::GetRenderWidth());
         root.size->set_y(Ray::GetRenderHeight());

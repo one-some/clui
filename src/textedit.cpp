@@ -27,6 +27,21 @@ void TextEdit::draw_self() {
         Ray::ColorAlpha(Colors::FG, 0.2)
     );
 
+    draw_text();
+
+    if (caret_visible) {
+        Ray::DrawRectangle(
+            pos.x + caret_position_px.x + 1,
+            pos.y + caret_position_px.y,
+            2,
+            font_size_px,
+            Colors::FG
+        );
+    }
+}
+
+void TextEdit::draw_text_plain_jane() {
+    Vector2 pos = position->get_global();
     std::vector<String> lines = text.split('\n');
 
     for (size_t i=0; i<lines.size();i++) {
@@ -39,16 +54,37 @@ void TextEdit::draw_self() {
             Colors::FG
         );
     }
+}
+
+void TextEdit::draw_text() {
+    Vector2 pointer = position->get_global();
+
+    for (auto node : parser.nodes) {
+        if (node.token_type == TokenType::NEWLINE) {
+            pointer.y += font_size_px;
+            pointer.x = 0;
+            continue;
+        }
+
+        Ray::Color color = Colors::FG;
+
+        if (node.token_type == TokenType::SYMBOL) {
+            if (node.text == String("int32_t")) {
+                color = Ray::BLUE;
+            }
+        }
 
 
-    if (caret_visible) {
-        Ray::DrawRectangle(
-            pos.x + caret_position_px.x + 1,
-            pos.y + caret_position_px.y,
-            2,
-            font_size_px,
-            Colors::FG
+        Ray::DrawTextEx(
+            *font,
+            node.text.as_c(),
+            { (float)pointer.x + 4, (float)pointer.y},
+            (float)font_size_px,
+            0,
+            color
         );
+
+        pointer.x += Ray::MeasureTextEx(*font, node.text.as_c(), font_size_px, 0).x;
     }
 }
 

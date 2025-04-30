@@ -1,9 +1,59 @@
 #include "cpp.h"
 
+#define PUSH_LONER(char, token) case char: push_loner(token); break;
+
 void CPPParser::parse() {
     char c = '\0';
 
     while ((c = eat())) {
-        printf("Parsing lol %c\n", c);
+        switch (c) {
+            case ' ':
+                reuse_or_push_if_differs(TokenType::WHITESPACE);
+                break;
+            
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                if (
+                    active_node.token_type != TokenType::NUMBER
+                    && active_node.token_type != TokenType::SYMBOL
+                ) {
+                    // Numbers can continue symbols but not establish them
+                    push_loner(TokenType::NUMBER);
+                }
+                break;
+
+            PUSH_LONER('#', TokenType::POUND);
+            PUSH_LONER('"', TokenType::DOUBLE_QUOTE);
+            PUSH_LONER('\'', TokenType::SINGLE_QUOTE);
+            PUSH_LONER(';', TokenType::SEMICOLON);
+            PUSH_LONER(':', TokenType::COLON);
+            PUSH_LONER('(', TokenType::OPEN_PAREN);
+            PUSH_LONER(')', TokenType::CLOSE_PAREN);
+            PUSH_LONER('[', TokenType::OPEN_BRACKET);
+            PUSH_LONER(']', TokenType::CLOSE_BRACKET);
+            PUSH_LONER('{', TokenType::OPEN_BRACE);
+            PUSH_LONER('}', TokenType::CLOSE_BRACE);
+            PUSH_LONER('=', TokenType::EQUALS);
+            PUSH_LONER('\n', TokenType::NEWLINE);
+
+            default:
+                reuse_or_push_if_differs(TokenType::SYMBOL);
+                break;
+        }
+
+        active_node.text.append(c);
+
+
+        // printf("Parsing lol %c\n", c);
     }
+
+    push_token();
 }

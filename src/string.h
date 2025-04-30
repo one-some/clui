@@ -7,7 +7,7 @@
 class String {
     public:
         String() {
-            this->c_str = (char*)malloc(16);
+            this->c_str = (char*)calloc(16, sizeof(char));
             capacity = 16;
         }
 
@@ -16,7 +16,12 @@ class String {
             capacity = strlen(c_str);
         }
 
+        bool operator==(const String& that) {
+            return strcmp(c_str, that.c_str) == 0;
+        }
+
         void append(char c) {
+            // printf("[append] previous: '%s'", c_str);
             if (capacity < (strlen(c_str) + 2)) {
                 capacity *= 2;
 
@@ -30,6 +35,7 @@ class String {
             size_t len = strlen(c_str);
             c_str[len] = c;
             c_str[len + 1] = '\0';
+            // printf(" modern: '%s'\n", c_str);
         }
 
         std::vector<String> split(const char dilemeter) {
