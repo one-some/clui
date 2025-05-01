@@ -3,12 +3,13 @@
 #include "string.h"
 #include "file.h"
 #include "cpp.h"
+#include "fontglobal.h"
 
 class TextEdit : public Container {
     public:
         String text = File("src/textedit.h").read();
         //String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
-        Ray::Font* font = nullptr;
+        Ray::Font font = Font::the();
 
         Vector2 caret_position_px = {0, 0};
         int32_t caret_blink_timer = 0;

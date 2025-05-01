@@ -6,8 +6,6 @@
 #include <vector>
 
 void TextEdit::draw_self() {
-    if (!font) return;
-
     caret_blink_timer++;
 
     bool caret_visible = true;
@@ -46,7 +44,7 @@ void TextEdit::draw_text_plain_jane() {
 
     for (size_t i=0; i<lines.size();i++) {
         Ray::DrawTextEx(
-            *font,
+            font,
             lines[i].as_c(),
             { (float)pos.x + 4, (float)pos.y + (font_size_px * i) },
             (float)font_size_px,
@@ -118,7 +116,7 @@ void TextEdit::draw_text() {
 
 
         Ray::DrawTextEx(
-            *font,
+            font,
             node.text.as_c(),
             { (float)pointer.x + 4, (float)pointer.y},
             (float)font_size_px,
@@ -126,7 +124,7 @@ void TextEdit::draw_text() {
             color
         );
 
-        pointer.x += Ray::MeasureTextEx(*font, node.text.as_c(), font_size_px, 0).x;
+        pointer.x += Ray::MeasureTextEx(font, node.text.as_c(), font_size_px, 0).x;
     }
 }
 
@@ -143,7 +141,7 @@ void TextEdit::on_click() {
 
     size_t line_length = strlen(line.as_c());
     for (size_t i=1; i < line_length; i++) {
-        int32_t width = Ray::MeasureTextEx(*font, line.first_n(i).as_c(), font_size_px, 0).x;
+        int32_t width = Ray::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
 
         if (width < x_left && i != line_length - 1) continue;
 
