@@ -21,50 +21,53 @@ enum TokenType {
     OPEN_BRACE,
     CLOSE_BRACE,
     EQUALS,
+    ASTERISK,
+    DOT,
+    SLASH,
 };
 
-class Node {
+class Token {
     public:
         String text;
-        TokenType token_type = TokenType::SYMBOL;
+        TokenType type = TokenType::SYMBOL;
+        bool commented = false;
 };
 
 class CPPParser {
     public:
         String input;
-        size_t i = 0;
-        std::vector<Node> nodes;
-        Node active_node;
+        std::vector<Token> tokens;
+        Token active_token;
+        size_t char_idx = 0;
         
         CPPParser(String input) {
             this->input = input;
         }
 
         void reuse_or_push_if_differs(TokenType token_type) {
-            if (active_node.token_type == token_type) return;
+            if (active_token.type == token_type) return;
 
             push_loner(token_type);
         }
 
         void push_loner(TokenType token_type) {
             push_token();
-            active_node.token_type = token_type;
+            active_token.type = token_type;
         }
 
         void push_token() {
-            printf("Pushing with %i: '%s'\n", active_node.token_type, active_node.text.as_c());
-            nodes.push_back(active_node);
-            active_node = Node();
+            // printf("Pushing with %i: '%s'\n", active_token.token_type, active_token.text.as_c());
+            tokens.push_back(active_token);
+            active_token = Token();
         }
 
-        inline char eat() {
-            return input.as_c()[i++];
+        inline char eat_char() {
+            return input.as_c()[char_idx++];
         }
 
-        inline char peek() {
-            return input.as_c()[i];
+        inline char peek_char() {
+            return input.as_c()[char_idx];
         }
-
 
         void parse();
 };

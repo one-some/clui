@@ -5,7 +5,7 @@
 void CPPParser::parse() {
     char c = '\0';
 
-    while ((c = eat())) {
+    while ((c = eat_char())) {
         switch (c) {
             case ' ':
                 reuse_or_push_if_differs(TokenType::WHITESPACE);
@@ -22,8 +22,8 @@ void CPPParser::parse() {
             case '8':
             case '9':
                 if (
-                    active_node.token_type != TokenType::NUMBER
-                    && active_node.token_type != TokenType::SYMBOL
+                    active_token.type != TokenType::NUMBER
+                    && active_token.type != TokenType::SYMBOL
                 ) {
                     // Numbers can continue symbols but not establish them
                     push_loner(TokenType::NUMBER);
@@ -43,17 +43,49 @@ void CPPParser::parse() {
             PUSH_LONER('}', TokenType::CLOSE_BRACE);
             PUSH_LONER('=', TokenType::EQUALS);
             PUSH_LONER('\n', TokenType::NEWLINE);
+            PUSH_LONER('*', TokenType::ASTERISK);
+            PUSH_LONER('.', TokenType::DOT);
+            PUSH_LONER('/', TokenType::SLASH);
 
             default:
                 reuse_or_push_if_differs(TokenType::SYMBOL);
                 break;
         }
 
-        active_node.text.append(c);
+        active_token.text.append(c);
 
 
         // printf("Parsing lol %c\n", c);
     }
 
     push_token();
+
+    size_t token_idx = 0;
+    bool commenting = false;
+
+    while (token_idx < tokens.size()) {
+        Token* token = &tokens[token_idx++];
+
+        // printf("'%s'\n", token.text.as_c());
+
+        switch (token->type) {
+            case TokenType::SLASH:
+                printf("???\n");
+                if (tokens[token_idx].type == TokenType::SLASH) {
+                    commenting = true;
+                    printf("CHECKMARK??n");
+                }
+
+                break;
+
+            case TokenType::NEWLINE:
+                commenting = false;
+                break;
+        }
+
+        if (commenting) {
+            printf("'%s'\n", token->text.as_c());
+        }
+        token->commented = commenting;
+    }
 }

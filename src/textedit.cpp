@@ -59,8 +59,8 @@ void TextEdit::draw_text_plain_jane() {
 void TextEdit::draw_text() {
     Vector2 pointer = position->get_global();
 
-    for (auto node : parser.nodes) {
-        if (node.token_type == TokenType::NEWLINE) {
+    for (auto node : parser.tokens) {
+        if (node.type == TokenType::NEWLINE) {
             pointer.y += font_size_px;
             pointer.x = 0;
             continue;
@@ -68,10 +68,52 @@ void TextEdit::draw_text() {
 
         Ray::Color color = Colors::FG;
 
-        if (node.token_type == TokenType::SYMBOL) {
-            if (node.text == String("int32_t")) {
-                color = Ray::BLUE;
-            }
+        switch (node.type) {
+            case TokenType::SYMBOL:
+
+                switch (node.text.hash()) {
+                    case String::hash("int32_t"):
+                    case String::hash("switch"):
+                    case String::hash("case"):
+                    case String::hash("if"):
+                    case String::hash("else"):
+                    case String::hash("class"):
+                    case String::hash("public"):
+                    case String::hash("static"):
+                    case String::hash("private"):
+                    case String::hash("const"):
+                    case String::hash("void"):
+                        color = Ray::BLUE;
+                        break;
+                    case String::hash("nullptr"):
+                        color = Ray::PURPLE;
+                        break;
+                }
+
+                break;
+            case TokenType::NUMBER:
+                color = Ray::GREEN;
+                break;
+            case TokenType::COLON:
+            case TokenType::SEMICOLON:
+            case TokenType::DOT:
+                color = Ray::GRAY;
+                break;
+            case TokenType::ASTERISK:
+            case TokenType::EQUALS:
+                color = Ray::WHITE;
+                break;
+            case TokenType::OPEN_PAREN:
+            case TokenType::CLOSE_PAREN:
+            case TokenType::OPEN_BRACE:
+            case TokenType::CLOSE_BRACE:
+                color = Ray::SKYBLUE;
+            default:
+                break;
+        }
+
+        if (node.commented) {
+            color = Ray::DARKGREEN;
         }
 
 
@@ -99,10 +141,11 @@ void TextEdit::on_click() {
     String line = lines[line_number];
     int32_t x_left = mouse_pos.x;
 
-    for (size_t i=1; i < strlen(line.as_c()); i++) {
+    size_t line_length = strlen(line.as_c());
+    for (size_t i=1; i < line_length; i++) {
         int32_t width = Ray::MeasureTextEx(*font, line.first_n(i).as_c(), font_size_px, 0).x;
 
-        if (width < x_left) continue;
+        if (width < x_left && i != line_length - 1) continue;
 
         caret_position_px.x = width;
         caret_position_px.y = line_number * font_size_px;

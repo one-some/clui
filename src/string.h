@@ -20,6 +20,21 @@ class String {
             return strcmp(c_str, that.c_str) == 0;
         }
 
+        constexpr static u_int64_t hash(char* str) {
+            // djb2 by Dan Bernstein
+            u_int64_t hash = 5381;
+            int c = 0;
+
+            while (c = *str++)
+                hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+            return hash;
+        }
+
+        u_int64_t hash() {
+            return String::hash(c_str);
+        }
+
         void append(char c) {
             // printf("[append] previous: '%s'", c_str);
             if (capacity < (strlen(c_str) + 2)) {
