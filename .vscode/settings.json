@@ -47,6 +47,7 @@
         "typeinfo": "cpp",
         "*.m": "cpp",
         "ranges": "cpp",
-        "assert.h": "c"
+        "assert.h": "c",
+        "cstring": "cpp"
     }
 }

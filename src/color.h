@@ -1,9 +1,6 @@
 #pragma once
 #include <cstdint>
-
-namespace Ray {
-    #include "raylib.h"
-}
+#include "raylib.h"
 
 class Color {
     public:
@@ -12,10 +9,10 @@ class Color {
         uint8_t b = 0;
 
         Color(uint32_t color);
-        Ray::Color to_ray();
+        RayLib::Color to_ray();
 };
 
 namespace Colors {
-    extern Ray::Color BG;
-    extern Ray::Color FG;
+    extern RayLib::Color BG;
+    extern RayLib::Color FG;
 }

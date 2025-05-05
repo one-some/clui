@@ -1,7 +1,5 @@
+#include "Dep/raylib.h"
 #include "color.h"
-namespace Ray {
-    #include "raylib.h"
-}
 
 Color::Color(uint32_t color) {
     b = color & 0xFF;
@@ -9,13 +7,13 @@ Color::Color(uint32_t color) {
     r = color >> 16 & 0xFF;
 }
 
-Ray::Color Color::to_ray() {
+RayLib::Color Color::to_ray() {
     return { r, g, b, 0xFF };
 }
 
 
 
 namespace Colors {
-    Ray::Color BG = Color(0x000022).to_ray();
-    Ray::Color FG = Color(0xfff9a6).to_ray();
+    RayLib::Color BG = Color(0x000022).to_ray();
+    RayLib::Color FG = Color(0xfff9a6).to_ray();
 }

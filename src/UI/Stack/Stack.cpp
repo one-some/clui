@@ -1,10 +1,11 @@
-#include "stack.h"
+#include <cstdio>
+#include "UI/Stack/Stack.h"
 
 void VStack::reposition_children() {
     int32_t height_budget = size->get().y;
     int32_t flimsy_child_count = 0;
 
-    for (auto child : children) {
+    for (auto child : visible_children()) {
         if (child->size->strategy_y != SizeStrategy::FORCE) {
             flimsy_child_count++;
             continue;
@@ -14,7 +15,7 @@ void VStack::reposition_children() {
     }
 
     int32_t current_y = 0;
-    for (auto child : children) {
+    for (auto child : visible_children()) {
         child->size->set_x(size->get().x);
         
         if (child->size->strategy_y != SizeStrategy::FORCE) {
@@ -30,7 +31,7 @@ void HStack::reposition_children() {
     int32_t width_budget = size->get().x;
     int32_t flimsy_child_count = 0;
 
-    for (auto child : children) {
+    for (auto child : visible_children()) {
         if (child->size->strategy_x != SizeStrategy::FORCE) {
             flimsy_child_count++;
             continue;
@@ -40,7 +41,7 @@ void HStack::reposition_children() {
     }
 
     int32_t current_x = 0;
-    for (auto child : children) {
+    for (auto child : visible_children()) {
         child->size->set_y(size->get().y);
         
         if (child->size->strategy_x != SizeStrategy::FORCE) {

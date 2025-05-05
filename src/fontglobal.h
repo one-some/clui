@@ -1,17 +1,15 @@
 #pragma once
 #include <memory>
-namespace Ray {
-    #include "raylib.h"
-}
+#include "raylib.h"
 
 class Font {
     public:
-        static Ray::Font the() {
+        static RayLib::Font the() {
             if (!the_raw) {
-                the_raw = std::make_unique<Ray::Font>(Ray::LoadFont("ibm.ttf"));
+                the_raw = std::make_unique<RayLib::Font>(RayLib::LoadFont("ibm.ttf"));
             }
             return *the_raw;
         }
     private:
-        static std::unique_ptr<Ray::Font> the_raw;
+        static std::unique_ptr<RayLib::Font> the_raw;
 };

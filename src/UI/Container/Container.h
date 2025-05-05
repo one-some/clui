@@ -24,8 +24,9 @@ class Container {
         virtual void draw_self() { }
 
         bool is_hovered() { return _is_hovered; }
+        virtual std::vector<Container*> visible_children() { return children; }
     
-    private:
+    protected:
         bool _is_hovered = false;
 
         virtual void on_hover_change(bool is_hovered) { };

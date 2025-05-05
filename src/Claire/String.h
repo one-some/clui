@@ -1,8 +1,10 @@
 #pragma once
 #include <cstdlib>
-#include <cstring>
+#include <cstddef>
+
 #include <vector>
 #include <stdio.h>
+#include <cstring>
 
 class String {
     public:
@@ -25,7 +27,7 @@ class String {
             u_int64_t hash = 5381;
             int c = 0;
 
-            while (c = *str++)
+            while ((c = *str++))
                 hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
             return hash;

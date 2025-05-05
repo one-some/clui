@@ -85,6 +85,7 @@
 #ifndef RAYLIB_H
 #define RAYLIB_H
 
+namespace RayLib {
 #include <stdarg.h>     // Required for: va_list - Only used by TraceLogCallback
 
 #define RAYLIB_VERSION_MAJOR 5
@@ -1710,5 +1711,7 @@ RLAPI void DetachAudioMixedProcessor(AudioCallback processor); // Detach audio s
 #if defined(__cplusplus)
 }
 #endif
+
+}
 
 #endif // RAYLIB_H

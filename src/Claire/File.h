@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdio>
-#include "string.h"
-#include "assert.h"
+#include "Claire/String.h"
+#include "Claire/Assert.h"
 
 class File {
     public:

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <cstddef>
-#include "string.h"
+#include "Claire/String.h"
 
 enum TokenType {
     WHITESPACE,
@@ -40,6 +40,8 @@ class CPPParser {
         Token active_token;
         size_t char_idx = 0;
         
+        CPPParser() {}
+
         CPPParser(String input) {
             this->input = input;
         }

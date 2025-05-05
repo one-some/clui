@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -std=c++17# -Weffc++
+CXXFLAGS = -Wall -std=c++17 -I./src -Wno-switch
 
 # Directories
 SRC_DIR = src
@@ -28,6 +28,7 @@ $(BUILD_DIR):
 
 # Compile source files into object files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Link object files into the final executable

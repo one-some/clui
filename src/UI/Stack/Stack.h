@@ -1,5 +1,6 @@
 #pragma once
-#include "container.h"
+#include <cstdio>
+#include "UI/Container/Container.h"
 
 class Stack : public Container {
     public:
@@ -8,8 +9,8 @@ class Stack : public Container {
             reposition_children();
         }
 
-    private:
-        virtual void reposition_children() { }
+    protected:
+        virtual void reposition_children() = 0;
 
         void on_child_added(Container* child) override {
             reposition_children();
@@ -17,11 +18,11 @@ class Stack : public Container {
 };
 
 class VStack : public Stack {
-    private:
+    protected:
         void reposition_children() override;
 };
 
 class HStack : public Stack {
-    private:
+    protected:
         void reposition_children() override;
 };

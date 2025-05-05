@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "color.h"
 #include "textedit.h"
-#include "string.h"
+#include "Claire/String.h"
 #include <vector>
 
 void TextEdit::draw_self() {
@@ -17,18 +17,18 @@ void TextEdit::draw_self() {
     }
 
     Vector2 pos = position->get_global();
-    Ray::DrawRectangle(
+    RayLib::DrawRectangle(
         pos.x,
         pos.y,
         1,
         size->get().y,
-        Ray::ColorAlpha(Colors::FG, 0.2)
+        RayLib::ColorAlpha(Colors::FG, 0.2)
     );
 
     draw_text();
 
     if (caret_visible) {
-        Ray::DrawRectangle(
+        RayLib::DrawRectangle(
             pos.x + caret_position_px.x + 1,
             pos.y + caret_position_px.y,
             2,
@@ -43,7 +43,7 @@ void TextEdit::draw_text_plain_jane() {
     std::vector<String> lines = text.split('\n');
 
     for (size_t i=0; i<lines.size();i++) {
-        Ray::DrawTextEx(
+        RayLib::DrawTextEx(
             font,
             lines[i].as_c(),
             { (float)pos.x + 4, (float)pos.y + (font_size_px * i) },
@@ -64,7 +64,7 @@ void TextEdit::draw_text() {
             continue;
         }
 
-        Ray::Color color = Colors::FG;
+        RayLib::Color color = Colors::FG;
 
         switch (node.type) {
             case TokenType::SYMBOL:
@@ -81,41 +81,41 @@ void TextEdit::draw_text() {
                     case String::hash("private"):
                     case String::hash("const"):
                     case String::hash("void"):
-                        color = Ray::BLUE;
+                        color = RayLib::BLUE;
                         break;
                     case String::hash("nullptr"):
-                        color = Ray::PURPLE;
+                        color = RayLib::PURPLE;
                         break;
                 }
 
                 break;
             case TokenType::NUMBER:
-                color = Ray::GREEN;
+                color = RayLib::GREEN;
                 break;
             case TokenType::COLON:
             case TokenType::SEMICOLON:
             case TokenType::DOT:
-                color = Ray::GRAY;
+                color = RayLib::GRAY;
                 break;
             case TokenType::ASTERISK:
             case TokenType::EQUALS:
-                color = Ray::WHITE;
+                color = RayLib::WHITE;
                 break;
             case TokenType::OPEN_PAREN:
             case TokenType::CLOSE_PAREN:
             case TokenType::OPEN_BRACE:
             case TokenType::CLOSE_BRACE:
-                color = Ray::SKYBLUE;
+                color = RayLib::SKYBLUE;
             default:
                 break;
         }
 
         if (node.commented) {
-            color = Ray::DARKGREEN;
+            color = RayLib::DARKGREEN;
         }
 
 
-        Ray::DrawTextEx(
+        RayLib::DrawTextEx(
             font,
             node.text.as_c(),
             { (float)pointer.x + 4, (float)pointer.y},
@@ -124,12 +124,12 @@ void TextEdit::draw_text() {
             color
         );
 
-        pointer.x += Ray::MeasureTextEx(font, node.text.as_c(), font_size_px, 0).x;
+        pointer.x += RayLib::MeasureTextEx(font, node.text.as_c(), font_size_px, 0).x;
     }
 }
 
 void TextEdit::on_click() {
-    Vector2 mouse_pos = Vector2::from_ray(Ray::GetMousePosition());
+    Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - position->get_global();
 
     size_t line_number = mouse_pos.y / font_size_px;
@@ -141,7 +141,7 @@ void TextEdit::on_click() {
 
     size_t line_length = strlen(line.as_c());
     for (size_t i=1; i < line_length; i++) {
-        int32_t width = Ray::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
+        int32_t width = RayLib::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
 
         if (width < x_left && i != line_length - 1) continue;
 
@@ -149,8 +149,8 @@ void TextEdit::on_click() {
         caret_position_px.y = line_number * font_size_px;
         caret_blink_timer = 0;
 
-        printf("(%i, %i)\n", caret_position_px.x, caret_position_px.y);
-        printf("%c\n", line.as_c()[i - 1]);
+        // printf("(%i, %i)\n", caret_position_px.x, caret_position_px.y);
+        // printf("%c\n", line.as_c()[i - 1]);
         break;
     }
 }

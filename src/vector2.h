@@ -1,9 +1,6 @@
 #pragma once
 #include <cstdint>
-
-namespace Ray {
-#include "raylib.h"
-}
+#include "Dep/raylib.h"
 
 struct Vector2 {
     int32_t x;
@@ -31,15 +28,15 @@ struct Vector2 {
         return true;
     }
 
-    const Ray::Vector2 to_ray() {
+    const RayLib::Vector2 to_ray() {
         return { (float)x, (float)y };
     }
 
-    static Vector2 from_ray(Ray::Vector2 vec) {
+    static Vector2 from_ray(RayLib::Vector2 vec) {
         return { (int32_t)vec.x, (int32_t)vec.y };
     }
 
-    const static Ray::Rectangle to_ray_rect(Vector2 pos, Vector2 size) {
+    const static RayLib::Rectangle to_ray_rect(Vector2 pos, Vector2 size) {
         return { (float)pos.x, (float)pos.y, (float)size.x, (float)size.y };
     }
 };

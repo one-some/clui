@@ -1,33 +1,31 @@
 #include "assert.h"
 #include <stdio.h>
-namespace Ray {
-    #include "raylib.h"
-}
+#include "raylib.h"
 #include <cstdint>
 #include <vector>
 #include <iostream>
 #include <memory>
 #include <ranges>
-#include <string.h>
 
-#include "container.h"
+#include "UI/Container/Container.h"
 #include "textedit.h"
 #include "color.h"
 #include "cpp.h"
-#include "file.h"
-#include "string.h"
-#include "stack.h"
+#include "Claire/File.h"
+#include "Claire/String.h"
+#include "UI/Stack/Stack.h"
 #include "tabcontainer.h"
 #include "fontglobal.h"
+#include "FileList/FileList.h"
 
-std::unique_ptr<Ray::Font> Font::the_raw;
+std::unique_ptr<RayLib::Font> Font::the_raw;
 
 class TextureRect : public Container {
     public:
-        std::unique_ptr<Ray::Texture2D> texture;
+        std::unique_ptr<RayLib::Texture2D> texture;
 
         TextureRect(const char* file_name) {
-            texture = std::make_unique<Ray::Texture2D>(Ray::LoadTexture(file_name));
+            texture = std::make_unique<RayLib::Texture2D>(RayLib::LoadTexture(file_name));
             size->set_raw({ texture->width, texture->height });
         }
 
@@ -35,32 +33,33 @@ class TextureRect : public Container {
             if (!texture) return;
 
             Vector2 pos = position->get_global();
-            Ray::DrawTexturePro(
+            RayLib::DrawTexturePro(
                 *texture,
                 { 0.0, 0.0, (float)texture->width, (float)texture->height },
                 Vector2::to_ray_rect(pos, size->get()),
                 { 0, 0 },
                 0.0,
-                Ray::WHITE
+                RayLib::WHITE
             );
         }
 };
 
 class ColorRect : public Container {
     public:
-        Ray::Color color = Ray::RED;
+        RayLib::Color color = RayLib::RED;
 
         void draw_self() override {
             Vector2 pos = position->get_global();
-            Ray::DrawRectangle(pos.x, pos.y, size->get().x, size->get().y, color);
+            RayLib::DrawRectangle(pos.x, pos.y, size->get().x, size->get().y, color);
         }
 };
 
 int main() {
     // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
-    Ray::SetConfigFlags(Ray::FLAG_WINDOW_RESIZABLE);
-    Ray::InitWindow(500, 500, "clui test");
-    Ray::SetTargetFPS(60);
+    RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
+    RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
+    RayLib::InitWindow(500, 500, "clui test");
+    RayLib::SetTargetFPS(60);
     uint64_t frames = 0;
 
     auto root = Container();
@@ -72,17 +71,19 @@ int main() {
     stack.size->strategy_y = SizeStrategy::EXPAND;
     root.add_child(&stack);
 
-    auto sc1 = ColorRect();
-    sc1.color = Color(0xFF0000).to_ray();
-    sc1.size->strategy_y = SizeStrategy::FORCE;
-    sc1.size->set_y(30);
-    stack.add_child(&sc1);
+    auto sidebar_cont = HStack();
+    stack.add_child(&sidebar_cont);
 
     auto tabs = TabContainer();
-    stack.add_child(&tabs);
+    sidebar_cont.add_child(&tabs);
 
-    auto sc2 = TextEdit();
-    tabs.add_child(&sc2);
+    auto te1 = TextEdit("src/textedit.h");
+    tabs.add_child(&te1);
+    tabs.add_tab("textedit.h");
+
+    auto te2 = TextEdit("src/textedit.cpp");
+    tabs.add_child(&te2);
+    tabs.add_tab("src/textedit.cpp");
 
     auto sc3 = ColorRect();
     sc3.color = Color(0x0000FF).to_ray();
@@ -90,25 +91,25 @@ int main() {
     sc3.size->set_y(20);
     stack.add_child(&sc3);
 
-    while (!Ray::WindowShouldClose()) {
-        root.size->set_x(Ray::GetRenderWidth());
-        root.size->set_y(Ray::GetRenderHeight());
+    while (!RayLib::WindowShouldClose()) {
+        root.size->set_x(RayLib::GetRenderWidth());
+        root.size->set_y(RayLib::GetRenderHeight());
 
-        root.propagate_mouse_motion({Ray::GetMouseX(), Ray::GetMouseY()});
-        if (Ray::IsMouseButtonPressed(0)) root.propagate_click();
+        root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
+        if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();
 
-        Ray::BeginDrawing();
-        Ray::ClearBackground(Colors::BG);
+        RayLib::BeginDrawing();
+        RayLib::ClearBackground(Colors::BG);
 
         // if (frames % 2 == 0) rect->position.x += 1;
 
         root.draw_tree();
 
-        Ray::EndDrawing();
+        RayLib::EndDrawing();
         frames++;
     }
 
-    Ray::CloseWindow();
+    RayLib::CloseWindow();
 
     return 0;
 }
