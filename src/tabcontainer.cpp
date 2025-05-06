@@ -1,5 +1,5 @@
 #include "tabcontainer.h"
-#include "textlabel.h"
+#include "UI/TextLabel/TextLabel.h"
 
 void TabContainer::add_tab(const char* label) {
     Button* button = new Button();

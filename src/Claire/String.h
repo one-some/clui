@@ -13,9 +13,10 @@ class String {
             capacity = 16;
         }
 
-        String(char* c_str) {
-            this->c_str = c_str;
-            capacity = strlen(c_str);
+        String(char* in_c_str) {
+            capacity = strlen(in_c_str);
+            this->c_str = (char*) malloc(capacity);
+            strcpy(this->c_str, in_c_str);
         }
 
         bool operator==(const String& that) {

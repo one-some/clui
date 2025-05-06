@@ -1,6 +1,6 @@
 #include "assert.h"
 #include <stdio.h>
-#include "raylib.h"
+#include "Dep/raylib.h"
 #include <cstdint>
 #include <vector>
 #include <iostream>
@@ -16,7 +16,7 @@
 #include "UI/Stack/Stack.h"
 #include "tabcontainer.h"
 #include "fontglobal.h"
-#include "FileList/FileList.h"
+#include "UI/FileList/FileList.h"
 
 std::unique_ptr<RayLib::Font> Font::the_raw;
 
@@ -73,6 +73,11 @@ int main() {
 
     auto sidebar_cont = HStack();
     stack.add_child(&sidebar_cont);
+
+    auto file_list = FileList("./");
+    file_list.size->strategy_x = SizeStrategy::FORCE;
+    file_list.size->set_x(200);
+    sidebar_cont.add_child(&file_list);
 
     auto tabs = TabContainer();
     sidebar_cont.add_child(&tabs);

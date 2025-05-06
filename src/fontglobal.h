@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "raylib.h"
+#include "Dep/raylib.h"
 
 class Font {
     public:

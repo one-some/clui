@@ -55,12 +55,13 @@ void TextEdit::draw_text_plain_jane() {
 }
 
 void TextEdit::draw_text() {
-    Vector2 pointer = position->get_global();
+    Vector2 base_pos = position->get_global();
+    Vector2 pointer = base_pos;
 
     for (auto node : parser.tokens) {
         if (node.type == TokenType::NEWLINE) {
             pointer.y += font_size_px;
-            pointer.x = 0;
+            pointer.x = base_pos.x;
             continue;
         }
 
