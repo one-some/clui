@@ -11,7 +11,6 @@
 class TabContainer : public VStack {
     public:
         HStack tab_button_stack;
-        std::vector<Button*> buttons;
 
         TabContainer() {
             tab_button_stack.size->set_y(30);
@@ -34,9 +33,14 @@ class TabContainer : public VStack {
         }
 
         std::vector<Container*> visible_children() override {
-            if (children.size() < 2) return {children[0]};
+            std::vector<Container*> out;
+            if (children.empty()) return out;
+            out.push_back(children[0].get());
 
-            return {children[0], children[active_tab_idx + 1]};
+            if (children.size() < 2) return out;
+
+            out.push_back(children[active_tab_idx + 1].get());
+            return out;
         }
 
     private:

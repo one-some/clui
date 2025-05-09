@@ -10,7 +10,7 @@ class Button : public Container {
         void draw_tree() override {
             // Override draw_tree to change order..... a bit hacky
 
-            for (auto child : children) {
+            for (const auto &child : children) {
                 child->draw_tree();
             }
 

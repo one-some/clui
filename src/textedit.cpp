@@ -154,4 +154,6 @@ void TextEdit::on_click() {
         // printf("%c\n", line.as_c()[i - 1]);
         break;
     }
+
+    printf("%i, %i\n", caret_position_px.x, caret_position_px.y);
 }

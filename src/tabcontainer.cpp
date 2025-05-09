@@ -9,7 +9,7 @@ void TabContainer::add_tab(const char* label) {
     lab->color = RayLib::WHITE;
     lab->font_size = 16;
 
-    uint32_t our_idx = buttons.size();
+    uint32_t our_idx = tab_button_stack.children.size();
 
     button->callback_on_click = [=] {
         focus_tab(our_idx);
@@ -17,5 +17,4 @@ void TabContainer::add_tab(const char* label) {
 
     button->add_child(lab);
     tab_button_stack.add_child(button);
-    buttons.push_back(button);
 }

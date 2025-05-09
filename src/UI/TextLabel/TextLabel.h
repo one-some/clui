@@ -1,15 +1,18 @@
 #pragma once
 #include "UI/Container/Container.h"
 #include "fontglobal.h"
+#include <cstring>
 
 class TextLabel : public Container {
     public:
-        const char* text = "Test";
+        char* text = "Test";
         RayLib::Color color = RayLib::BLACK;
         float font_size = Font::the().baseSize;
 
         TextLabel(const char* _text) {
-            this->text = _text;
+            text = (char*) calloc(strlen(_text) + 1, 1);
+            strcpy(text, _text);
+            // this->text = _text;
         }
 
         void draw_self() override {

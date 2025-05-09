@@ -1,5 +1,9 @@
 #pragma once
+#include <sys/types.h>
+#include <stdio.h>
 #include <vector>
+
+#include <memory>
 
 #include "position.h"
 #include "size.h"
@@ -8,12 +12,14 @@
 class Container {
     public:
         // Don't allow setting the whole position...
-        Position* const position = new Position(this);
-        Size* const size = new Size(this);
+        std::unique_ptr<Position> const position = std::make_unique<Position>(Position(this));
+        std::unique_ptr<Size> const size = std::make_unique<Size>(Size(this));
 
         // TODO: Private?
         Container* parent = nullptr;
-        std::vector<Container*> children;
+        std::vector<std::unique_ptr<Container>> children;
+
+        virtual ~Container() { }
 
         void add_child(Container* child);
 
@@ -24,7 +30,14 @@ class Container {
         virtual void draw_self() { }
 
         bool is_hovered() { return _is_hovered; }
-        virtual std::vector<Container*> visible_children() { return children; }
+
+        virtual std::vector<Container*> visible_children() {
+            std::vector<Container*> out;
+            for (auto &child : children) {
+                out.push_back(child.get());
+            }
+            return out;
+        }
     
     protected:
         bool _is_hovered = false;

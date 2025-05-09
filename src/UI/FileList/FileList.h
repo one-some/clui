@@ -17,7 +17,7 @@ class FileList : public VStack {
         }
 
         void refresh() {
-            this->children = {};
+            this->children.clear();
 
             printf("Listing for '%s'\n", directory.path);
 

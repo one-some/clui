@@ -9,14 +9,47 @@
 class String {
     public:
         String() {
-            this->c_str = (char*)calloc(16, sizeof(char));
+            this->c_str = (char*)calloc(16, 1);
             capacity = 16;
         }
 
         String(char* in_c_str) {
-            capacity = strlen(in_c_str);
+            capacity = strlen(in_c_str) + 1;
             this->c_str = (char*) malloc(capacity);
             strcpy(this->c_str, in_c_str);
+            this->c_str[capacity - 1] = '\0';
+        }
+
+        ~String() {
+            free(c_str);
+        }
+
+        String(const String& that) {
+            capacity = that.capacity;
+            c_str = (char*) calloc(capacity, 1);
+            strcpy(c_str, that.c_str);
+        }
+
+        String& operator=(const String& that) {
+            if (this == &that) return *this;
+
+            free(c_str);
+            capacity = that.capacity;
+            c_str = (char*) calloc(capacity, 1);
+            strcpy(c_str, that.c_str);
+            return *this;
+        }
+
+        String& operator=(String&& other) noexcept {
+            if (this == &other) return *this;
+
+            free(c_str);
+            c_str = other.c_str;
+            capacity = other.capacity;
+
+            other.c_str = nullptr;
+            other.capacity = 0;
+            return *this;
         }
 
         bool operator==(const String& that) {
@@ -41,10 +74,11 @@ class String {
         void append(char c) {
             // printf("[append] previous: '%s'", c_str);
             if (capacity < (strlen(c_str) + 2)) {
+                size_t old_capacity = capacity;
                 capacity *= 2;
 
                 char* new_string = (char*)malloc(capacity);
-                memcpy(new_string, c_str, capacity);
+                memcpy(new_string, c_str, old_capacity);
                 free(c_str);
 
                 c_str = new_string;

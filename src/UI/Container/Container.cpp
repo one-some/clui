@@ -3,7 +3,7 @@
 void Container::add_child(Container* child) {
     // TODO: Can't have parent already
     child->parent = this;
-    children.push_back(child);
+    children.push_back(std::unique_ptr<Container>(child));
 
     on_child_added(child);
 }
@@ -11,7 +11,7 @@ void Container::add_child(Container* child) {
 void Container::draw_tree() {
     draw_self();
 
-    for (auto child : children) {
+    for (const auto& child : children) {
         child->draw_tree();
     }
 }
@@ -22,7 +22,7 @@ void Container::propagate_mouse_motion(Vector2 pos) {
     _is_hovered = in;
     on_hover_change(_is_hovered);
 
-    for (auto child : children) {
+    for (const auto& child : children) {
         child->propagate_mouse_motion(pos);
     }
 }
@@ -30,7 +30,7 @@ void Container::propagate_mouse_motion(Vector2 pos) {
 void Container::propagate_click() {
     if (is_hovered()) on_click();
 
-    for (auto child : children) {
+    for (const auto& child : children) {
         child->propagate_click();
     }
 }
