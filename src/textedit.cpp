@@ -5,7 +5,51 @@
 #include "Claire/String.h"
 #include <vector>
 
+size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
+    printf("LOOKING FOR GOLD %i, %i\n", vec.x, vec.y);
+
+    for (size_t i = 0; text[i]; i++) {
+        if (vec.y) {
+            if (text[i] != '\n') continue;
+
+            vec.y--;
+            continue;
+        }
+
+        printf("V1 Iter: (%i, %i): %li\n", vec.x, vec.y, i);
+
+        // FIXME: What do we do when either is inaccessable?
+        vec.x--;
+
+        if (!vec.x) return i + 1;
+    }
+
+    printf("WITS END.\n");
+    return 0;
+}
+
+void TextEdit::process_input() {
+    bool changes_made = false;
+
+    char c = '\0';
+    while ((c = RayLib::GetCharPressed())) {
+        printf("We found '%c'\n", c);
+        text.insert(c, caret_index);
+        changes_made = true;
+    }
+
+
+    if (changes_made) {
+        parser.parse();
+    }
+
+
+    RayLib::GetCharPressed();
+}
+
 void TextEdit::draw_self() {
+    process_input();
+
     caret_blink_timer++;
 
     bool caret_visible = true;
@@ -149,6 +193,8 @@ void TextEdit::on_click() {
         caret_position_px.x = width;
         caret_position_px.y = line_number * font_size_px;
         caret_blink_timer = 0;
+
+        caret_index = str_index_from_vec2(text.as_c(), {(int32_t)i, (int32_t)line_number});
 
         // printf("(%i, %i)\n", caret_position_px.x, caret_position_px.y);
         // printf("%c\n", line.as_c()[i - 1]);

@@ -35,14 +35,14 @@ class Token {
 
 class CPPParser {
     public:
-        String input;
+        String* input;
         std::vector<Token> tokens;
         Token active_token;
         size_t char_idx = 0;
         
         CPPParser() {}
 
-        CPPParser(String input) {
+        CPPParser(String* input) {
             this->input = input;
         }
 
@@ -64,11 +64,11 @@ class CPPParser {
         }
 
         inline char eat_char() {
-            return input.as_c()[char_idx++];
+            return input->as_c()[char_idx++];
         }
 
         inline char peek_char() {
-            return input.as_c()[char_idx];
+            return input->as_c()[char_idx];
         }
 
         void parse();

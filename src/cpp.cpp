@@ -4,6 +4,9 @@
 #define PUSH_LONER(char, token) case char: push_loner(token); break;
 
 void CPPParser::parse() {
+    tokens.clear();
+    char_idx = 0;
+
     char c = '\0';
 
     while ((c = eat_char())) {

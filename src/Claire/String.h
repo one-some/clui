@@ -61,8 +61,9 @@ class String {
             u_int64_t hash = 5381;
             int c = 0;
 
-            while ((c = *str++))
+            while ((c = *str++)) {
                 hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+            }
 
             return hash;
         }
@@ -72,22 +73,18 @@ class String {
         }
 
         void append(char c) {
-            // printf("[append] previous: '%s'", c_str);
-            if (capacity < (strlen(c_str) + 2)) {
-                size_t old_capacity = capacity;
-                capacity *= 2;
-
-                char* new_string = (char*)malloc(capacity);
-                memcpy(new_string, c_str, old_capacity);
-                free(c_str);
-
-                c_str = new_string;
-            }
+            expand_for(1);
 
             size_t len = strlen(c_str);
             c_str[len] = c;
             c_str[len + 1] = '\0';
-            // printf(" modern: '%s'\n", c_str);
+        }
+
+        void insert(char c, size_t index) {
+            expand_for(1);
+
+            memmove(c_str + index + 1, c_str + index, strlen(c_str) + 1 - index);
+            c_str[index] = c;
         }
 
         std::vector<String> split(const char dilemeter) {
@@ -133,4 +130,17 @@ class String {
     private:
         char* c_str = nullptr;
         size_t capacity = 0;
+
+        void expand_for(size_t extra_chars) {
+            if (capacity >= (strlen(c_str) + 1 + extra_chars)) return;
+
+            size_t old_capacity = capacity;
+            capacity *= 2;
+
+            char* new_string = (char*)calloc(capacity, 1);
+            memcpy(new_string, c_str, old_capacity);
+            free(c_str);
+
+            c_str = new_string;
+        }
 };

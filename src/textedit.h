@@ -12,6 +12,7 @@ class TextEdit : public Container {
         RayLib::Font font = Font::the();
 
         Vector2 caret_position_px = {0, 0};
+        size_t caret_index = 0;
         int32_t caret_blink_timer = 0;
         CPPParser parser;
 
@@ -19,13 +20,15 @@ class TextEdit : public Container {
 
         virtual void draw_self();
         void draw_text();
+        void process_input();
         void draw_text_plain_jane();
+        static size_t str_index_from_vec2(const char* text, Vector2 vec);
 
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
         TextEdit(char* path) {
             text = File(path).read();
-            parser = CPPParser(text);
+            parser = CPPParser(&text);
             parser.parse();
         }
     
