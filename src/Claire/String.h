@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstddef>
 
+#include "Claire/Assert.h"
 #include <vector>
 #include <stdio.h>
 #include <cstring>
@@ -87,6 +88,11 @@ class String {
             c_str[index] = c;
         }
 
+        void remove(size_t index) {
+            // Just keep it current size lol
+            memmove(c_str + index, c_str + index + 1, strlen(c_str) - index);
+        }
+
         std::vector<String> split(const char dilemeter) {
             std::vector<String> out;
             size_t substring_start = 0;
@@ -116,10 +122,23 @@ class String {
         }
 
         String first_n(size_t n) {
-            char* str = (char*)malloc(n + 1);
-            memcpy((void*)str, c_str, n);
+            char* str = (char*)calloc(n + 1, 1);
 
+            memcpy((void*)str, c_str, n);
             str[n] = '\0';
+
+            return String(str);
+        }
+
+        String slice(size_t start, size_t end) {
+            if (start == end) return String("");
+
+            ASSERT(start < end, "Be orderly!");
+            char* str = (char*)calloc(end - start + 1, 1);
+
+            memcpy(str,  c_str + start, end - start);
+            str[end - start] = '\0';
+
             return String(str);
         }
 

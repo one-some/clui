@@ -3,11 +3,10 @@
 #include "color.h"
 #include "textedit.h"
 #include "Claire/String.h"
+#include "Claire/Math.h"
 #include <vector>
 
 size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
-    printf("LOOKING FOR GOLD %i, %i\n", vec.x, vec.y);
-
     for (size_t i = 0; text[i]; i++) {
         if (vec.y) {
             if (text[i] != '\n') continue;
@@ -15,8 +14,6 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
             vec.y--;
             continue;
         }
-
-        printf("V1 Iter: (%i, %i): %li\n", vec.x, vec.y, i);
 
         // FIXME: What do we do when either is inaccessable?
         vec.x--;
@@ -28,18 +25,83 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
     return 0;
 }
 
+void TextEdit::move_caret(Vector2 delta) {
+    char c = '\0';
+
+    while ((c = text.as_c()[caret_index])) {
+        if (delta.y) {
+            if (caret_index == 0 && delta.y < 0) {
+                delta.y = 0;
+                continue;
+            }
+
+            printf("Okay! Let's deal with delta y... Dy: %i, Sign: %i\n", delta.y, SIGN(delta.y));
+            printf("k.... derlta y is now %i\n", delta.y);
+            caret_index += SIGN(delta.y);
+            if (c == '\n') delta.y -= SIGN(delta.y);
+            printf("&.... carret indx is now %li\n", caret_index);
+            continue;
+        }
+
+        if (delta.x) {
+            if (caret_index == 0 && delta.x < 0) {
+                delta.x = 0;
+                continue;
+            }
+
+            caret_index += SIGN(delta.x);
+            delta.x -= SIGN(delta.x);
+        }
+
+        break;
+    }
+
+    caret_position_px.graft(survey_position(caret_index));
+    caret_blink_timer = 0;
+
+    printf(" yeah whaterver lol\n");
+}
+
 void TextEdit::process_input() {
     bool changes_made = false;
 
     char c = '\0';
     while ((c = RayLib::GetCharPressed())) {
-        printf("We found '%c'\n", c);
         text.insert(c, caret_index);
+        changes_made = true;
+        move_caret({1, 0});
+    }
+
+    if (RayLib::IsKeyTyped(RayLib::KEY_DELETE)) {
+        text.remove(caret_index);
         changes_made = true;
     }
 
+    if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
+        move_caret({-1, 0});
+
+        // Not encompassing due to caret timer
+        if (caret_index > 0) {
+            text.remove(caret_index - 1);
+            changes_made = true;
+        }
+    }
+
+    if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
+        text.insert('\n', caret_index);
+        changes_made = true;
+        move_caret({1, 0});
+    }
+
+    Vector2 caret_delta = Vector2::zero();
+    if (RayLib::IsKeyTyped(RayLib::KEY_LEFT))   caret_delta.x--;
+    if (RayLib::IsKeyTyped(RayLib::KEY_RIGHT))  caret_delta.x++;
+    if (RayLib::IsKeyTyped(RayLib::KEY_UP))     caret_delta.y--;
+    if (RayLib::IsKeyTyped(RayLib::KEY_DOWN))   caret_delta.y++;
+    if (caret_delta.x || caret_delta.y) move_caret(caret_delta);
 
     if (changes_made) {
+        caret_blink_timer = 0;
         parser.parse();
     }
 
@@ -171,6 +233,30 @@ void TextEdit::draw_text() {
 
         pointer.x += RayLib::MeasureTextEx(font, node.text.as_c(), font_size_px, 0).x;
     }
+}
+
+Vector2 TextEdit::survey_position(size_t index) {
+    Vector2 out = Vector2::zero();
+
+    size_t last_newline = 0;
+
+    printf("===\n");
+
+    for (size_t i = 0; i < index; i++) {
+        char c = text.as_c()[i];
+        ASSERT(c, "Can't survey the end of time");
+
+        if (c != '\n') continue;
+
+        out.y += font_size_px;
+        last_newline = i;
+    }
+
+    String partial_line = text.slice(last_newline, index);
+    int32_t width = RayLib::MeasureTextEx(font, partial_line.as_c(), font_size_px, 0).x;
+    out.x = width;
+
+    return out;
 }
 
 void TextEdit::on_click() {

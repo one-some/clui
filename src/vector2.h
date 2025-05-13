@@ -28,8 +28,17 @@ struct Vector2 {
         return true;
     }
 
+    void graft(Vector2 that) {
+        x = that.x;
+        y = that.y;
+    }
+
     const RayLib::Vector2 to_ray() {
         return { (float)x, (float)y };
+    }
+
+    static Vector2 zero() {
+        return { 0, 0 };
     }
 
     static Vector2 from_ray(RayLib::Vector2 vec) {

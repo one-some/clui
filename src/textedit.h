@@ -22,6 +22,7 @@ class TextEdit : public Container {
         void draw_text();
         void process_input();
         void draw_text_plain_jane();
+        void move_caret(Vector2 delta);
         static size_t str_index_from_vec2(const char* text, Vector2 vec);
 
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
@@ -34,4 +35,6 @@ class TextEdit : public Container {
     
     private:
         void on_click() override;
+
+        Vector2 survey_position(size_t index);
 };
