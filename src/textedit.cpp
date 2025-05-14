@@ -78,13 +78,13 @@ void TextEdit::process_input() {
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
-        move_caret({-1, 0});
-
         // Not encompassing due to caret timer
         if (caret_index > 0) {
             text.remove(caret_index - 1);
             changes_made = true;
         }
+
+        move_caret({-1, 0});
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {

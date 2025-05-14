@@ -25,6 +25,8 @@ class Directory {
             std::vector<String> out;
 
             while ((entry = readdir(dp)) != NULL) {
+                if (entry->d_name[0] == '.') continue;
+                //entry->d_type = DT_DIR
                 out.push_back(String(entry->d_name));
             }
 
