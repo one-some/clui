@@ -32,7 +32,7 @@ class File {
         }
 
         void write(String content) {
-            FILE* fp = fopen(path, "rb");
+            FILE* fp = fopen(path, "w");
             ASSERT(fp != NULL, "Couldn't open file");
 
             fprintf(fp, "%s", content.as_c());

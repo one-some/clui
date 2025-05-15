@@ -1,3 +1,5 @@
+// Hello from CLAIRE
+
 #pragma once
 #include "UI/Container/Container.h"
 #include "Claire/String.h"
