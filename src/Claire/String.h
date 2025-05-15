@@ -84,6 +84,8 @@ class String {
         void append(const char* text) {
             if (!text[0]) return;
 
+            printf("Append with size of %li\n", strlen(text));
+
             expand_for(strlen(text));
             memmove(c_str + strlen(c_str), text, strlen(text));
             c_str[strlen(c_str)] = '\0';
@@ -162,7 +164,7 @@ class String {
             if (capacity >= (strlen(c_str) + 1 + extra_chars)) return;
 
             size_t old_capacity = capacity;
-            capacity *= 2;
+            capacity = (capacity + extra_chars) * 2;
 
             char* new_string = (char*)calloc(capacity, 1);
             memcpy(new_string, c_str, old_capacity);

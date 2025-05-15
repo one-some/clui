@@ -45,6 +45,21 @@ void Terminal::init_terminal() {
         setsid();
         ioctl(slave_fd, TIOCSCTTY, 1);
 
+        struct termios terminal_attrs;
+
+        ASSERT(tcgetattr(slave_fd, &terminal_attrs) != -1, "termattr get error");
+
+        terminal_attrs.c_lflag |= ICANON;
+        terminal_attrs.c_lflag |= ECHO;
+        terminal_attrs.c_lflag |= ECHOE;
+        terminal_attrs.c_lflag |= ISIG;
+        terminal_attrs.c_oflag |= OPOST;
+        terminal_attrs.c_iflag |= ICRNL;
+
+        terminal_attrs.c_cc[VERASE] = '\b';
+
+        ASSERT(tcsetattr(slave_fd, TCSANOW, &terminal_attrs) != -1, "termattr write error");
+
         dup2(slave_fd, 0);  // STDIN
         dup2(slave_fd, 1);  // STDOUT
         dup2(slave_fd, 2);  // STDERR
@@ -97,8 +112,12 @@ void Terminal::handle_input() {
         keys.add_char(c);
     }
 
-    if (RayLib::IsKeyPressed(RayLib::KEY_ENTER)) {
+    if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
         keys.add_char('\n');
+    }
+
+    if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
+        keys.add_char('\b');
     }
 
     write(master_pty_fd, keys.as_c(), strlen(keys.as_c()));
