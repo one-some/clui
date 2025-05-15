@@ -16,6 +16,7 @@
 #include "UI/Stack/Stack.h"
 #include "tabcontainer.h"
 #include "fontglobal.h"
+#include "terminal.h"
 #include "UI/FileList/FileList.h"
 
 std::unique_ptr<RayLib::Font> Font::the_raw;
@@ -81,6 +82,10 @@ int main() {
 
     auto tabs = TabContainer();
     sidebar_cont.add_child(&tabs);
+
+    auto term = Terminal();
+    tabs.add_child(&term);
+    tabs.add_tab("Terminal");
 
     auto te1 = TextEdit("src/textedit.h");
     tabs.add_child(&te1);

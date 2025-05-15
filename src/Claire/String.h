@@ -73,12 +73,20 @@ class String {
             return String::hash(c_str);
         }
 
-        void append(char c) {
+        void add_char(char c) {
             expand_for(1);
 
             size_t len = strlen(c_str);
             c_str[len] = c;
             c_str[len + 1] = '\0';
+        }
+
+        void append(const char* text) {
+            if (!text[0]) return;
+
+            expand_for(strlen(text));
+            memmove(c_str + strlen(c_str), text, strlen(text));
+            c_str[strlen(c_str)] = '\0';
         }
 
         void insert(char c, size_t index) {

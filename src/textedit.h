@@ -24,9 +24,6 @@ class TextEdit : public Container {
         int32_t font_size_px = 16;
 
         virtual void draw_self();
-        void draw_text();
-        void process_input();
-        void draw_text_plain_jane();
         void move_caret(Vector2 delta);
         void save_to_file();
         static size_t str_index_from_vec2(const char* text, Vector2 vec);
@@ -42,6 +39,9 @@ class TextEdit : public Container {
     
     private:
         void on_click() override;
+        void process_input();
+        void draw_text();
+        void draw_text_plain_jane();
 
         Vector2 survey_position(size_t index);
 };

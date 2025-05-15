@@ -56,7 +56,7 @@ void CPPParser::parse() {
                 break;
         }
 
-        active_token.text.append(c);
+        active_token.text.add_char(c);
 
 
         // printf("Parsing lol %c\n", c);
