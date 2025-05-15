@@ -6,14 +6,14 @@
 #include "Claire/Assert.h"
 
 class File {
+    // FIXME: It look not so good./.....
     public:
-        // XXX
         File(const char* path) {
             this->path = path;
         }
 
         String read() {
-            fp = fopen(path, "rb");
+            FILE* fp = fopen(path, "rb");
             ASSERT(fp != NULL, "Couldn't open file");
 
             fseek(fp, 0, SEEK_END);
@@ -30,9 +30,17 @@ class File {
 
             return String(buf);
         }
+
+        void write(String content) {
+            FILE* fp = fopen(path, "rb");
+            ASSERT(fp != NULL, "Couldn't open file");
+
+            fprintf(fp, "%s", content.as_c());
+
+            fclose(fp);
+        }
     
     private:
         const char* path = "";
-        FILE* fp = nullptr;
         size_t length = 0;
 };

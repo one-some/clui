@@ -8,6 +8,8 @@
 class TextEdit : public Container {
     public:
         String text;
+        File file;
+
         //String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
         RayLib::Font font = Font::the();
 
@@ -15,6 +17,7 @@ class TextEdit : public Container {
         size_t caret_index = 0;
         int32_t caret_blink_timer = 0;
         CPPParser parser;
+        const char* path;
 
         int32_t font_size_px = 16;
 
@@ -23,12 +26,14 @@ class TextEdit : public Container {
         void process_input();
         void draw_text_plain_jane();
         void move_caret(Vector2 delta);
+        void save_to_file();
         static size_t str_index_from_vec2(const char* text, Vector2 vec);
 
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
-        TextEdit(char* path) {
-            text = File(path).read();
+        TextEdit(const char* path): file(path) {
+            this->path = path;
+            text = file.read();
             parser = CPPParser(&text);
             parser.parse();
         }

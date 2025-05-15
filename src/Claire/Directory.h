@@ -9,6 +9,16 @@
 #include "Claire/Assert.h"
 #include "Claire/String.h"
 
+enum DirectoryChildType {
+    TYPE_FILE,
+    TYPE_DIRECTORY,
+};
+
+struct DirectoryChild {
+    DirectoryChildType type;
+    String name;
+};
+
 class Directory {
     public:
         const char* path = "";
@@ -17,17 +27,20 @@ class Directory {
             this->path = path;
         }
 
-        std::vector<String> list() {
+        std::vector<DirectoryChild> list() {
             DIR* dp = opendir(path);
             ASSERT(dp, "Couldn't open directory");
 
             struct dirent* entry;
-            std::vector<String> out;
+            std::vector<DirectoryChild> out;
 
             while ((entry = readdir(dp)) != NULL) {
                 if (entry->d_name[0] == '.') continue;
                 //entry->d_type = DT_DIR
-                out.push_back(String(entry->d_name));
+                out.push_back({
+                    entry->d_type == DT_DIR ? DirectoryChildType::TYPE_DIRECTORY : DirectoryChildType::TYPE_FILE,
+                    String(entry->d_name),
+                });
             }
 
             closedir(dp);

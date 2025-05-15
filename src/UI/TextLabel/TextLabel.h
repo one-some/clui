@@ -5,13 +5,14 @@
 
 class TextLabel : public Container {
     public:
-        char* text = "Test";
+        const char* text = "Test";
         RayLib::Color color = RayLib::BLACK;
         float font_size = Font::the().baseSize;
 
         TextLabel(const char* _text) {
-            text = (char*) calloc(strlen(_text) + 1, 1);
-            strcpy(text, _text);
+            char* new_text = (char*) calloc(strlen(_text) + 1, 1);
+            strcpy(new_text, _text);
+            text = new_text;
             // this->text = _text;
         }
 

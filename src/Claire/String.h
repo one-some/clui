@@ -10,15 +10,15 @@
 class String {
     public:
         String() {
-            this->c_str = (char*)calloc(16, 1);
+            c_str = (char*)calloc(16, 1);
             capacity = 16;
         }
 
-        String(char* in_c_str) {
+        String(const char* in_c_str) {
             capacity = strlen(in_c_str) + 1;
-            this->c_str = (char*) malloc(capacity);
-            strcpy(this->c_str, in_c_str);
-            this->c_str[capacity - 1] = '\0';
+            c_str = (char*) malloc(capacity);
+            strcpy(c_str, in_c_str);
+            c_str[capacity - 1] = '\0';
         }
 
         ~String() {
@@ -57,7 +57,7 @@ class String {
             return strcmp(c_str, that.c_str) == 0;
         }
 
-        constexpr static u_int64_t hash(char* str) {
+        constexpr static u_int64_t hash(const char* str) {
             // djb2 by Dan Bernstein
             u_int64_t hash = 5381;
             int c = 0;

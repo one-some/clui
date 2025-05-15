@@ -1,3 +1,5 @@
+.SILENT:
+
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -Wall -std=c++17 -I./src -Wno-switch -g -fsanitize=address

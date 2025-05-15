@@ -58,12 +58,22 @@ void TextEdit::move_caret(Vector2 delta) {
 
     caret_position_px.graft(survey_position(caret_index));
     caret_blink_timer = 0;
+}
 
-    printf(" yeah whaterver lol\n");
+void TextEdit::save_to_file() {
+    file.write(text);
 }
 
 void TextEdit::process_input() {
     bool changes_made = false;
+
+    if (RayLib::IsKeyPressed(RayLib::KEY_S) && RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
+        // CTRL+S
+        printf("Save! %s\n", path);
+        save_to_file();
+        return;
+    }
+
 
     char c = '\0';
     while ((c = RayLib::GetCharPressed())) {
@@ -128,7 +138,7 @@ void TextEdit::draw_self() {
         pos.y,
         1,
         size->get().y,
-        RayLib::ColorAlpha(Colors::FG, 0.2)
+        RayLib::ColorAlpha(Colors::FG.to_ray(), 0.2)
     );
 
     draw_text();
@@ -139,7 +149,7 @@ void TextEdit::draw_self() {
             pos.y + caret_position_px.y,
             2,
             font_size_px,
-            Colors::FG
+            Colors::FG.to_ray()
         );
     }
 }
@@ -155,7 +165,7 @@ void TextEdit::draw_text_plain_jane() {
             { (float)pos.x + 4, (float)pos.y + (font_size_px * i) },
             (float)font_size_px,
             0,
-            Colors::FG
+            Colors::FG.to_ray()
         );
     }
 }
@@ -171,7 +181,7 @@ void TextEdit::draw_text() {
             continue;
         }
 
-        RayLib::Color color = Colors::FG;
+        RayLib::Color color = Colors::FG.to_ray();
 
         switch (node.type) {
             case TokenType::SYMBOL:

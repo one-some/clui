@@ -104,7 +104,7 @@ int main() {
         if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();
 
         RayLib::BeginDrawing();
-        RayLib::ClearBackground(Colors::BG);
+        RayLib::ClearBackground(Colors::BG.to_ray());
 
         // if (frames % 2 == 0) rect->position.x += 1;
 

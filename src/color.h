@@ -8,11 +8,18 @@ class Color {
         uint8_t g = 0;
         uint8_t b = 0;
 
-        Color(uint32_t color);
-        RayLib::Color to_ray();
+        Color(uint32_t color) {
+            b = color & 0xFF;
+            g = color >> 8 & 0xFF;
+            r = color >> 16 & 0xFF;
+        }
+
+        inline RayLib::Color to_ray() {
+            return { r, g, b, 0xFF };
+        }
 };
 
 namespace Colors {
-    extern RayLib::Color BG;
-    extern RayLib::Color FG;
+    inline auto BG = ::Color(0x000022);
+    inline auto FG = ::Color(0xFFF9A6);
 }

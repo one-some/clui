@@ -21,11 +21,11 @@ class FileList : public VStack {
 
             printf("Listing for '%s'\n", directory.path);
 
-            for (auto file_name : directory.list()) {
-                auto child = new TextLabel(file_name.as_c());
+            for (auto dir_child : directory.list()) {
+                auto child = new TextLabel(dir_child.name.as_c());
                 child->size->strategy_y = SizeStrategy::FORCE;
                 child->font_size = 16;
-                child->color = Colors::FG;
+                child->color = dir_child.type == DirectoryChildType::TYPE_DIRECTORY ? Colors::FG.to_ray() : RayLib::RED;
                 this->add_child(child);
             }
         }
