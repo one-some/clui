@@ -51,7 +51,6 @@ void Terminal::init_terminal() {
 
         terminal_attrs.c_lflag |= ICANON;
         terminal_attrs.c_lflag |= ECHO;
-        terminal_attrs.c_lflag |= ECHOE;
         terminal_attrs.c_lflag |= ISIG;
         terminal_attrs.c_oflag |= OPOST;
         terminal_attrs.c_iflag |= ICRNL;
@@ -66,7 +65,8 @@ void Terminal::init_terminal() {
 
         close(slave_fd);
 
-        execl("/bin/sh", "");
+        setenv("TERM", "dumb", 1);
+        execl("/bin/bash", "/bin/bash", "--norc", NULL);
         return;
     }
 
@@ -90,7 +90,7 @@ void Terminal::sync_pty() {
         if (!(fd_array[0].revents & POLLIN)) break;
 
         // Ok probably safe lol
-        read(master_pty_fd, buf, 1024);
+        read(master_pty_fd, buf, 1024 - 1);
         out.append(buf);
 
     }
@@ -98,8 +98,19 @@ void Terminal::sync_pty() {
     free(buf);
 
     if (out.as_c()[0]) {
-        printf("%s\n", out.as_c());
-        text.append(out.as_c());
+        for (size_t i = 0; i < strlen(out.as_c()); i++) {
+            char c = out.as_c()[i];
+
+            if (c == '\b') {
+                text.remove(strlen(text.as_c()) - 1);
+                continue;
+            }
+
+            if (c == '\r') continue;
+
+            text.add_char(c);
+        }
+        // text.append(out.as_c());
     }
     return;
 }
@@ -112,13 +123,9 @@ void Terminal::handle_input() {
         keys.add_char(c);
     }
 
-    if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
-        keys.add_char('\n');
-    }
-
-    if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
-        keys.add_char('\b');
-    }
+    if (RayLib::IsKeyTyped(RayLib::KEY_ENTER))      { keys.add_char('\n'); }
+    if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE))  { keys.add_char('\b'); }
+    if (RayLib::IsKeyTyped(RayLib::KEY_TAB))        { keys.add_char('\t'); }
 
     write(master_pty_fd, keys.as_c(), strlen(keys.as_c()));
 }

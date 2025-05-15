@@ -84,8 +84,6 @@ class String {
         void append(const char* text) {
             if (!text[0]) return;
 
-            printf("Append with size of %li\n", strlen(text));
-
             expand_for(strlen(text));
             memmove(c_str + strlen(c_str), text, strlen(text));
             c_str[strlen(c_str)] = '\0';
