@@ -7,7 +7,6 @@
 
 void Terminal::draw_self() {
     sync_pty();
-    handle_input();
     draw_text();
 }
 
@@ -114,7 +113,7 @@ void Terminal::sync_pty() {
     return;
 }
 
-void Terminal::handle_input() {
+void Terminal::on_input() {
     char c = '\0';
     String keys;
 

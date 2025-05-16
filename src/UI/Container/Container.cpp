@@ -1,5 +1,7 @@
 #include "UI/Container/Container.h"
 
+Container* Container::focused_element = nullptr;
+
 void Container::add_child(Container* child) {
     // TODO: Can't have parent already
     child->parent = this;
@@ -10,8 +12,12 @@ void Container::add_child(Container* child) {
 
 void Container::draw_tree() {
     Vector2 pos = position->get_global();
+
+    // TODO: Scissor optional
     RayLib::BeginScissorMode(pos.x, pos.y, size->get().x, size->get().y);
+
     draw_self();
+
     RayLib::EndScissorMode();
 
     for (const auto& child : children) {
@@ -31,7 +37,10 @@ void Container::propagate_mouse_motion(Vector2 pos) {
 }
 
 void Container::propagate_click() {
-    if (is_hovered()) on_click();
+    if (is_hovered()) {
+        Container::focused_element = this;
+        on_click();
+    }
 
     for (const auto& child : children) {
         child->propagate_click();

@@ -19,12 +19,17 @@ class Container {
         Container* parent = nullptr;
         std::vector<std::unique_ptr<Container>> children;
 
+        static Container* focused_element;
+
         virtual ~Container() { }
 
         void add_child(Container* child);
 
         void propagate_mouse_motion(Vector2 pos);
         void propagate_click();
+        virtual void on_input() { };
+
+        inline bool is_focused() { return Container::focused_element == this; }
 
         virtual void draw_tree();
         virtual void draw_self() { }
@@ -38,6 +43,7 @@ class Container {
             }
             return out;
         }
+
     
     protected:
         bool _is_hovered = false;

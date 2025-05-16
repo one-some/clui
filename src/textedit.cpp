@@ -64,7 +64,7 @@ void TextEdit::save_to_file() {
     file.write(text);
 }
 
-void TextEdit::process_input() {
+void TextEdit::on_input() {
     bool changes_made = false;
 
     if (RayLib::IsKeyPressed(RayLib::KEY_S) && RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
@@ -116,12 +116,10 @@ void TextEdit::process_input() {
     }
 
 
-    RayLib::GetCharPressed();
+    // RayLib::GetCharPressed();
 }
 
 void TextEdit::draw_self() {
-    process_input();
-
     caret_blink_timer++;
 
     bool caret_visible = true;
@@ -143,7 +141,7 @@ void TextEdit::draw_self() {
 
     draw_text();
 
-    if (caret_visible) {
+    if (caret_visible && is_focused()) {
         RayLib::DrawRectangle(
             pos.x + caret_position_px.x + 1,
             pos.y + caret_position_px.y,

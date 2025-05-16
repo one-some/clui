@@ -22,6 +22,6 @@ class Terminal : public Container {
         }
     
     private:
+        void on_input() override;
         void sync_pty();
-        void handle_input();
 };
