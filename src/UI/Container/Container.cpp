@@ -9,7 +9,10 @@ void Container::add_child(Container* child) {
 }
 
 void Container::draw_tree() {
+    Vector2 pos = position->get_global();
+    RayLib::BeginScissorMode(pos.x, pos.y, size->get().x, size->get().y);
     draw_self();
+    RayLib::EndScissorMode();
 
     for (const auto& child : children) {
         child->draw_tree();

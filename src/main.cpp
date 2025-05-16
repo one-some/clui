@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <ranges>
+#include <unistd.h>
 
 #include "UI/Container/Container.h"
 #include "textedit.h"
@@ -55,8 +56,19 @@ class ColorRect : public Container {
         }
 };
 
+void reload_self() {
+    printf("ROFL RELOAD\n");
+
+    char buf[1024];
+    ssize_t length = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+    ASSERT(length != -1, "Unable to read self exec link");
+    buf[length] = '\0';
+
+    printf("%s\n", buf);
+    execl(buf, buf, NULL);
+}
+
 int main() {
-    // SetConfigFlags(FLAG_WINDOW_UNDECORATED);
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
@@ -66,44 +78,47 @@ int main() {
     auto root = Container();
     root.size->set_raw({ 500, 500 });
 
-    auto stack = VStack();
-    stack.size->set_raw({300, 300});
-    stack.size->strategy_x = SizeStrategy::EXPAND;
-    stack.size->strategy_y = SizeStrategy::EXPAND;
-    root.add_child(&stack);
-
     auto sidebar_cont = HStack();
-    stack.add_child(&sidebar_cont);
+    sidebar_cont.size->strategy_x = SizeStrategy::EXPAND;
+    sidebar_cont.size->strategy_y = SizeStrategy::EXPAND;
+    root.add_child(&sidebar_cont);
 
-    auto file_list = FileList("./");
-    file_list.size->strategy_x = SizeStrategy::FORCE;
-    file_list.size->set_x(200);
-    sidebar_cont.add_child(&file_list);
+        auto file_list = FileList("./");
+        file_list.size->strategy_x = SizeStrategy::FORCE;
+        file_list.size->set_x(200);
+        sidebar_cont.add_child(&file_list);
 
-    auto tabs = TabContainer();
-    sidebar_cont.add_child(&tabs);
+        auto tabs_terminal_stack = VStack();
+        tabs_terminal_stack.size->strategy_x = SizeStrategy::EXPAND;
+        tabs_terminal_stack.size->strategy_y = SizeStrategy::EXPAND;
+        sidebar_cont.add_child(&tabs_terminal_stack);
 
-    auto term = Terminal();
-    tabs.add_child(&term);
-    tabs.add_tab("Terminal");
 
-    auto te1 = TextEdit("src/textedit.h");
-    tabs.add_child(&te1);
-    tabs.add_tab("textedit.h");
+            auto tabs = TabContainer();
+            tabs.size->strategy_x = SizeStrategy::EXPAND;
+            tabs_terminal_stack.add_child(&tabs);
 
-    auto te2 = TextEdit("src/textedit.cpp");
-    tabs.add_child(&te2);
-    tabs.add_tab("src/textedit.cpp");
+                auto te1 = TextEdit("src/textedit.h");
+                tabs.add_child(&te1);
+                tabs.add_tab("textedit.h");
 
-    auto sc3 = ColorRect();
-    sc3.color = Color(0x0000FF).to_ray();
-    sc3.size->strategy_y = SizeStrategy::FORCE;
-    sc3.size->set_y(20);
-    stack.add_child(&sc3);
+                auto te2 = TextEdit("src/textedit.cpp");
+                tabs.add_child(&te2);
+                tabs.add_tab("src/textedit.cpp");
+            
+            auto term = Terminal();
+            term.size->strategy_y = SizeStrategy::FORCE;
+            term.size->set_y(200);
+            tabs_terminal_stack.add_child(&term);
+
 
     while (!RayLib::WindowShouldClose()) {
         root.size->set_x(RayLib::GetRenderWidth());
         root.size->set_y(RayLib::GetRenderHeight());
+
+        if (RayLib::IsKeyPressed(RayLib::KEY_RIGHT_SHIFT)) {
+            reload_self();
+        }
 
         root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
         if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();

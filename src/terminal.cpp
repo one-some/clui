@@ -110,7 +110,6 @@ void Terminal::sync_pty() {
 
             text.add_char(c);
         }
-        // text.append(out.as_c());
     }
     return;
 }
