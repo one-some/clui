@@ -31,7 +31,7 @@ class TextEdit : public Container {
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
         TextEdit(const char* path): file(path) {
-            printf("Hello from crazy world...\n");
+            printf("Waiiit....Hello from crazy world...\n");
             this->path = path;
             text = file.read();
             parser = CPPParser(&text);

@@ -19,6 +19,7 @@
 #include "fontglobal.h"
 #include "terminal.h"
 #include "UI/FileList/FileList.h"
+#include <fcntl.h>
 
 std::unique_ptr<RayLib::Font> Font::the_raw;
 
@@ -56,19 +57,24 @@ class ColorRect : public Container {
         }
 };
 
-void reload_self() {
+void reload_self(int argc, char *argv[], char *envp[]) {
     printf("ROFL RELOAD\n");
 
-    char buf[1024];
-    ssize_t length = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
-    ASSERT(length != -1, "Unable to read self exec link");
-    buf[length] = '\0';
+    int fd = open("/proc/self/exe", O_RDONLY | O_CLOEXEC);
+    ASSERT(fd != -1, "Coudln't open self");
 
-    printf("%s\n", buf);
-    execl(buf, buf, NULL);
+    std::vector<char*> args;
+    for (size_t i = 0; i < argc;  i++) {
+        args.push_back(argv[i]);
+    }
+    args.push_back(NULL);
+
+    fexecve(fd, args.data(), envp);
+
+    ASSERT(false, "FAILED TO SHIFT EXEC");
 }
 
-int main() {
+int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
@@ -117,7 +123,7 @@ int main() {
         root.size->set_y(RayLib::GetRenderHeight());
 
         if (RayLib::IsKeyPressed(RayLib::KEY_RIGHT_SHIFT)) {
-            reload_self();
+            reload_self(argc, argv, envp);
         }
 
         root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
