@@ -20,6 +20,7 @@
 #include "terminal.h"
 #include "UI/FileList/FileList.h"
 #include <fcntl.h>
+#include "log.h"
 
 std::unique_ptr<RayLib::Font> Font::the_raw;
 
@@ -75,12 +76,16 @@ void reload_self(int argc, char *argv[], char *envp[]) {
 }
 
 int main(int argc, char *argv[], char *envp[]) {
+    LogContainer::swallow_stdout();
+
+    printf("Hello\n");
+
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
     RayLib::SetTargetFPS(60);
     uint64_t frames = 0;
-
+    
     auto root = Container();
     root.size->set_raw({ 500, 500 });
 
@@ -112,10 +117,18 @@ int main(int argc, char *argv[], char *envp[]) {
                 tabs.add_child(&te2);
                 tabs.add_tab("src/textedit.cpp");
             
-            auto term = Terminal();
-            term.size->strategy_y = SizeStrategy::FORCE;
-            term.size->set_y(200);
-            tabs_terminal_stack.add_child(&term);
+            auto bottom_tabs = TabContainer();
+            bottom_tabs.size->strategy_y = SizeStrategy::FORCE;
+            bottom_tabs.size->set_y(200);
+            tabs_terminal_stack.add_child(&bottom_tabs);
+
+                auto term = Terminal();
+                bottom_tabs.add_child(&term);
+                bottom_tabs.add_tab("Terminal");
+
+                auto log = LogContainer();
+                bottom_tabs.add_child(&log);
+                bottom_tabs.add_tab("Babble");
 
 
     while (!RayLib::WindowShouldClose()) {
@@ -141,6 +154,9 @@ int main(int argc, char *argv[], char *envp[]) {
         root.draw_tree();
 
         RayLib::EndDrawing();
+
+        LogContainer::flush_stdout();
+
         frames++;
     }
 
