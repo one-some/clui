@@ -9,3 +9,8 @@ inline void ASSERT(bool condition, const char* message) {
     printf("Assertion failed! :: %s", message);
     exit(1);
 }
+
+inline void ASSERT_NOT_REACHED(const char* message) {
+    printf("Assertion reached! :: %s", message);
+    exit(1);
+}

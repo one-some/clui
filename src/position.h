@@ -2,13 +2,23 @@
 #include <cstdint>
 
 #include "vector2.h"
+#include "Claire/BitEnum.h"
 
 // HACK
 class Container;
 
-enum PositionStrategy {
-    RELATIVE,
+enum class XPositionStrategy {
+    RAW,
     CENTER,
+    LEFT,
+    RIGHT,
+};
+
+enum class YPositionStrategy {
+    RAW,
+    CENTER,
+    TOP,
+    BOTTOM,
 };
 
 class Position {
@@ -17,7 +27,8 @@ class Position {
             this->owner = owner;
         }
 
-        PositionStrategy strategy = PositionStrategy::RELATIVE;
+        XPositionStrategy x_strategy = XPositionStrategy::RAW;
+        YPositionStrategy y_strategy = YPositionStrategy::RAW;
 
         Vector2 get_local();
         Vector2 get_global();

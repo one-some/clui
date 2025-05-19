@@ -7,13 +7,12 @@ class Button : public Container {
     public:
         std::function<void()> callback_on_click;
 
-        void draw_tree() override {
-            // Override draw_tree to change order..... a bit hacky
+    private:
+        void on_click() override {
+            if (callback_on_click) callback_on_click();
+        }
 
-            for (const auto &child : children) {
-                child->draw_tree();
-            }
-
+        void post_draw_tree() override {
             if (!is_hovered()) return;
             
             bool mouse_held = RayLib::IsMouseButtonDown(0);
@@ -23,8 +22,4 @@ class Button : public Container {
             RayLib::DrawRectangle(pos.x, pos.y, size->get().x, size->get().y, RayLib::ColorAlpha(RayLib::BLACK, alpha));
         }
         
-    private:
-        void on_click() override {
-            if (callback_on_click) callback_on_click();
-        }
 };

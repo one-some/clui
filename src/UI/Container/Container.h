@@ -51,4 +51,7 @@ class Container {
         virtual void on_hover_change(bool is_hovered) { };
         virtual void on_child_added(Container* child) { };
         virtual void on_click() { };
+
+        virtual void pre_draw_tree() { };
+        virtual void post_draw_tree() { };
 };

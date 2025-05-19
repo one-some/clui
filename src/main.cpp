@@ -65,7 +65,7 @@ void reload_self(int argc, char *argv[], char *envp[]) {
     ASSERT(fd != -1, "Coudln't open self");
 
     std::vector<char*> args;
-    for (size_t i = 0; i < argc;  i++) {
+    for (int i = 0; i < argc;  i++) {
         args.push_back(argv[i]);
     }
     args.push_back(NULL);
@@ -111,11 +111,11 @@ int main(int argc, char *argv[], char *envp[]) {
 
                 auto te1 = TextEdit("src/textedit.h");
                 tabs.add_child(&te1);
-                tabs.add_tab("textedit.h");
+                tabs.add_tab("textedit.h", true);
 
                 auto te2 = TextEdit("src/textedit.cpp");
                 tabs.add_child(&te2);
-                tabs.add_tab("src/textedit.cpp");
+                tabs.add_tab("src/textedit.cpp", true);
             
             auto bottom_tabs = TabContainer();
             bottom_tabs.size->strategy_y = SizeStrategy::FORCE;

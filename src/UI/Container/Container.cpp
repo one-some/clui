@@ -1,3 +1,5 @@
+// #define DEBUG_DRAW
+
 #include "UI/Container/Container.h"
 
 Container* Container::focused_element = nullptr;
@@ -11,10 +13,17 @@ void Container::add_child(Container* child) {
 }
 
 void Container::draw_tree() {
+    pre_draw_tree();
+
     Vector2 pos = position->get_global();
 
     // TODO: Scissor optional
     RayLib::BeginScissorMode(pos.x, pos.y, size->get().x, size->get().y);
+
+#ifdef DEBUG_DRAW
+    Vector2 s = size->get();
+    RayLib::DrawRectangleLines(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x88});
+#endif
 
     draw_self();
 
@@ -23,6 +32,8 @@ void Container::draw_tree() {
     for (const auto& child : children) {
         child->draw_tree();
     }
+
+    post_draw_tree();
 }
 
 void Container::propagate_mouse_motion(Vector2 pos) {

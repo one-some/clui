@@ -10,7 +10,7 @@
 
 class TabContainer : public VStack {
     public:
-        HStack tab_button_stack;
+        Container tab_button_stack;
 
         TabContainer() {
             tab_button_stack.size->set_y(30);
@@ -18,7 +18,7 @@ class TabContainer : public VStack {
             add_child(&tab_button_stack);
         }
 
-        void add_tab(const char* label);
+        void add_tab(const char* label, bool allow_close = false);
 
         void draw_tree() override {
             draw_self();

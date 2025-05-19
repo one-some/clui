@@ -16,11 +16,15 @@ class TextLabel : public Container {
             // this->text = _text;
         }
 
+        Vector2 text_bounds() {
+            auto text_size = RayLib::MeasureTextEx(Font::the(), text, font_size, 1);
+            return Vector2::from_ray(text_size);
+        }
+
         void draw_self() override {
             Vector2 pos = position->get_global();
 
-            auto text_size = RayLib::MeasureTextEx(Font::the(), text, font_size, 1);
-            size->set_raw(Vector2::from_ray(text_size));
+            size->set_raw(text_bounds());
 
             RayLib::DrawTextEx(
                 Font::the(),
