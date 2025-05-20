@@ -1,14 +1,23 @@
 #include "tabcontainer.h"
 #include "UI/TextLabel/TextLabel.h"
 
-void TabContainer::add_tab(const char* label, bool allow_close) {
+void TabContainer::add_tab(const char* label, Container* view, bool allow_close) {
+    add_child(view);
+
     uint32_t x_offset = 0;
 
     for (auto child : tab_button_stack.visible_children()) {
         x_offset += child->size->get().x;
     }
 
-    Button* button = new Button();
+
+    tabs.push_back(std::make_unique<Tab>(
+        label,
+        view
+    ));
+
+    Tab& tab = *(tabs.back());
+
     TextLabel* lab = new TextLabel(label);
 
     lab->position->x_strategy = XPositionStrategy::CENTER;
@@ -16,11 +25,10 @@ void TabContainer::add_tab(const char* label, bool allow_close) {
     lab->color = RayLib::WHITE;
     lab->font_size = 16;
 
-    button->position->set_x(x_offset);
-    button->size->set_y(tab_button_stack.size->get().y);
+    tab.button.position->set_x(x_offset);
+    tab.button.size->set_y(tab_button_stack.size->get().y);
 
     uint32_t x_padding = 24;
-    uint32_t our_idx = tab_button_stack.children.size();
 
     if (allow_close) {
         Button* close_button = new Button();
@@ -36,21 +44,33 @@ void TabContainer::add_tab(const char* label, bool allow_close) {
         close_button->position->x_strategy = XPositionStrategy::RIGHT;
         close_button->position->y_strategy = YPositionStrategy::CENTER;
 
-        close_button->callback_on_click = [our_idx] {
-            close_tab(our_idx);
+        close_button->callback_on_click = [this, &tab] {
+            if (this->active_tab == &tab) {
+                // TODO: Select next
+                this->active_tab = nullptr;
+            }
+
+            tabs.erase(std::remove_if(
+                tabs.begin(),
+                tabs.end(),
+                [&tab](const std::unique_ptr<Tab>& t) {
+                    return t.get() == &tab;
+                }),
+            tabs.end());
+            // tab dangles after here.... duh
         };
 
         close_button->add_child(x);
-        button->add_child(close_button);
+        tab.button.add_child(close_button);
         x_padding += 32;
     }
 
-    button->size->set_x(lab->text_bounds().x + x_padding);
+    tab.button.size->set_x(lab->text_bounds().x + x_padding);
 
-    button->callback_on_click = [=] {
-        focus_tab(our_idx);
+    tab.button.callback_on_click = [this, &tab] {
+        this->active_tab = &tab;
     };
 
-    button->add_child(lab);
-    tab_button_stack.add_child(button);
+    tab.button.add_child(lab);
+    tab_button_stack.add_child(&tab.button);
 }

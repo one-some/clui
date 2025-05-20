@@ -110,12 +110,10 @@ int main(int argc, char *argv[], char *envp[]) {
             tabs_terminal_stack.add_child(&tabs);
 
                 auto te1 = TextEdit("src/textedit.h");
-                tabs.add_child(&te1);
-                tabs.add_tab("textedit.h", true);
+                tabs.add_tab("textedit.h", &te1, true);
 
                 auto te2 = TextEdit("src/textedit.cpp");
-                tabs.add_child(&te2);
-                tabs.add_tab("src/textedit.cpp", true);
+                tabs.add_tab("src/textedit.cpp", &te2, true);
             
             auto bottom_tabs = TabContainer();
             bottom_tabs.size->strategy_y = SizeStrategy::FORCE;
@@ -123,12 +121,10 @@ int main(int argc, char *argv[], char *envp[]) {
             tabs_terminal_stack.add_child(&bottom_tabs);
 
                 auto term = Terminal();
-                bottom_tabs.add_child(&term);
-                bottom_tabs.add_tab("Terminal");
+                bottom_tabs.add_tab("Terminal", &term);
 
                 auto log = LogContainer();
-                bottom_tabs.add_child(&log);
-                bottom_tabs.add_tab("Babble");
+                bottom_tabs.add_tab("Babble", &log);
 
 
     while (!RayLib::WindowShouldClose()) {
