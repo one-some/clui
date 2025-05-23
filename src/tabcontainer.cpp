@@ -17,6 +17,7 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
     ));
 
     Tab& tab = *(tabs.back());
+    if (!active_tab) active_tab = tabs.back().get();
 
     TextLabel* lab = new TextLabel(label);
 
