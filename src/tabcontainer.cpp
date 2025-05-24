@@ -10,6 +10,7 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
         x_offset += child->size->get().x;
     }
 
+    std::unique_ptr<Button> button = std::make_unique<Button>();
 
     tabs.push_back(std::make_unique<Tab>(
         label,
@@ -26,8 +27,8 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
     lab->color = RayLib::WHITE;
     lab->font_size = 16;
 
-    tab.button.position->set_x(x_offset);
-    tab.button.size->set_y(tab_button_stack.size->get().y);
+    button->position->set_x(x_offset);
+    button->size->set_y(tab_button_stack.size->get().y);
 
     uint32_t x_padding = 24;
 
@@ -45,19 +46,22 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
         close_button->position->x_strategy = XPositionStrategy::RIGHT;
         close_button->position->y_strategy = YPositionStrategy::CENTER;
 
-        close_button->callback_on_click = [this, &tab] {
+        close_button->callback_on_click = [this, &tab, &button] {
+            printf("Free the damn thing\n");
             if (this->active_tab == &tab) {
                 // TODO: Select next
                 this->active_tab = nullptr;
             }
 
+            tab_button_stack.remove_child(button);
             tabs.erase(std::remove_if(
                 tabs.begin(),
                 tabs.end(),
                 [&tab](const std::unique_ptr<Tab>& t) {
                     return t.get() == &tab;
                 }),
-            tabs.end());
+                tabs.end()
+            );
             // tab dangles after here.... duh
         };
 

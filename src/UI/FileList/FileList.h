@@ -22,11 +22,11 @@ class FileList : public VStack {
             printf("Listing for '%s'\n", directory.path);
 
             for (auto dir_child : directory.list()) {
-                auto child = new TextLabel(dir_child.name.as_c());
+                std::unique_ptr<TextLabel> child = std::make_unique<TextLabel>(dir_child.name.as_c());
                 child->size->strategy_y = SizeStrategy::FORCE;
                 child->font_size = 16;
                 child->color = dir_child.type == DirectoryChildType::TYPE_DIRECTORY ? Colors::FG.to_ray() : RayLib::RED;
-                this->add_child(child);
+                this->add_child(std::move(child));
             }
         }
 };

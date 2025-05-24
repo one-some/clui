@@ -12,7 +12,7 @@ class Stack : public Container {
     protected:
         virtual void reposition_children() = 0;
 
-        void on_child_added(Container* child) override {
+        void on_child_added(std::unique_ptr<Container>& child) override {
             reposition_children();
         }
 };

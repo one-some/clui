@@ -23,7 +23,8 @@ class Container {
 
         virtual ~Container() { }
 
-        void add_child(Container* child);
+        void add_child(std::unique_ptr<Container> child);
+        void remove_child(std::unique_ptr<Container> child);
 
         void propagate_mouse_motion(Vector2 pos);
         void propagate_click();
@@ -49,7 +50,7 @@ class Container {
         bool _is_hovered = false;
 
         virtual void on_hover_change(bool is_hovered) { };
-        virtual void on_child_added(Container* child) { };
+        virtual void on_child_added(std::unique_ptr<Container>& child) { };
         virtual void on_click() { };
 
         virtual void pre_draw_tree() { };

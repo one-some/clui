@@ -2,6 +2,7 @@
 #include <functional>
 #include "UI/Container/Container.h"
 #include "Dep/raylib.h"
+#include "FrameManager/FrameManager.h"
 
 class Button : public Container {
     public:
@@ -9,7 +10,9 @@ class Button : public Container {
 
     private:
         void on_click() override {
-            if (callback_on_click) callback_on_click();
+            if (callback_on_click) {
+                FrameManager::queue_operation(callback_on_click);
+            }
         }
 
         void post_draw_tree() override {

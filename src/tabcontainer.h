@@ -11,7 +11,6 @@
 class Tab {
     public:
         const char* label;
-        Button button;
         Container* view;
 
         Tab(const char* _label, Container* _view): label(_label), view(_view) {
@@ -23,7 +22,7 @@ class TabContainer : public VStack {
         TabContainer() {
             tab_button_stack.size->set_y(30);
             tab_button_stack.size->strategy_y = SizeStrategy::FORCE;
-            add_child(&tab_button_stack);
+            add_child(std::make_unique<Container>(tab_button_stack));
         }
 
         void add_tab(const char* label, Container* view, bool allow_close = false);

@@ -1,17 +1,22 @@
 #include "log.h"
 #include "color.h"
 
+#define DONT_EAT_LOG
+
 int LogContainer::outfd = -1;
 std::vector<const char*> LogContainer::output_lines;
 
 void LogContainer::swallow_stdout() {
+#ifndef DONT_EAT_LOG
     // It begins....
     outfd = memfd_create("clog", 0);
     fflush(stdout);
     dup2(outfd, STDOUT_FILENO);
+#endif
 }
 
 void LogContainer::flush_stdout() {
+#ifndef DONT_EAT_LOG
     fflush(stdout);
 
     struct stat sb;
@@ -32,6 +37,7 @@ void LogContainer::flush_stdout() {
 
     ASSERT(ftruncate(outfd, 0) != -1, "BAD FTRUNCATE");
     ASSERT(lseek(outfd, 0, SEEK_SET) != -1, "BAD LSEEK");
+#endif
 }
 
 void LogContainer::draw_self() {

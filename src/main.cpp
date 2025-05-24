@@ -7,6 +7,7 @@
 #include <memory>
 #include <ranges>
 #include <unistd.h>
+#include "FrameManager/FrameManager.h"
 
 #include "UI/Container/Container.h"
 #include "textedit.h"
@@ -135,6 +136,7 @@ int main(int argc, char *argv[], char *envp[]) {
             reload_self(argc, argv, envp);
         }
 
+        printf("Root mouse propagation\n");
         root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
         if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();
 
@@ -151,6 +153,7 @@ int main(int argc, char *argv[], char *envp[]) {
 
         RayLib::EndDrawing();
 
+        FrameManager::run_queued_operations();
         LogContainer::flush_stdout();
 
         frames++;
