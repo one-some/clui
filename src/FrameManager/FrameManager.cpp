@@ -9,10 +9,8 @@ void FrameManager::queue_operation(std::function<void()> operation) {
 
 void FrameManager::run_queued_operations() {
     for (auto& operation : queued_operations) {
-        printf("Running queuedd....\n");
         operation();
     }
 
     queued_operations.clear();
-    printf("Done\n");
 }

@@ -20,17 +20,20 @@ class Tab {
 class TabContainer : public VStack {
     public:
         TabContainer() {
-            tab_button_stack.size->set_y(30);
-            tab_button_stack.size->strategy_y = SizeStrategy::FORCE;
-            add_child(std::make_unique<Container>(tab_button_stack));
+            auto unique_tabs = std::make_unique<Container>();
+            unique_tabs->size->set_y(30);
+            unique_tabs->size->strategy_y = SizeStrategy::FORCE;
+
+            tab_button_stack = unique_tabs.get();
+            add_child(std::move(unique_tabs));
         }
 
-        void add_tab(const char* label, Container* view, bool allow_close = false);
+        void add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close = false);
 
         void draw_tree() override {
             draw_self();
 
-            tab_button_stack.draw_tree();
+            tab_button_stack->draw_tree();
 
             if (!active_tab) return;
             active_tab->view->draw_tree();
@@ -49,7 +52,7 @@ class TabContainer : public VStack {
         }
 
     private:
-        Container tab_button_stack;
+        Container* tab_button_stack;
         std::vector<std::unique_ptr<Tab>> tabs;
         Tab* active_tab = nullptr;
 };

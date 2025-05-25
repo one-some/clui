@@ -90,42 +90,36 @@ int main(int argc, char *argv[], char *envp[]) {
     auto root = Container();
     root.size->set_raw({ 500, 500 });
 
-    auto sidebar_cont = HStack();
-    sidebar_cont.size->strategy_x = SizeStrategy::EXPAND;
-    sidebar_cont.size->strategy_y = SizeStrategy::EXPAND;
-    root.add_child(&sidebar_cont);
+    auto sidebar_cont = root.create_child<HStack>();
+    sidebar_cont->size->strategy_x = SizeStrategy::EXPAND;
+    sidebar_cont->size->strategy_y = SizeStrategy::EXPAND;
 
-        auto file_list = FileList("./");
-        file_list.size->strategy_x = SizeStrategy::FORCE;
-        file_list.size->set_x(200);
-        sidebar_cont.add_child(&file_list);
+        auto file_list = sidebar_cont->create_child<FileList>("./");
+        file_list->size->strategy_x = SizeStrategy::FORCE;
+        file_list->size->set_x(200);
 
-        auto tabs_terminal_stack = VStack();
-        tabs_terminal_stack.size->strategy_x = SizeStrategy::EXPAND;
-        tabs_terminal_stack.size->strategy_y = SizeStrategy::EXPAND;
-        sidebar_cont.add_child(&tabs_terminal_stack);
+        auto tabs_terminal_stack = sidebar_cont->create_child<VStack>();
+        tabs_terminal_stack->size->strategy_x = SizeStrategy::EXPAND;
+        tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND;
 
+            auto tabs = tabs_terminal_stack->create_child<TabContainer>();
+            tabs->size->strategy_x = SizeStrategy::EXPAND;
 
-            auto tabs = TabContainer();
-            tabs.size->strategy_x = SizeStrategy::EXPAND;
-            tabs_terminal_stack.add_child(&tabs);
+                auto te1 = std::make_unique<TextEdit>("src/textedit.h");
+                tabs->add_tab("textedit.h", std::move(te1), true);
 
-                auto te1 = TextEdit("src/textedit.h");
-                tabs.add_tab("textedit.h", &te1, true);
-
-                auto te2 = TextEdit("src/textedit.cpp");
-                tabs.add_tab("src/textedit.cpp", &te2, true);
+                auto te2 = std::make_unique<TextEdit>("src/textedit.cpp");
+                tabs->add_tab("src/textedit.cpp", std::move(te2), true);
             
-            auto bottom_tabs = TabContainer();
-            bottom_tabs.size->strategy_y = SizeStrategy::FORCE;
-            bottom_tabs.size->set_y(200);
-            tabs_terminal_stack.add_child(&bottom_tabs);
+            auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
+            bottom_tabs->size->strategy_y = SizeStrategy::FORCE;
+            bottom_tabs->size->set_y(200);
 
-                auto term = Terminal();
-                bottom_tabs.add_tab("Terminal", &term);
+                auto term = std::make_unique<Terminal>();
+                bottom_tabs->add_tab("Terminal", std::move(term));
 
-                auto log = LogContainer();
-                bottom_tabs.add_tab("Babble", &log);
+                auto log = std::make_unique<LogContainer>();
+                bottom_tabs->add_tab("Babble", std::move(log));
 
 
     while (!RayLib::WindowShouldClose()) {
@@ -136,7 +130,6 @@ int main(int argc, char *argv[], char *envp[]) {
             reload_self(argc, argv, envp);
         }
 
-        printf("Root mouse propagation\n");
         root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
         if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();
 

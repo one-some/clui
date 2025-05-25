@@ -1,24 +1,28 @@
 // #define DEBUG_DRAW
 
+#include "Claire/Assert.h"
 #include "UI/Container/Container.h"
 #include <functional>
 
 Container* Container::focused_element = nullptr;
 
-void Container::add_child(std::unique_ptr<Container> child) {
+Container* Container::add_child(std::unique_ptr<Container> child) {
+    ASSERT(!!child, "Gimmie");
+
     // TODO: Can't have parent already
     child->parent = this;
     children.push_back(std::move(child));
 
     on_child_added(children.back());
+    return children.back().get();
 }
 
-void Container::remove_child(std::unique_ptr<Container> child) {
+void Container::remove_child(Container* child) {
     children.erase(std::remove_if(
         children.begin(),
         children.end(),
         [&child](const std::unique_ptr<Container>& maybe_child) {
-            return maybe_child == child;
+            return maybe_child.get() == child;
         }),
         children.end()
     );
@@ -50,7 +54,6 @@ void Container::draw_tree() {
 
 void Container::propagate_mouse_motion(Vector2 pos) {
     // Update mouse
-    printf("YEA IIM PROPMOUSE\n");
     bool in = pos.in_rectangle(position->get_global(), size->get());
     _is_hovered = in;
     on_hover_change(_is_hovered);

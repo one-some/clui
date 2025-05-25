@@ -23,8 +23,18 @@ class Container {
 
         virtual ~Container() { }
 
-        void add_child(std::unique_ptr<Container> child);
-        void remove_child(std::unique_ptr<Container> child);
+        Container* add_child(std::unique_ptr<Container> child);
+        void remove_child(Container* child);
+
+        template<typename T, typename... Args>
+        T* create_child(Args&&... args) {
+            static_assert(std::is_base_of<Container, T>::value, "Cant create whatever that is as a child");
+
+            auto new_child = std::make_unique<T>(std::forward<Args>(args)...);
+            T* raw_ptr = new_child.get();
+            add_child(std::move(new_child));
+            return raw_ptr;
+        }
 
         void propagate_mouse_motion(Vector2 pos);
         void propagate_click();

@@ -1,40 +1,36 @@
 #include "tabcontainer.h"
 #include "UI/TextLabel/TextLabel.h"
 
-void TabContainer::add_tab(const char* label, Container* view, bool allow_close) {
-    add_child(view);
-
-    uint32_t x_offset = 0;
-
-    for (auto child : tab_button_stack.visible_children()) {
-        x_offset += child->size->get().x;
-    }
-
-    std::unique_ptr<Button> button = std::make_unique<Button>();
-
+void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close) {
     tabs.push_back(std::make_unique<Tab>(
         label,
-        view
+        view.get()
     ));
+    add_child(std::move(view));
 
     Tab& tab = *(tabs.back());
     if (!active_tab) active_tab = tabs.back().get();
 
-    TextLabel* lab = new TextLabel(label);
+    uint32_t x_offset = 0;
+    for (auto child : tab_button_stack->visible_children()) {
+        x_offset += child->size->get().x;
+    }
 
+    auto button = tab_button_stack->create_child<Button>();
+    button->position->set_x(x_offset);
+    button->size->set_y(tab_button_stack->size->get().y);
+
+    auto lab = button->create_child<TextLabel>(label);
     lab->position->x_strategy = XPositionStrategy::CENTER;
     lab->position->y_strategy = YPositionStrategy::CENTER;
     lab->color = RayLib::WHITE;
     lab->font_size = 16;
 
-    button->position->set_x(x_offset);
-    button->size->set_y(tab_button_stack.size->get().y);
-
     uint32_t x_padding = 24;
 
     if (allow_close) {
-        Button* close_button = new Button();
-        TextLabel* x = new TextLabel("X");
+        auto close_button = button->create_child<Button>();
+        auto x = close_button->create_child<TextLabel>("X");
 
         x->color = RayLib::GRAY;
         x->font_size = 16;
@@ -53,7 +49,7 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
                 this->active_tab = nullptr;
             }
 
-            tab_button_stack.remove_child(button);
+            tab_button_stack->remove_child(button);
             tabs.erase(std::remove_if(
                 tabs.begin(),
                 tabs.end(),
@@ -65,17 +61,12 @@ void TabContainer::add_tab(const char* label, Container* view, bool allow_close)
             // tab dangles after here.... duh
         };
 
-        close_button->add_child(x);
-        tab.button.add_child(close_button);
         x_padding += 32;
     }
 
-    tab.button.size->set_x(lab->text_bounds().x + x_padding);
+    button->size->set_x(lab->text_bounds().x + x_padding);
 
-    tab.button.callback_on_click = [this, &tab] {
+    button->callback_on_click = [this, &tab] {
         this->active_tab = &tab;
     };
-
-    tab.button.add_child(lab);
-    tab_button_stack.add_child(&tab.button);
 }
