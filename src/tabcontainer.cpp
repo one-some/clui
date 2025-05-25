@@ -42,7 +42,7 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
         close_button->position->x_strategy = XPositionStrategy::RIGHT;
         close_button->position->y_strategy = YPositionStrategy::CENTER;
 
-        close_button->callback_on_click = [this, &tab, &button] {
+        close_button->callback_on_click = [this, &tab, button] {
             printf("Free the damn thing\n");
             if (this->active_tab == &tab) {
                 // TODO: Select next
@@ -50,6 +50,7 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
             }
 
             tab_button_stack->remove_child(button);
+
             tabs.erase(std::remove_if(
                 tabs.begin(),
                 tabs.end(),
@@ -58,7 +59,6 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
                 }),
                 tabs.end()
             );
-            // tab dangles after here.... duh
         };
 
         x_padding += 32;
