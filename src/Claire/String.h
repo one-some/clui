@@ -85,6 +85,11 @@ class String {
 
         u_int64_t hash() {
             return String::hash(c_str);
+        
+        }
+        
+        size_t length() {
+            return strlen(c_str);
         }
 
         void add_char(char c) {

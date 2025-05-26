@@ -24,6 +24,34 @@ void Terminal::draw_text() {
             Colors::FG.to_ray()
         );
     }
+
+    caret_blink_timer++;
+
+    // Sleepy. I think this can be made more beautiful.
+    bool caret_visible = true;
+    if (caret_blink_timer > CARET_BLINK_DURATION) {
+        caret_blink_timer = 0;
+    } else if (caret_blink_timer > CARET_BLINK_DURATION / 2) {
+        caret_visible = false;
+    }
+
+    if (caret_visible && is_focused()) {
+        // TODO: Wht tf is this every frame whyyyyyyyyyy
+        RayLib::Vector2 mono_size = RayLib::MeasureTextEx(
+            font,
+            "s",
+            font_size_px,
+            0
+        );
+
+        RayLib::DrawRectangle(
+            pos.x + (mono_size.x * lines.back().length()) + 4,
+            pos.y + (mono_size.y * (lines.size() - 1)),
+            mono_size.x,
+            mono_size.y,
+            Colors::FG.to_ray()
+        );
+    }
 }
 
 void Terminal::init_terminal() {
@@ -106,6 +134,12 @@ void Terminal::sync_pty() {
             }
 
             if (c == '\r') continue;
+
+            if (c == '\n') {
+                caret_pos = 0;
+            } else {
+                caret_pos++;
+            }
 
             text.add_char(c);
         }

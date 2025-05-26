@@ -5,21 +5,23 @@
 
 class Terminal : public Container {
     public:
+        static const int32_t CARET_BLINK_DURATION = 530 / 8;
+
         String text;
         int master_pty_fd = -1;
 
         RayLib::Font font = Font::the();
         int32_t font_size_px = 16;
-
-        virtual void draw_self();
-        void draw_text();
-        void init_terminal();
-
-        static const int32_t CARET_BLINK_DURATION = 530 / 8;
+        int32_t caret_blink_timer = 0;
+        uint32_t caret_pos = 0;
 
         Terminal() {
             init_terminal();
         }
+
+        virtual void draw_self();
+        void draw_text();
+        void init_terminal();
     
     private:
         void on_input() override;
