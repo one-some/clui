@@ -21,7 +21,14 @@ class String {
             c_str[capacity - 1] = '\0';
         }
 
-        static String move_from(const char* in_c_str) {
+        static char* copy_c_str(const char* in_c_str) {
+            char* c_str = (char*) malloc(strlen(in_c_str + 1));
+            strcpy(c_str, in_c_str);
+            c_str[strlen(in_c_str)] = '\0';
+            return c_str;
+        }
+
+        static String move_from(char* in_c_str) {
             String out;
             out.capacity = strlen(in_c_str) + 1;
             out.c_str = (char*)std::move(in_c_str);

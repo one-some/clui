@@ -1,23 +1,20 @@
 #pragma once
 #include "UI/Container/Container.h"
 #include "fontglobal.h"
-#include <cstring>
+#include "Claire/String.h"
 
 class TextLabel : public Container {
     public:
-        const char* text = "Test";
+        String text;
         RayLib::Color color = RayLib::BLACK;
         float font_size = Font::the().baseSize;
 
         TextLabel(const char* _text) {
-            char* new_text = (char*) calloc(strlen(_text) + 1, 1);
-            strcpy(new_text, _text);
-            text = new_text;
-            // this->text = _text;
+            text = String(_text);
         }
 
         Vector2 text_bounds() {
-            auto text_size = RayLib::MeasureTextEx(Font::the(), text, font_size, 1);
+            auto text_size = RayLib::MeasureTextEx(Font::the(), text.as_c(), font_size, 1);
             return Vector2::from_ray(text_size);
         }
 
@@ -28,7 +25,7 @@ class TextLabel : public Container {
 
             RayLib::DrawTextEx(
                 Font::the(),
-                text,
+                text.as_c(),
                 { (float)pos.x, (float)pos.y },
                 font_size,
                 1,
