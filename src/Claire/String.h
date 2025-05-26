@@ -21,6 +21,13 @@ class String {
             c_str[capacity - 1] = '\0';
         }
 
+        static String move_from(const char* in_c_str) {
+            String out;
+            out.capacity = strlen(in_c_str) + 1;
+            out.c_str = (char*)std::move(in_c_str);
+            return out;
+        }
+
         ~String() {
             free(c_str);
         }
@@ -118,7 +125,7 @@ class String {
 
                     new_string[new_len] = '\0';
                     substring_start = i + 1;
-                    out.push_back(String(new_string));
+                    out.push_back(String::move_from(new_string));
 
                 }
 

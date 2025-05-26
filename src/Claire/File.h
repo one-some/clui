@@ -28,7 +28,7 @@ class File {
             buf[length] = '\0';
             fclose(fp);
 
-            return String(buf);
+            return String::move_from(buf);
         }
 
         void write(String content) {

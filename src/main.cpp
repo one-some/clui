@@ -23,7 +23,7 @@
 #include <fcntl.h>
 #include "log.h"
 
-std::unique_ptr<RayLib::Font> Font::the_raw;
+std::unique_ptr<RayLib::Font, RLFontDeleter> Font::the_raw;
 
 class TextureRect : public Container {
     public:

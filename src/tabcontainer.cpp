@@ -1,6 +1,14 @@
 #include "tabcontainer.h"
 #include "UI/TextLabel/TextLabel.h"
 
+void TabContainer::recalculate_tab_positions() {
+    uint32_t x_offset = 0;
+    for (auto child : tab_button_stack->visible_children()) {
+        child->position->set_x(x_offset);
+        x_offset += child->size->get().x;
+    }
+}
+
 void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close) {
     tabs.push_back(std::make_unique<Tab>(
         label,
@@ -11,14 +19,10 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
     Tab& tab = *(tabs.back());
     if (!active_tab) active_tab = tabs.back().get();
 
-    uint32_t x_offset = 0;
-    for (auto child : tab_button_stack->visible_children()) {
-        x_offset += child->size->get().x;
-    }
-
     auto button = tab_button_stack->create_child<Button>();
-    button->position->set_x(x_offset);
     button->size->set_y(tab_button_stack->size->get().y);
+
+    recalculate_tab_positions();
 
     auto lab = button->create_child<TextLabel>(label);
     lab->position->x_strategy = XPositionStrategy::CENTER;
@@ -43,13 +47,35 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
         close_button->position->y_strategy = YPositionStrategy::CENTER;
 
         close_button->callback_on_click = [this, &tab, button] {
-            printf("Free the damn thing\n");
+            auto tab_iterator = std::find_if(
+                tabs.begin(),
+                tabs.end(),
+                [&tab](const std::unique_ptr<Tab>& t) {
+                    return t.get() == &tab;
+                }
+            );
+            
+            ASSERT(tab_iterator != tabs.end(), "Expected the tab to be liek....real....");
+
             if (this->active_tab == &tab) {
-                // TODO: Select next
-                this->active_tab = nullptr;
+                // We are the active tab... lets do something.... ANYTHING!!
+                if (tabs.size() > 1) {
+                    auto next_up = std::next(tab_iterator);
+
+                    // If next won't work try previous
+                    if (next_up == tabs.end()) next_up = std::prev(tab_iterator);
+                    ASSERT(next_up != tabs.end(), "Okay what's going on here");
+
+                    active_tab = next_up->get();
+                } else {
+                    // Uh oh
+                    active_tab = nullptr;
+                }
             }
 
             tab_button_stack->remove_child(button);
+
+            recalculate_tab_positions();
 
             tabs.erase(std::remove_if(
                 tabs.begin(),

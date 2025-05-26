@@ -29,6 +29,7 @@ class TabContainer : public VStack {
         }
 
         void add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close = false);
+        void recalculate_tab_positions();
 
         void draw_tree() override {
             draw_self();

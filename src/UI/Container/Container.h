@@ -21,7 +21,9 @@ class Container {
 
         static Container* focused_element;
 
-        virtual ~Container() { }
+        virtual ~Container() {
+            if (is_focused()) focused_element = nullptr;
+        }
 
         Container* add_child(std::unique_ptr<Container> child);
         void remove_child(Container* child);
