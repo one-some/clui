@@ -71,6 +71,10 @@ class String {
             return strcmp(c_str, that.c_str) == 0;
         }
 
+        bool operator==(const char* that) {
+            return strcmp(c_str, that) == 0;
+        }
+
         constexpr static u_int64_t hash(const char* str) {
             // djb2 by Dan Bernstein
             u_int64_t hash = 5381;
@@ -169,7 +173,7 @@ class String {
             return String(str);
         }
 
-        const char* as_c() {
+        const char* as_c() const {
             return c_str;
         }
 

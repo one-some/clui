@@ -10,13 +10,13 @@
 #include "FrameManager/FrameManager.h"
 
 #include "UI/Container/Container.h"
-#include "textedit.h"
 #include "color.h"
 #include "cpp.h"
 #include "Claire/File.h"
 #include "Claire/String.h"
+#include "Actions/EditorActions.h"
 #include "UI/Stack/Stack.h"
-#include "tabcontainer.h"
+#include "UI/TabContainer/TabContainer.h"
 #include "fontglobal.h"
 #include "terminal.h"
 #include "UI/FileList/FileList.h"
@@ -106,12 +106,9 @@ int main(int argc, char *argv[], char *envp[]) {
 
             auto tabs = tabs_terminal_stack->create_child<TabContainer>();
             tabs->size->strategy_x = SizeStrategy::EXPAND;
-
-                auto te1 = std::make_unique<TextEdit>("src/textedit.h");
-                tabs->add_tab("textedit.h", std::move(te1), true);
-
-                auto te2 = std::make_unique<TextEdit>("src/textedit.cpp");
-                tabs->add_tab("src/textedit.cpp", std::move(te2), true);
+            EditorActions::register_primary_tab_container(tabs);
+            EditorActions::open_file_in_new_tab("src/main.cpp");
+            // EditorActions::open_file_in_new_tab("src/textedit.cpp");
             
             auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
             bottom_tabs->size->strategy_y = SizeStrategy::FORCE;

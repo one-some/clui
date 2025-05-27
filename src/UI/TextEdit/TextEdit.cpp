@@ -1,7 +1,7 @@
 #include <cstring>
 #include <stdio.h>
 #include "color.h"
-#include "textedit.h"
+#include "UI/TextEdit/TextEdit.h"
 #include "Claire/String.h"
 #include "Claire/Math.h"
 #include <vector>

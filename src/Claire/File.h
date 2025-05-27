@@ -12,20 +12,35 @@ class File {
             this->path = path;
         }
 
-        String read() {
-            FILE* fp = fopen(path, "rb");
-            ASSERT(fp != NULL, "Couldn't open file");
+        bool is_probably_binary() {
+            // Kinda lame heuristic but lazy...
+            size_t null_index = read().length();
+            size_t length = get_length();
+
+            printf("%s: %li vs %li\n", path, null_index, length);
+
+            return length != null_index;
+        }
+
+        size_t get_length() {
+            auto fp = get_read_pointer();
 
             fseek(fp, 0, SEEK_END);
-            length = ftell(fp);
-            fseek(fp, 0, SEEK_SET);
+            size_t length = ftell(fp);
+            fclose(fp);
 
-            char* buf = (char*)malloc(length + 1);
+            return length;
+        }
 
-            size_t amount_read = fread(buf, 1, length, fp);
-            ASSERT(amount_read == length, "Didn't read all..?");
+        String read() {
+            size_t len = get_length();
+            auto fp = get_read_pointer();
 
-            buf[length] = '\0';
+            char* buf = (char*)malloc(len + 1);
+            size_t amount_read = fread(buf, 1, len, fp);
+            ASSERT(amount_read == len, "Didn't read all..?");
+
+            buf[len] = '\0';
             fclose(fp);
 
             return String::move_from(buf);
@@ -42,5 +57,12 @@ class File {
     
     private:
         const char* path = "";
-        size_t length = 0;
+
+        FILE* get_read_pointer() {
+            // Remember you gotta close it...
+            FILE* fp = fopen(path, "rb");
+            ASSERT(fp != NULL, "Couldn't open file");
+
+            return fp;
+        }
 };

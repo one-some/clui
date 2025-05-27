@@ -21,14 +21,14 @@ struct DirectoryChild {
 
 class Directory {
     public:
-        const char* path = "";
+        String path;
 
-        Directory(const char* path) {
+        Directory(String path) {
             this->path = path;
         }
 
         std::vector<DirectoryChild> list() {
-            DIR* dp = opendir(path);
+            DIR* dp = opendir(path.as_c());
             ASSERT(dp, "Couldn't open directory");
 
             struct dirent* entry;

@@ -44,6 +44,8 @@ void Stack::do_user_resizing() {
             grabee->size.get(),
             relevant_axis(grabee->size->get()) + (sign * relevant_axis(mouse_delta))
         );
+
+        FrameManager::set_frame_cursor(drag_cursor());
         return;
     }
 

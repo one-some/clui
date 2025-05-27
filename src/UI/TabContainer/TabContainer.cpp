@@ -1,4 +1,4 @@
-#include "tabcontainer.h"
+#include "UI/TabContainer/TabContainer.h"
 #include "UI/TextLabel/TextLabel.h"
 
 void TabContainer::recalculate_tab_positions() {
