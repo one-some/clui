@@ -91,6 +91,7 @@ int main(int argc, char *argv[], char *envp[]) {
     root.size->set_raw({ 500, 500 });
 
     auto sidebar_cont = root.create_child<HStack>();
+    sidebar_cont->allow_user_resize = true;
     sidebar_cont->size->strategy_x = SizeStrategy::EXPAND;
     sidebar_cont->size->strategy_y = SizeStrategy::EXPAND;
 

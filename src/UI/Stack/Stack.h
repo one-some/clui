@@ -23,6 +23,12 @@ class VStack : public Stack {
 };
 
 class HStack : public Stack {
+    public:
+        bool allow_user_resize = false;
+
     protected:
+        Container* grabee = nullptr;
+
         void reposition_children() override;
+        void do_user_resizing();
 };
