@@ -100,6 +100,7 @@ int main(int argc, char *argv[], char *envp[]) {
         file_list->size->set_x(200);
 
         auto tabs_terminal_stack = sidebar_cont->create_child<VStack>();
+        tabs_terminal_stack->allow_user_resize = true;
         tabs_terminal_stack->size->strategy_x = SizeStrategy::EXPAND;
         tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND;
 
@@ -124,6 +125,8 @@ int main(int argc, char *argv[], char *envp[]) {
 
 
     while (!RayLib::WindowShouldClose()) {
+        FrameManager::set_frame_cursor(RayLib::MouseCursor::MOUSE_CURSOR_DEFAULT);
+
         root.size->set_x(RayLib::GetRenderWidth());
         root.size->set_y(RayLib::GetRenderHeight());
 
@@ -146,6 +149,8 @@ int main(int argc, char *argv[], char *envp[]) {
         root.draw_tree();
 
         RayLib::EndDrawing();
+
+        RayLib::AwesomeSetMouseCursor(FrameManager::get_frame_cursor());
 
         FrameManager::run_queued_operations();
         LogContainer::flush_stdout();

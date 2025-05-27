@@ -1,70 +1,49 @@
 #include <cstdio>
 #include "UI/Stack/Stack.h"
 #include "Claire/Assert.h"
+#include "FrameManager/FrameManager.h"
 
-void VStack::reposition_children() {
-    int32_t height_budget = size->get().y;
+void Stack::reposition_children() {
+    // This pattern kinda sucks but i am not duplicating all this code...
+    int32_t budget = relevant_axis(size->get());
     int32_t flimsy_child_count = 0;
 
-    for (auto child : visible_children()) {
-        if (child->size->strategy_y != SizeStrategy::FORCE) {
+    for (auto& child : visible_children()) {
+        if (relevant_strat(child->size.get()) != SizeStrategy::FORCE) {
             flimsy_child_count++;
             continue;
         }
 
-        height_budget -= child->size->get().y;
+        budget -= relevant_axis(child->size->get());
     }
 
-    int32_t current_y = 0;
-    for (auto child : visible_children()) {
-        child->size->set_x(size->get().x);
+    int32_t current_pos = 0;
+    for (auto& child : visible_children()) {
+        set_inv_relevant(child->size.get(), inv_relevant_axis(size->get()));
         
-        if (child->size->strategy_y != SizeStrategy::FORCE) {
-            child->size->set_y(height_budget / flimsy_child_count);
+        if (relevant_strat(child->size.get()) != SizeStrategy::FORCE) {
+            set_relevant(child->size.get(), budget / flimsy_child_count);
         }
 
-        child->position->set_y(current_y);
-        current_y += child->size->get().y;
+
+        set_relevant(child->position.get(), current_pos);
+        current_pos += relevant_axis(child->size->get());
     }
 }
 
-void HStack::reposition_children() {
-    if (allow_user_resize) do_user_resizing();
-
-    int32_t width_budget = size->get().x;
-    int32_t flimsy_child_count = 0;
-
-    for (auto child : visible_children()) {
-        if (child->size->strategy_x != SizeStrategy::FORCE) {
-            flimsy_child_count++;
-            continue;
-        }
-
-        width_budget -= child->size->get().x;
-    }
-
-    int32_t current_x = 0;
-    for (auto child : visible_children()) {
-        child->size->set_y(size->get().y);
-        
-        if (child->size->strategy_x != SizeStrategy::FORCE) {
-            child->size->set_x(width_budget / flimsy_child_count);
-        }
-
-        child->position->set_x(current_x);
-        current_x += child->size->get().x;
-    }
-}
-
-void HStack::do_user_resizing() {
+void Stack::do_user_resizing() {
     if (!RayLib::IsMouseButtonDown(RayLib::MOUSE_BUTTON_LEFT)) {
         grabee = nullptr;
     }
 
     if (grabee) {
         Vector2 mouse_delta = Vector2::from_ray(RayLib::GetMouseDelta());
-        grabee->size->set_x(grabee->size->get().x + mouse_delta.x);
+        int sign = (dynamic_cast<VStack*>(this)) ? -1 : 1;
 
+        set_relevant(
+            grabee->size.get(),
+            relevant_axis(grabee->size->get()) + (sign * relevant_axis(mouse_delta))
+        );
         return;
     }
 
@@ -72,34 +51,28 @@ void HStack::do_user_resizing() {
     std::vector<int32_t> borders;
     std::vector<Container*> visible = visible_children();
 
-    int32_t current_x = 0;
-    for (auto child : visible) {
-        current_x += child->size->get().x;
+    int32_t current_pos = 0;
+    for (auto& child : visible) {
+        current_pos += relevant_axis(child->size->get());
 
-        borders.push_back(current_x);
+        borders.push_back(current_pos);
     }
 
     ssize_t border = -1;
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - position->get_global();
 
-    for (size_t i = 0; i < borders.size(); i++) {
+    for (size_t i = 0; i < borders.size() - 1; i++) {
         // If not around the border, ignore
-        if (!mouse_pos.in_rectangle(
-            { borders[i] - 5, 0 },
-            { 11, size->get().y }
-        )) continue;
+        if (!check_dragger_collision(mouse_pos, borders[i])) continue;
 
         border = i;
         break;
     }
 
-    if (border == -1) {
-        RayLib::AwesomeSetMouseCursor(RayLib::MouseCursor::MOUSE_CURSOR_DEFAULT);
-        return;
-    }
+    if (border == -1) return;
 
-    RayLib::AwesomeSetMouseCursor(RayLib::MouseCursor::MOUSE_CURSOR_RESIZE_EW);
+    FrameManager::set_frame_cursor(drag_cursor());
 
     if (!RayLib::IsMouseButtonDown(RayLib::MOUSE_BUTTON_LEFT)) return;
 
@@ -109,17 +82,14 @@ void HStack::do_user_resizing() {
     Container* before = visible[border];
     Container* after = visible[border + 1];
 
-    printf("Before strat: %i\n", before->size->strategy_x);
-    printf("Aftr strat: %i\n", after->size->strategy_x);
-
     Container* target = before;
 
     // Does this even work at all???? If we force the right one doesn't it grow
     // from the left?? IDFK!!
-    if (target->size->strategy_x != SizeStrategy::FORCE) target = after;
+    if (relevant_strat(target->size.get()) != SizeStrategy::FORCE) target = after;
 
     // TODO: Make it force????
-    ASSERT(target->size->strategy_x == SizeStrategy::FORCE, "TODO: Force somebody");
+    ASSERT(relevant_strat(target->size.get()) == SizeStrategy::FORCE, "TODO: Force somebody");
 
     grabee = target;
 }
