@@ -88,6 +88,7 @@ int main(int argc, char *argv[], char *envp[]) {
     uint64_t frames = 0;
     
     auto root = Container();
+    FrameManager::root_container = &root;
     root.size->set_raw({ 500, 500 });
 
     auto sidebar_cont = root.create_child<HStack>();
@@ -144,6 +145,7 @@ int main(int argc, char *argv[], char *envp[]) {
         // if (frames % 2 == 0) rect->position.x += 1;
 
         root.draw_tree();
+        FrameManager::draw_debug_points();
 
         RayLib::EndDrawing();
 

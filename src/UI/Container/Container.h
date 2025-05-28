@@ -14,6 +14,7 @@ class Container {
         // Don't allow setting the whole position...
         std::unique_ptr<Position> const position = std::make_unique<Position>(Position(this));
         std::unique_ptr<Size> const size = std::make_unique<Size>(Size(this));
+        std::unique_ptr<Vector2> const scroll_offset = std::make_unique<Vector2>();
 
         // TODO: Private?
         Container* parent = nullptr;
@@ -57,6 +58,9 @@ class Container {
             return out;
         }
 
+        Vector2 get_draw_position() {
+            return position->get_global() + *scroll_offset;
+        }
     
     protected:
         bool _is_hovered = false;

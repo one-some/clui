@@ -33,10 +33,8 @@ class FileList : public VStack {
                 // TODO: WOW THIS NEEDS TO BE AWESOMER
                 String path;
                 if (directory.path == "./") {
-                    printf("It is: %s\n", dir_child.name.as_c());
                     path = dir_child.name;
                 } else {
-                    printf("It ain't: %s\n", dir_child.name.as_c());
                     path = directory.path;
                     path.append("/");
                     path.append(dir_child.name.as_c());

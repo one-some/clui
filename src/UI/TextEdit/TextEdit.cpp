@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "color.h"
 #include "UI/TextEdit/TextEdit.h"
+#include "FrameManager/FrameManager.h"
 #include "Claire/String.h"
 #include "Claire/Math.h"
 #include <vector>
@@ -35,11 +36,11 @@ void TextEdit::move_caret(Vector2 delta) {
                 continue;
             }
 
-            printf("Okay! Let's deal with delta y... Dy: %i, Sign: %i\n", delta.y, SIGN(delta.y));
-            printf("k.... derlta y is now %i\n", delta.y);
+            // printf("Okay! Let's deal with delta y... Dy: %i, Sign: %i\n", delta.y, SIGN(delta.y));
+            // printf("k.... derlta y is now %i\n", delta.y);
             caret_index += SIGN(delta.y);
             if (c == '\n') delta.y -= SIGN(delta.y);
-            printf("&.... carret indx is now %li\n", caret_index);
+            // printf("&.... carret indx is now %li\n", caret_index);
             continue;
         }
 
@@ -58,6 +59,16 @@ void TextEdit::move_caret(Vector2 delta) {
 
     caret_position_px.graft(survey_position(caret_index));
     caret_blink_timer = 0;
+
+    auto editor_height = size->get().y;
+    auto caret_base = caret_position_px.y + font_size_px;
+    auto the_line_tm = editor_height - scroll_offset->y;
+
+    if (caret_position_px.y < -scroll_offset->y) {
+        scroll_offset->y = -caret_position_px.y;
+    } else if (caret_base >= the_line_tm) {
+        scroll_offset->y = editor_height - caret_base;
+    }
 }
 
 void TextEdit::save_to_file() {
@@ -69,7 +80,7 @@ void TextEdit::on_input() {
 
     if (RayLib::IsKeyPressed(RayLib::KEY_S) && RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
         // CTRL+S
-        printf("Save! %s\n", path);
+        printf("Save! %s\n", file.get_path());
         save_to_file();
         return;
     }
@@ -130,7 +141,7 @@ void TextEdit::draw_self() {
         caret_visible = false;
     }
 
-    Vector2 pos = position->get_global();
+    Vector2 pos = get_draw_position();
     RayLib::DrawRectangle(
         pos.x,
         pos.y,
@@ -153,7 +164,7 @@ void TextEdit::draw_self() {
 }
 
 void TextEdit::draw_text_plain_jane() {
-    Vector2 pos = position->get_global();
+    Vector2 pos = get_draw_position();
     std::vector<String> lines = text.split('\n');
 
     for (size_t i=0; i<lines.size();i++) {
@@ -169,7 +180,7 @@ void TextEdit::draw_text_plain_jane() {
 }
 
 void TextEdit::draw_text() {
-    Vector2 base_pos = position->get_global();
+    Vector2 base_pos = get_draw_position();
     Vector2 pointer = base_pos;
 
     for (auto node : parser.tokens) {
@@ -269,7 +280,7 @@ Vector2 TextEdit::survey_position(size_t index) {
 
 void TextEdit::on_click() {
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
-    mouse_pos = mouse_pos - position->get_global();
+    mouse_pos = mouse_pos - get_draw_position();
 
     size_t line_number = mouse_pos.y / font_size_px;
     std::vector<String> lines = text.split('\n');

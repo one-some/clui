@@ -20,7 +20,6 @@ class TextEdit : public Container {
         size_t caret_index = 0;
         int32_t caret_blink_timer = 0;
         CPPParser parser;
-        const char* path;
 
         int32_t font_size_px = 16;
 
@@ -33,7 +32,6 @@ class TextEdit : public Container {
 
         TextEdit(const char* path): file(path) {
             printf("Waiiit....Hello from crazy world...\n");
-            this->path = path;
             text = file.read();
             parser = CPPParser(&text);
             parser.parse();

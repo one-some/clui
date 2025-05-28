@@ -17,8 +17,6 @@ class File {
             size_t null_index = read().length();
             size_t length = get_length();
 
-            printf("%s: %li vs %li\n", path, null_index, length);
-
             return length != null_index;
         }
 
@@ -53,6 +51,10 @@ class File {
             fprintf(fp, "%s", content.as_c());
 
             fclose(fp);
+        }
+
+        const char* get_path() const {
+            return path;
         }
     
     private:

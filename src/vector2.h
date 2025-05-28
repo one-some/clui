@@ -3,8 +3,8 @@
 #include "Dep/raylib.h"
 
 struct Vector2 {
-    int32_t x;
-    int32_t y;
+    int32_t x = 0;
+    int32_t y = 0;
 
     Vector2 operator+(const Vector2& that) {
         return {x + that.x, y + that.y};
