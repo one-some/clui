@@ -39,8 +39,10 @@ class String {
             free(c_str);
         }
 
-        String(const String& that) {
-            capacity = that.capacity;
+        String(const String& that) : c_str(nullptr), capacity(0) {
+            if (!that.c_str) return;
+
+            capacity = strlen(that.c_str) + 1;
             c_str = (char*) calloc(capacity, 1);
             strcpy(c_str, that.c_str);
         }

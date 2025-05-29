@@ -9,7 +9,7 @@
 #include "Claire/Assert.h"
 #include "Claire/String.h"
 
-enum DirectoryChildType {
+enum class DirectoryChildType {
     TYPE_FILE,
     TYPE_DIRECTORY,
 };
@@ -17,6 +17,15 @@ enum DirectoryChildType {
 struct DirectoryChild {
     DirectoryChildType type;
     String name;
+
+
+    static bool compare(const DirectoryChild& a, const DirectoryChild b) {
+        if (a.type != b.type) {
+            return a.type == DirectoryChildType::TYPE_DIRECTORY;
+        }
+
+        return strcmp(a.name.as_c(), b.name.as_c()) < 0;
+    }
 };
 
 class Directory {

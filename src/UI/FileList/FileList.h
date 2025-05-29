@@ -5,6 +5,7 @@
 #include "UI/Button/Button.h"
 #include "Claire/String.h"
 #include "Claire/Directory.h"
+#include "Claire/Path.h"
 #include "color.h"
 
 class FileList : public VStack {
@@ -15,13 +16,15 @@ class FileList : public VStack {
             refresh();
         }
 
-        void refresh() {
-            this->children.clear();
+        void sprawl(Directory dir, Container* container, int depth) {
+            printf("Listing for '%s'\n", dir.path.as_c());
 
-            printf("Listing for '%s'\n", directory.path.as_c());
+            std::vector<DirectoryChild> directory_children = dir.list();
+            std::sort(directory_children.begin(), directory_children.end(), DirectoryChild::compare);
 
-            for (auto dir_child : directory.list()) {
-                auto button = create_child<Button>();
+            for (auto& dir_child : directory_children) {
+                auto cont = container->create_child<VStack>();
+                auto button = cont->create_child<Button>();
                 auto label = button->create_child<TextLabel>(dir_child.name.as_c());
 
                 label->color = dir_child.type == DirectoryChildType::TYPE_DIRECTORY ? Colors::FG.to_ray() : RayLib::RED;
@@ -30,20 +33,36 @@ class FileList : public VStack {
                 button->size->strategy_y = SizeStrategy::FORCE;
                 button->size->set_raw(label->text_bounds());
 
-                // TODO: WOW THIS NEEDS TO BE AWESOMER
-                String path;
-                if (directory.path == "./") {
-                    path = dir_child.name;
-                } else {
-                    path = directory.path;
-                    path.append("/");
-                    path.append(dir_child.name.as_c());
-                }
+                cont->size->strategy_y = SizeStrategy::FORCE;
+                cont->size->set_raw(label->text_bounds());
 
-                button->callback_on_click = [dir_child, path]{
-                    if (dir_child.type != DirectoryChildType::TYPE_FILE) return;
-                    EditorActions::open_file_in_new_tab(path.as_c());
+                label->position->set_x(16 * depth);
+
+                // auto l2 = cont->create_child<TextLabel>("Better than eva");
+                // l2->position->set_x(16);
+                // l2->color = Colors::FG.to_ray();
+                // l2->font_size = 16;
+
+                // cont->size->set_y(cont->size->get().y*2);
+
+                // TODO: WOW THIS NEEDS TO BE AWESOMER
+                String path = Path::join(directory.path, dir_child.name);
+
+                button->callback_on_click = [this, dir, dir_child, cont, depth, path]{
+                    String new_path = Path::join(dir.path, dir_child.name);
+
+                    if (dir_child.type == DirectoryChildType::TYPE_FILE) {
+                        EditorActions::open_file_in_new_tab(new_path.as_c());
+                    } else if (dir_child.type == DirectoryChildType::TYPE_DIRECTORY) {
+                        sprawl({ new_path }, cont, depth + 1);
+                        cont->size->set_y(cont->children.size() * 16);
+                    }
                 };
             }
+        }
+
+        void refresh() {
+            children.clear();
+            sprawl(directory, this, 0);
         }
 };

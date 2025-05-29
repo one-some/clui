@@ -4,6 +4,8 @@
 #include "UI/Container/Container.h"
 #include <functional>
 
+#define DEBUG_DRAW
+
 Container* Container::focused_element = nullptr;
 
 Container* Container::add_child(std::unique_ptr<Container> child) {
