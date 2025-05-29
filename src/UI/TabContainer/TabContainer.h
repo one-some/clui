@@ -19,6 +19,8 @@ class Tab {
 
 class TabContainer : public VStack {
     public:
+        std::vector<std::unique_ptr<Tab>> tabs;
+
         TabContainer() {
             auto unique_tabs = std::make_unique<Container>();
             unique_tabs->size->set_y(30);
@@ -54,6 +56,5 @@ class TabContainer : public VStack {
 
     private:
         Container* tab_button_stack;
-        std::vector<std::unique_ptr<Tab>> tabs;
         Tab* active_tab = nullptr;
 };

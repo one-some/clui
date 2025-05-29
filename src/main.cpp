@@ -147,6 +147,11 @@ int main(int argc, char *argv[], char *envp[]) {
         root.draw_tree();
         FrameManager::draw_debug_points();
 
+        for (auto& tab : tabs->tabs) {
+            printf("Tab: %i\n", tabs->size->get().y);;
+            printf("%s - %i\n", tab->label, tab->view->size->get().y);
+        }
+
         RayLib::EndDrawing();
 
         RayLib::AwesomeSetMouseCursor(FrameManager::get_frame_cursor());

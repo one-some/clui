@@ -28,9 +28,7 @@ void Stack::reposition_children() {
     if (relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
         int32_t min_size = calculate_min_size(this);
 
-        // if (min_size > relevant_axis(size->get())) {
         set_relevant(size.get(), min_size);
-        // }
     }
 
     // If we're forcing, the budget MUST BE THIS....
