@@ -4,12 +4,24 @@
 #include "FrameManager/FrameManager.h"
 
 void Stack::reposition_children() {
-    // This pattern kinda sucks but i am not duplicating all this code...
+    if (relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
+        // Otherwise, ROFL, we can literally make our own
+        int32_t cum_height = 0;
+        for (auto& child : visible_children()) {
+            cum_height += relevant_axis(child->size->get());
+        }
+
+        if (cum_height > relevant_axis(size->get())) {
+            set_relevant(size.get(), cum_height);
+        }
+    }
+
+    // If we're forcing, the budget MUST BE THIS....
     int32_t budget = relevant_axis(size->get());
     int32_t flimsy_child_count = 0;
 
     for (auto& child : visible_children()) {
-        if (relevant_strat(child->size.get()) != SizeStrategy::FORCE) {
+        if (relevant_strat(child->size.get()) == SizeStrategy::FLIMSY) {
             flimsy_child_count++;
             continue;
         }
@@ -17,11 +29,18 @@ void Stack::reposition_children() {
         budget -= relevant_axis(child->size->get());
     }
 
+    // if (budget < 0 && relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
+    //     printf("Expanding... before: %i ", relevant_axis(size->get()));
+    //     set_relevant(size.get(), relevant_axis(size->get()) - budget);
+    //     printf("...AFTER: %i\n", relevant_axis(size->get()));
+    //     budget = 0;
+    // }
+
     int32_t current_pos = 0;
     for (auto& child : visible_children()) {
         set_inv_relevant(child->size.get(), inv_relevant_axis(size->get()));
         
-        if (relevant_strat(child->size.get()) != SizeStrategy::FORCE) {
+        if (relevant_strat(child->size.get()) == SizeStrategy::FLIMSY) {
             set_relevant(child->size.get(), budget / flimsy_child_count);
         }
 

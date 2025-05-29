@@ -93,8 +93,8 @@ int main(int argc, char *argv[], char *envp[]) {
 
     auto sidebar_cont = root.create_child<HStack>();
     sidebar_cont->allow_user_resize = true;
-    sidebar_cont->size->strategy_x = SizeStrategy::EXPAND;
-    sidebar_cont->size->strategy_y = SizeStrategy::EXPAND;
+    sidebar_cont->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
+    sidebar_cont->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
 
         auto file_list = sidebar_cont->create_child<FileList>("./");
         file_list->size->strategy_x = SizeStrategy::FORCE;
@@ -102,11 +102,11 @@ int main(int argc, char *argv[], char *envp[]) {
 
         auto tabs_terminal_stack = sidebar_cont->create_child<VStack>();
         tabs_terminal_stack->allow_user_resize = true;
-        tabs_terminal_stack->size->strategy_x = SizeStrategy::EXPAND;
-        tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND;
+        tabs_terminal_stack->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
+        tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
 
             auto tabs = tabs_terminal_stack->create_child<TabContainer>();
-            tabs->size->strategy_x = SizeStrategy::EXPAND;
+            tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
             EditorActions::register_primary_tab_container(tabs);
             EditorActions::open_file_in_new_tab("src/main.cpp");
             // EditorActions::open_file_in_new_tab("src/textedit.cpp");

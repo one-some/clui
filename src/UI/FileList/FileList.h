@@ -33,29 +33,19 @@ class FileList : public VStack {
                 button->size->strategy_y = SizeStrategy::FORCE;
                 button->size->set_raw(label->text_bounds());
 
-                cont->size->strategy_y = SizeStrategy::FORCE;
+                cont->size->strategy_y = SizeStrategy::FLIMSY;
                 cont->size->set_raw(label->text_bounds());
 
                 label->position->set_x(16 * depth);
 
-                // auto l2 = cont->create_child<TextLabel>("Better than eva");
-                // l2->position->set_x(16);
-                // l2->color = Colors::FG.to_ray();
-                // l2->font_size = 16;
-
-                // cont->size->set_y(cont->size->get().y*2);
-
-                // TODO: WOW THIS NEEDS TO BE AWESOMER
-                String path = Path::join(directory.path, dir_child.name);
-
-                button->callback_on_click = [this, dir, dir_child, cont, depth, path]{
+                button->callback_on_click = [this, dir, dir_child, cont, depth]{
                     String new_path = Path::join(dir.path, dir_child.name);
 
                     if (dir_child.type == DirectoryChildType::TYPE_FILE) {
                         EditorActions::open_file_in_new_tab(new_path.as_c());
                     } else if (dir_child.type == DirectoryChildType::TYPE_DIRECTORY) {
                         sprawl({ new_path }, cont, depth + 1);
-                        cont->size->set_y(cont->children.size() * 16);
+                        // cont->size->set_y(cont->children.size() * 16);
                     }
                 };
             }

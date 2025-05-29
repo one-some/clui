@@ -6,9 +6,9 @@
 class Container;
 
 enum SizeStrategy {
-    ABSOLUTE,
+    FLIMSY,
     FORCE,
-    EXPAND,
+    EXPAND_TO_FILL,
 };
 
 class Size {
@@ -17,8 +17,8 @@ class Size {
             this->owner = owner;
         }
 
-        SizeStrategy strategy_x = SizeStrategy::ABSOLUTE;
-        SizeStrategy strategy_y = SizeStrategy::ABSOLUTE;
+        SizeStrategy strategy_x = SizeStrategy::FLIMSY;
+        SizeStrategy strategy_y = SizeStrategy::FLIMSY;
 
         Vector2 get();
 

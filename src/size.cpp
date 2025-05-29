@@ -7,20 +7,20 @@ Vector2 Size::get() {
 
     switch (strategy_x) {
         case SizeStrategy::FORCE:
-        case SizeStrategy::ABSOLUTE:
+        case SizeStrategy::FLIMSY:
             out.x = raw.x;
             break;
-        case SizeStrategy::EXPAND:
+        case SizeStrategy::EXPAND_TO_FILL:
             out.x = owner->parent->size->get().x;
             break;
     }
 
     switch (strategy_y) {
         case SizeStrategy::FORCE:
-        case SizeStrategy::ABSOLUTE:
+        case SizeStrategy::FLIMSY:
             out.y = raw.y;
             break;
-        case SizeStrategy::EXPAND:
+        case SizeStrategy::EXPAND_TO_FILL:
             out.y = owner->parent->size->get().y;
             break;
     }
