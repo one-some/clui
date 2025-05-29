@@ -2,8 +2,14 @@
 #include <cstdio>
 #include "UI/Container/Container.h"
 
+enum class StackLayout {
+    LAYOUT_EXPAND,
+    LAYOUT_STACK
+};
+
 class Stack : public Container {
     public:
+        StackLayout layout_style = StackLayout::LAYOUT_EXPAND;
         bool allow_user_resize = false;
 
         virtual ~Stack() = default;
@@ -19,6 +25,8 @@ class Stack : public Container {
         Container* grabee = nullptr;
 
         virtual RayLib::MouseCursor drag_cursor() const = 0;
+
+        int32_t calculate_min_size(Container* thing);
 
         virtual int32_t relevant_axis(Vector2 v) const = 0;
         virtual int32_t inv_relevant_axis(Vector2 v) const = 0;

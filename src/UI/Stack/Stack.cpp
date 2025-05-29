@@ -3,16 +3,33 @@
 #include "Claire/Assert.h"
 #include "FrameManager/FrameManager.h"
 
+int32_t Stack::calculate_min_size(Container* thing) {
+    Stack* maybe_stack = dynamic_cast<Stack*>(thing);
+
+    if (!maybe_stack) {
+        // THAT'S NOT A STACK
+        if (relevant_strat(thing->size.get()) == SizeStrategy::FORCE) {
+            return relevant_axis(thing->size->get());
+        }
+        return 0;
+    }
+
+    // Its a stack....
+    int32_t out = 0;
+
+    for (auto& child : thing->visible_children()) {
+        out += calculate_min_size(child);
+    }
+
+    return out;
+}
+
 void Stack::reposition_children() {
     if (relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
-        // Otherwise, ROFL, we can literally make our own
-        int32_t cum_height = 0;
-        for (auto& child : visible_children()) {
-            cum_height += relevant_axis(child->size->get());
-        }
+        int32_t min_size = calculate_min_size(this);
 
-        if (cum_height > relevant_axis(size->get())) {
-            set_relevant(size.get(), cum_height);
+        if (min_size > relevant_axis(size->get())) {
+            set_relevant(size.get(), min_size);
         }
     }
 
@@ -29,19 +46,14 @@ void Stack::reposition_children() {
         budget -= relevant_axis(child->size->get());
     }
 
-    // if (budget < 0 && relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
-    //     printf("Expanding... before: %i ", relevant_axis(size->get()));
-    //     set_relevant(size.get(), relevant_axis(size->get()) - budget);
-    //     printf("...AFTER: %i\n", relevant_axis(size->get()));
-    //     budget = 0;
-    // }
-
     int32_t current_pos = 0;
     for (auto& child : visible_children()) {
         set_inv_relevant(child->size.get(), inv_relevant_axis(size->get()));
         
         if (relevant_strat(child->size.get()) == SizeStrategy::FLIMSY) {
-            set_relevant(child->size.get(), budget / flimsy_child_count);
+            if (layout_style == StackLayout::LAYOUT_EXPAND) {
+                set_relevant(child->size.get(), budget / flimsy_child_count);
+            }
         }
 
 
