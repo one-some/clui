@@ -8,6 +8,11 @@
 #include "Claire/Path.h"
 #include "color.h"
 
+class DirectoryLabelButton : public Button {
+    public:
+        bool open = false;
+};
+
 class FileList : public VStack {
     public:
         Directory directory;
@@ -28,7 +33,7 @@ class FileList : public VStack {
                 cont->layout_style = StackLayout::LAYOUT_STACK;
                 cont->size->strategy_y = SizeStrategy::FLIMSY;
 
-                auto button = cont->create_child<Button>();
+                auto button = cont->create_child<DirectoryLabelButton>();
                 auto label = button->create_child<TextLabel>(dir_child.name.as_c());
 
                 label->color = dir_child.type == DirectoryChildType::TYPE_DIRECTORY ? Colors::FG.to_ray() : RayLib::RED;
@@ -41,14 +46,22 @@ class FileList : public VStack {
 
                 label->position->set_x(16 * depth);
 
-                button->callback_on_click = [this, dir, dir_child, cont, depth]{
-                    String new_path = Path::join(dir.path, dir_child.name);
-
+                String new_path = Path::join(dir.path, dir_child.name);
+                button->callback_on_click = [this, button, new_path, dir_child, cont, depth]{
                     if (dir_child.type == DirectoryChildType::TYPE_FILE) {
                         EditorActions::open_file_in_new_tab(new_path.as_c());
                     } else if (dir_child.type == DirectoryChildType::TYPE_DIRECTORY) {
-                        sprawl({ new_path }, cont, depth + 1);
-                        // cont->size->set_y(cont->children.size() * 16);
+                        if (!button->open) {
+                            sprawl({ new_path }, cont, depth + 1);
+                        } else {
+                            // Yucky
+                            for (auto& child : cont->visible_children()) {
+                                if (child == button) continue;
+                                cont->remove_child(child);
+                            }
+                        }
+
+                        button->open = !button->open;
                     }
                 };
             }
