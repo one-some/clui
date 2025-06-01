@@ -23,7 +23,8 @@ class TextEdit : public Container {
 
         int32_t font_size_px = 16;
 
-        virtual void draw_self();
+        void draw_self() override;
+        void on_wheel(float wheel) override;
         void move_caret(Vector2 delta);
         void save_to_file();
         static size_t str_index_from_vec2(const char* text, Vector2 vec);

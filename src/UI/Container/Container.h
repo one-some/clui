@@ -8,6 +8,7 @@
 #include "position.h"
 #include "size.h"
 #include "vector2.h"
+#include "Claire/String.h"
 
 class Container {
     public:
@@ -19,6 +20,7 @@ class Container {
         // TODO: Private?
         Container* parent = nullptr;
         std::vector<std::unique_ptr<Container>> children;
+        String debug_name;
 
         static Container* focused_element;
 
@@ -42,6 +44,7 @@ class Container {
         void propagate_mouse_motion(Vector2 pos);
         void propagate_click();
         virtual void on_input() { };
+        virtual void on_wheel(float delta) { };
 
         inline bool is_focused() { return Container::focused_element == this; }
 
@@ -61,9 +64,12 @@ class Container {
         Vector2 get_draw_position() {
             return position->get_global() + *scroll_offset;
         }
+
+        virtual bool manages_child_size() { return false; }
     
     protected:
         bool _is_hovered = false;
+
 
         virtual void on_hover_change(bool is_hovered) { };
         virtual void on_child_added(std::unique_ptr<Container>& child) { };

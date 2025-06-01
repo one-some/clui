@@ -18,7 +18,7 @@ class FileList : public VStack {
         Directory directory;
 
         FileList(const char* path): directory(path) {
-            layout_style = StackLayout::LAYOUT_STACK;
+            layout_style = StackLayout::STACK;
             refresh();
         }
 
@@ -30,7 +30,7 @@ class FileList : public VStack {
 
             for (auto& dir_child : directory_children) {
                 auto cont = container->create_child<VStack>();
-                cont->layout_style = StackLayout::LAYOUT_STACK;
+                cont->layout_style = StackLayout::STACK;
                 cont->size->strategy_y = SizeStrategy::FLIMSY;
 
                 auto button = cont->create_child<DirectoryLabelButton>();

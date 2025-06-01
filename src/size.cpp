@@ -3,6 +3,8 @@
 #include "UI/Container/Container.h"
 
 Vector2 Size::get() {
+    if (owner->parent && owner->parent->manages_child_size()) return raw;
+
     Vector2 out;
 
     switch (strategy_x) {

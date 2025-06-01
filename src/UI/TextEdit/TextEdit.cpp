@@ -75,6 +75,12 @@ void TextEdit::save_to_file() {
     file.write(text);
 }
 
+void TextEdit::on_wheel(float delta) {
+    scroll_offset->y += delta * font_size_px * 5;
+
+    if (scroll_offset->y > 0) scroll_offset->y = 0;
+}
+
 void TextEdit::on_input() {
     bool changes_made = false;
 

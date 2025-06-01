@@ -4,7 +4,7 @@
 #include "UI/Container/Container.h"
 #include <functional>
 
-#define DEBUG_DRAW
+// #define DEBUG_DRAW
 
 Container* Container::focused_element = nullptr;
 

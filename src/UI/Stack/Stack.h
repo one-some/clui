@@ -3,13 +3,13 @@
 #include "UI/Container/Container.h"
 
 enum class StackLayout {
-    LAYOUT_EXPAND,
-    LAYOUT_STACK
+    EXPAND,
+    STACK
 };
 
 class Stack : public Container {
     public:
-        StackLayout layout_style = StackLayout::LAYOUT_EXPAND;
+        StackLayout layout_style = StackLayout::EXPAND;
         bool allow_user_resize = false;
 
         virtual ~Stack() = default;
@@ -20,6 +20,9 @@ class Stack : public Container {
             // WE ARE EVIL
             reposition_children();
         }
+
+        bool manages_child_size() override { return true; }
+
 
     protected:
         Container* grabee = nullptr;

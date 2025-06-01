@@ -15,6 +15,9 @@ void EditorActions::open_file_in_new_tab(const char* path) {
     }
 
     auto editor = std::make_unique<TextEdit>(path);
+    editor->debug_name = "editor";
+    editor->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
+
     primary_tab_container->add_tab(path, std::move(editor), true);
 }
 

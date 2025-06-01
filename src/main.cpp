@@ -101,17 +101,20 @@ int main(int argc, char *argv[], char *envp[]) {
         file_list->size->set_x(200);
 
         auto tabs_terminal_stack = sidebar_cont->create_child<VStack>();
+        tabs_terminal_stack->debug_name = String("tabs_terminal_stack");
         tabs_terminal_stack->allow_user_resize = true;
         tabs_terminal_stack->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
         tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
 
             auto tabs = tabs_terminal_stack->create_child<TabContainer>();
             tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
+            tabs->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
             EditorActions::register_primary_tab_container(tabs);
             EditorActions::open_file_in_new_tab("src/main.cpp");
             // EditorActions::open_file_in_new_tab("src/textedit.cpp");
             
             auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
+            bottom_tabs->debug_name = String("bottom_tabs");
             bottom_tabs->size->strategy_y = SizeStrategy::FORCE;
             bottom_tabs->size->set_y(200);
 
@@ -137,6 +140,11 @@ int main(int argc, char *argv[], char *envp[]) {
 
         if (Container::focused_element) {
             Container::focused_element->on_input();
+
+            float wheel_delta = RayLib::GetMouseWheelMove();
+            if (wheel_delta) {
+                Container::focused_element->on_wheel(wheel_delta);
+            }
         }
 
         RayLib::BeginDrawing();
@@ -146,11 +154,6 @@ int main(int argc, char *argv[], char *envp[]) {
 
         root.draw_tree();
         FrameManager::draw_debug_points();
-
-        for (auto& tab : tabs->tabs) {
-            printf("Tab: %i\n", tabs->size->get().y);;
-            printf("%s - %i\n", tab->label, tab->view->size->get().y);
-        }
 
         RayLib::EndDrawing();
 

@@ -28,33 +28,51 @@ void Stack::reposition_children() {
     if (relevant_strat(size.get()) == SizeStrategy::FLIMSY) {
         int32_t min_size = calculate_min_size(this);
 
+        // if (can_shrink || min_size > relevant_axis(size->get())) {
         set_relevant(size.get(), min_size);
+        // }
     }
 
     // If we're forcing, the budget MUST BE THIS....
     int32_t budget = relevant_axis(size->get());
-    int32_t flimsy_child_count = 0;
+    int32_t expandable_child_count = 0;
 
     for (auto& child : visible_children()) {
-        if (relevant_strat(child->size.get()) == SizeStrategy::FLIMSY) {
-            flimsy_child_count++;
-            continue;
+        auto child_strat = relevant_strat(child->size.get());
+        if (
+            child_strat == SizeStrategy::EXPAND_TO_FILL
+            || (child_strat == SizeStrategy::FLIMSY && layout_style == StackLayout::EXPAND)
+        ) {
+            expandable_child_count++;
+        } else {
+            // FORCE OR (STACK AND FLIMSY)
+            int32_t child_size = relevant_axis(child->size->get());
+            budget -= child_size;
         }
-
-        budget -= relevant_axis(child->size->get());
     }
+
+    if (budget < 0) budget = 0;
 
     int32_t current_pos = 0;
     for (auto& child : visible_children()) {
+        // Make their secondary axis match ours
         set_inv_relevant(child->size.get(), inv_relevant_axis(size->get()));
-        
-        if (relevant_strat(child->size.get()) == SizeStrategy::FLIMSY) {
-            if (layout_style == StackLayout::LAYOUT_EXPAND) {
-                set_relevant(child->size.get(), budget / flimsy_child_count);
+
+        auto child_strat = relevant_strat(child->size.get());
+        if (
+            child_strat == SizeStrategy::EXPAND_TO_FILL
+            || (child_strat == SizeStrategy::FLIMSY && layout_style == StackLayout::EXPAND)
+        ) {
+            // Gobble all space like HARDWARE.../teto
+            int32_t size = 0;
+            if (expandable_child_count > 0) {
+                size = budget / expandable_child_count;
             }
+
+            set_relevant(child->size.get(), size);
         }
 
-
+        // Put them in the right place
         set_relevant(child->position.get(), current_pos);
         current_pos += relevant_axis(child->size->get());
     }
