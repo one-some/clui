@@ -18,23 +18,24 @@ public:
     
     template<JSONValueDerivative T>
     T* as() {
-        return dynamic_cast<T*>(this);
+        T* ptr = dynamic_cast<T*>(this);
+        if (!ptr) printf("JTYPE: %s\n", typeid(T).name());
+        ASSERT(ptr, "Unable to cast JSON value in as...");
+        return ptr;
     }
 };
 
 class JSONObject : public JSONValue {
 public:
-    std::map<const char*, JSONValue*>* data = new std::map<const char*, JSONValue*>;
+    std::map<String, JSONValue*>* data = new std::map<String, JSONValue*>;
 
-    JSONValue* get(const char* key);
-    void set(const char* key, JSONValue* val);
+    JSONValue* get(String key);
+    void set(String key, JSONValue* val);
 
     // What a cute shortcut!
     template<JSONValueDerivative T>
-    T* get(const char* key) {
-        T* ptr = dynamic_cast<T*>(get(key));
-        ASSERT(ptr, "Unable to cast JSON value...");
-        return ptr;
+    T* get(String key) {
+        return get(key)->as<T>();
     }
 };
 
@@ -83,25 +84,22 @@ public:
     }
 
     JSONValue* parse_value() {
+        printf("Parsing value:");
         char first_char = text[i];
         
         switch (first_char) {
             case '{':
+                printf("Object!\n");
                 return parse_object();
             case '"':
             case '\'':
+                printf("String!\n");
                 return parse_string();
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                return parse_number();
+        }
+
+        if (String::is_number(first_char)) {
+            printf("Number!\n");
+            return parse_number();
         }
         
         printf("'%s'\n", text.as_c() + i);
@@ -155,7 +153,7 @@ public:
             JSONValue* value = parse_value();
             
             printf("[3] XX%s\n", text.as_c() + i);
-            object->set(key->value.as_c(), value);
+            object->set(key->value, value);
 
             zap_whitespace();
             if (text[i] == '}') break;

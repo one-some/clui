@@ -2,7 +2,7 @@
 
 # Compiler and flags
 CXX = ccache g++
-CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -fsanitize=address -march=native
+CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -fsanitize=address 
 
 # Directories
 SRC_DIR = src
@@ -13,7 +13,7 @@ BIN_DIR =.
 TARGET = main
 
 # Libraries
-LIBS = -lraylib -lGL -lX11 -lpthread -lm -lrt -lstdc++  -lbacktrace
+LIBS = -lraylib -lGL -lX11 -lpthread -lm -lrt -lbacktrace -lstdc++exp
 
 # Source files (finds all .cpp files recursively in the SRC_DIR)
 SOURCES := $(shell find $(SRC_DIR) -name '*.cpp')
@@ -42,6 +42,6 @@ clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)/$(TARGET)
 
 run: $(TARGET)
-	./main
+	./$(TARGET)
 
-.PHONY: all clean
+.PHONY: all clean run

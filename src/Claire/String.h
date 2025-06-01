@@ -3,6 +3,7 @@
 #include <cstddef>
 
 #include "Claire/Assert.h"
+#include "Claire/Math.h"
 #include <vector>
 #include <stdio.h>
 #include <cstring>
@@ -73,12 +74,22 @@ class String {
             return *this;
         }
 
-        bool operator==(const String& that) {
+        bool operator==(const String& that) const {
             return strcmp(c_str, that.c_str) == 0;
         }
 
-        bool operator==(const char* that) {
+        bool operator==(const char* that) const {
             return strcmp(c_str, that) == 0;
+        }
+
+        bool operator<(const String& that) const {
+            size_t this_len = length();
+            size_t that_len = that.length();
+            size_t min_len = min(this_len, that_len);
+
+            int cmp_out = std::strncmp(c_str, that.c_str, min_len);
+            if (cmp_out == 0) return this_len < that_len;
+            return cmp_out < 0;
         }
         
         constexpr static bool is_number(const char c) {
@@ -97,12 +108,12 @@ class String {
             return hash;
         }
 
-        u_int64_t hash() {
+        u_int64_t hash() const {
             return String::hash(c_str);
         
         }
         
-        size_t length() {
+        size_t length() const {
             return strlen(c_str);
         }
 
