@@ -2,7 +2,7 @@
 
 # Compiler and flags
 CXX = ccache g++
-CXXFLAGS = -Wall -std=c++17 -I./src -Wno-switch -g -fsanitize=address -march=native
+CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -fsanitize=address -march=native
 
 # Directories
 SRC_DIR = src
@@ -12,8 +12,8 @@ BIN_DIR =.
 # Executable name
 TARGET = main
 
-# Libraries (add your raylib libraries here)
-LIBS = -lraylib -lGL -lX11 -lpthread -lm -lrt
+# Libraries
+LIBS = -lraylib -lGL -lX11 -lpthread -lm -lrt -lstdc++  -lbacktrace
 
 # Source files (finds all .cpp files recursively in the SRC_DIR)
 SOURCES := $(shell find $(SRC_DIR) -name '*.cpp')

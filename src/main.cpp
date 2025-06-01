@@ -8,6 +8,7 @@
 #include <ranges>
 #include <unistd.h>
 #include "FrameManager/FrameManager.h"
+#include "Claire/JSON/JSON.h"
 
 #include "UI/Container/Container.h"
 #include "color.h"
@@ -77,6 +78,12 @@ void reload_self(int argc, char *argv[], char *envp[]) {
 }
 
 int main(int argc, char *argv[], char *envp[]) {
+    
+    auto json = (JSONParser(File("test.json").read()).parse())->as<JSONObject>();
+    auto style = json->get<JSONString>("style");
+    
+    printf("Style is: %s\n", style->value.as_c());
+    
     LogContainer::swallow_stdout();
 
     printf("Hello\n");

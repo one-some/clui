@@ -50,5 +50,6 @@
         "assert.h": "c",
         "cstring": "cpp",
         "optional": "cpp"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

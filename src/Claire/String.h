@@ -38,6 +38,10 @@ class String {
         ~String() {
             free(c_str);
         }
+        
+        const char operator[](size_t index) {
+            return c_str[index];
+        }
 
         String(const String& that) : c_str(nullptr), capacity(0) {
             if (!that.c_str) return;
@@ -75,6 +79,10 @@ class String {
 
         bool operator==(const char* that) {
             return strcmp(c_str, that) == 0;
+        }
+        
+        constexpr static bool is_number(const char c) {
+            return c >= '0' && c <= '9';
         }
 
         constexpr static u_int64_t hash(const char* str) {
@@ -177,6 +185,12 @@ class String {
 
         const char* as_c() const {
             return c_str;
+        }
+        
+        float as_float() {
+            // TODO: Error check or DIE!!!!
+            char* end;
+            return strtof(c_str, &end);
         }
 
     private:
