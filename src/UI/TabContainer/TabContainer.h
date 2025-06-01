@@ -30,7 +30,7 @@ class TabContainer : public VStack {
             add_child(std::move(unique_tabs));
         }
 
-        void add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close = false);
+        Tab* add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close = false);
         void recalculate_tab_positions();
 
         void draw_tree() override {
@@ -52,6 +52,10 @@ class TabContainer : public VStack {
 
             out.push_back(active_tab->view);
             return out;
+        }
+
+        void focus_tab(Tab* tab) {
+            active_tab = tab;
         }
 
     private:

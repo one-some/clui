@@ -9,7 +9,7 @@ void TabContainer::recalculate_tab_positions() {
     }
 }
 
-void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close) {
+Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close) {
     tabs.push_back(std::make_unique<Tab>(
         label,
         view.get()
@@ -95,4 +95,6 @@ void TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
     button->callback_on_click = [this, &tab] {
         this->active_tab = &tab;
     };
+
+    return &tab;
 }
