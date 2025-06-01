@@ -173,7 +173,7 @@ class String {
             return out;
         }
 
-        String first_n(size_t n) {
+        String first_n(size_t n) const {
             char* str = (char*)calloc(n + 1, 1);
 
             memcpy((void*)str, c_str, n);
