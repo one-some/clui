@@ -159,5 +159,5 @@ void Terminal::on_input() {
     if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE))  { keys.add_char('\b'); }
     if (RayLib::IsKeyTyped(RayLib::KEY_TAB))        { keys.add_char('\t'); }
 
-    write(master_pty_fd, keys.as_c(), strlen(keys.as_c()));
+    write(master_pty_fd, keys.as_c(), keys.length());
 }

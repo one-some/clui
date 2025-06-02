@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <cstdlib>
 #include <cstddef>
 
@@ -20,6 +21,25 @@ class String {
             c_str = (char*) malloc(capacity);
             strcpy(c_str, in_c_str);
             c_str[capacity - 1] = '\0';
+        }
+
+        static String from_double(double val) {
+            int len = snprintf(NULL, 0, "%f", val);
+            char* buf = (char*) malloc(len + 1);
+            snprintf(buf, len + 1, "%f", val);
+            return String::move_from(buf);
+        }
+
+        static String from_int(int val) {
+            int len = snprintf(NULL, 0, "%d", val);
+            char* buf = (char*) malloc(len + 1);
+            snprintf(buf, len + 1, "%d", val);
+            return String::move_from(buf);
+        }
+
+        static String from_number_klutz(double val) {
+            if (val == std::floor(val)) return from_int((int) val);
+            return from_double(val);
         }
 
         static char* copy_c_str(const char* in_c_str) {
@@ -125,6 +145,10 @@ class String {
             c_str[len + 1] = '\0';
         }
 
+        void append(String text) {
+            append(text.c_str);
+        }
+
         void append(const char* text) {
             if (!text[0]) return;
 
@@ -180,6 +204,14 @@ class String {
             str[n] = '\0';
 
             return String(str);
+        }
+
+        String last_n(size_t n) {
+            size_t len = length();
+            if (!len) return "";
+
+            size_t start = (n > len) ? 0 : len - n;
+            return slice(start, len);
         }
 
         String slice(size_t start, size_t end) {

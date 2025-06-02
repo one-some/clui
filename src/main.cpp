@@ -13,6 +13,7 @@
 #include "UI/Container/Container.h"
 #include "color.h"
 #include "cpp.h"
+#include "LSPClient/LSPClient.h"
 #include "Claire/File.h"
 #include "Claire/String.h"
 #include "Actions/EditorActions.h"
@@ -78,11 +79,16 @@ void reload_self(int argc, char *argv[], char *envp[]) {
 }
 
 int main(int argc, char *argv[], char *envp[]) {
+    auto lsp_client = new LSPClient();
+    auto request = lsp_client->await_lsp_response(lsp_client->build_request());
+
+    printf("WOW lol\n");
     
-    auto json = (JSONParser(File("test.json").read()).parse())->as<JSONObject>();
-    auto style = json->get<JSONString>("style");
+    // auto json = (JSONParser(File("test.json").read()).parse())->as<JSONObject>();
+    // auto styles = json->get<JSONArray>("styles");
     
-    printf("Style is: %s\n", style->value.as_c());
+    // printf("Style is: %s\n", (*styles).get<JSONString>(3)->value.as_c());
+    exit(0);
     
     LogContainer::swallow_stdout();
 

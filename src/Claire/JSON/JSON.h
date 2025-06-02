@@ -15,12 +15,13 @@ concept JSONValueDerivative = std::derived_from<T, JSONValue>;
 class JSONValue {
 public:
     virtual ~JSONValue() = default;
+
+    virtual String to_string() = 0;
     
     template<JSONValueDerivative T>
     T* as() {
         T* ptr = dynamic_cast<T*>(this);
-        if (!ptr) printf("JTYPE: %s\n", typeid(T).name());
-        ASSERT(ptr, "Unable to cast JSON value in as...");
+        ASSERT(ptr, "(.as<x>) Unable to cast JSON value to %s", typeid(T).name());
         return ptr;
     }
 };
@@ -29,14 +30,38 @@ class JSONObject : public JSONValue {
 public:
     std::map<String, JSONValue*>* data = new std::map<String, JSONValue*>;
 
+    ~JSONObject() {
+        delete data;
+    } 
+
     JSONValue* get(String key);
     void set(String key, JSONValue* val);
+    void set(String key, String val);
+    void set(String key, double val);
 
     // What a cute shortcut!
     template<JSONValueDerivative T>
     T* get(String key) {
         return get(key)->as<T>();
     }
+
+    String to_string() override;
+};
+
+class JSONArray : public JSONValue {
+public:
+    std::vector<JSONValue*>* data = new std::vector<JSONValue*>;
+
+    void append(JSONValue* val) {
+        data->push_back(val);
+    }
+
+    template<JSONValueDerivative T>
+    T* get(int index) {
+        return (*data)[index]->as<T>();
+    }
+
+    String to_string() override;
 };
 
 class JSONString : public JSONValue {
@@ -44,13 +69,45 @@ public:
     String value;
     
     JSONString(String val): value(val) { }
+
+    static String to_string(String s) {
+        String out = "\"";
+        out.append(s);
+        out.append("\"");
+        return out;
+    }
+
+    String to_string() override {
+        return JSONString::to_string(value);
+    }
 };
 
 class JSONNumber : public JSONValue {
 public:
-    float value;
+    double value;
     
-    JSONNumber(float val): value(val) { }
+    JSONNumber(double val): value(val) { }
+
+    String to_string() override {
+        // HACK for JSON-RPC for LSP (id SHOULD NOT have a fractional part)
+        return String::from_number_klutz(value);
+    }
+};
+
+class JSONNull : public JSONValue {
+public:
+    String to_string() override {
+        return "null";
+    }
+
+    static JSONNull* the() {
+        // Awesome - Meyers' Singleton
+        static JSONNull _the;
+        return &_the;
+    }
+
+private:
+    JSONNull() = default;
 };
 
 class JSONParser {
@@ -84,21 +141,19 @@ public:
     }
 
     JSONValue* parse_value() {
-        printf("Parsing value:");
         char first_char = text[i];
         
         switch (first_char) {
             case '{':
-                printf("Object!\n");
                 return parse_object();
+            case '[':
+                return parse_array();
             case '"':
             case '\'':
-                printf("String!\n");
                 return parse_string();
         }
 
         if (String::is_number(first_char)) {
-            printf("Number!\n");
             return parse_number();
         }
         
@@ -133,33 +188,48 @@ public:
         
         return new JSONString(out_string);
     }
+
+    JSONArray* parse_array() {
+        ASSERT(text[i] == '[', "Doesn't look like an array to me!");
+
+        JSONArray* array = new JSONArray();
+        if (text[++i] == ']') return array;
+
+        while (true) {
+            zap_whitespace();
+            JSONValue* val = parse_value();
+            array->append(val);
+            zap_whitespace();
+
+            if (text[i] == ']') {
+                break;
+            }
+
+            ASSERT(text[i++] == ',', "Expected ',' or ']' after array value");
+        }
+
+        i++;
+        return array;
+    }
     
     JSONObject* parse_object() {
         ASSERT(text[i] == '{', "Doesn't look like an object to me!");
 
         JSONObject* object = new JSONObject();
-        
         if (text[++i] == '}') return object;
-        zap_whitespace();
 
         while (true) {
-            printf("[1] XX%s\n", text.as_c() + i);
             zap_whitespace();
             JSONString* key = parse_string();
-            printf("[2] XX%s\n", text.as_c() + i);
             ASSERT(text[i++] == ':', "Expected ':' in object creation");
 
             zap_whitespace();
             JSONValue* value = parse_value();
             
-            printf("[3] XX%s\n", text.as_c() + i);
             object->set(key->value, value);
 
             zap_whitespace();
             if (text[i] == '}') break;
-            
-            printf("'%c'\n", text[i]);
-            printf("[4] XX%s\n", text.as_c() + i);
             
             ASSERT(text[i] == ',', "Expected ',' in object continuation");
             i++;
