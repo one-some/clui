@@ -2,7 +2,9 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstddef>
+#include <unistd.h>
 
+#include "Claire/Optional.h"
 #include "Claire/Assert.h"
 #include "Claire/Math.h"
 #include <vector>
@@ -14,6 +16,13 @@ class String {
         String() {
             c_str = (char*)calloc(16, 1);
             capacity = 16;
+        }
+
+        String(char c) {
+            capacity = 4;
+            c_str = (char*) malloc(2);
+            c_str[0] = c;
+            c_str[1] = '\0';
         }
 
         String(const char* in_c_str) {
@@ -145,9 +154,7 @@ class String {
             c_str[len + 1] = '\0';
         }
 
-        void append(String text) {
-            append(text.c_str);
-        }
+        void append(const String& text) { append(text.c_str); }
 
         void append(const char* text) {
             if (!text[0]) return;
@@ -167,6 +174,44 @@ class String {
         void remove(size_t index) {
             // Just keep it current size lol
             memmove(c_str + index, c_str + index + 1, strlen(c_str) - index);
+        }
+
+        std::vector<String> split(const String& delimiter) {
+            std::vector<String> out;
+
+            if (!delimiter.length()) {
+                // Otherwise will be empty
+                if (!length()) out.push_back("");
+
+                // TODO: Iterator over chars...
+                for (size_t i = 0; i < length(); i++) {
+                    out.push_back(String(c_str[i]));
+                }
+
+                return out;
+            }
+
+            size_t last_end = 0;
+            Optional<size_t> maybe_location;
+            while ((maybe_location = find(delimiter, last_end))) {
+                out.push_back(slice(last_end, *maybe_location));
+                last_end = *maybe_location + delimiter.length();
+            }
+
+            out.push_back(slice(last_end, length()));
+
+            return out;
+        }
+
+        Optional<size_t> find(const String& string, size_t start = 0) const {
+            size_t sample_size = string.length();
+            if (sample_size > length()) return Optional<size_t>();
+
+            for (size_t i = start; i <= length() - sample_size; i++) {
+                if (slice(i, i + sample_size) == string) return Optional<size_t>(i);
+            }
+
+            return Optional<size_t>();
         }
 
         std::vector<String> split(const char dilemeter) {
@@ -214,7 +259,7 @@ class String {
             return slice(start, len);
         }
 
-        String slice(size_t start, size_t end) {
+        String slice(size_t start, size_t end) const {
             if (start == end) return String("");
 
             ASSERT(start < end, "Be orderly!");
@@ -226,14 +271,54 @@ class String {
             return String(str);
         }
 
+        static String from_fd(int fd, ssize_t limit = -1, size_t chunk_size = 1024) {
+            String string;
+
+            if (!limit) return string;
+
+            char* buf = nullptr;
+            size_t total_read = 0;
+
+            while (true) {
+                size_t bytes_to_read = chunk_size;
+
+                if (limit > 0) {
+                    // We have a real limit....
+                    if (total_read >= (size_t)limit) break;
+                    bytes_to_read = min(bytes_to_read, limit - total_read);
+
+                }
+
+                buf = (char*) malloc(chunk_size + 1);
+
+                ssize_t bytes_read = read(fd, buf, chunk_size);
+                ASSERT(bytes_read >= 0, "ERROR READING!");
+                if (bytes_read == 0) break;
+
+                buf[bytes_read] = '\0';
+                string.append(buf);
+                total_read += bytes_read;
+
+                free(buf);
+                if ((size_t)bytes_read < chunk_size) break;
+            }
+
+            return string;
+        }
+
         const char* as_c() const {
             return c_str;
         }
         
-        float as_float() {
+        float to_float() const {
             // TODO: Error check or DIE!!!!
             char* end;
             return strtof(c_str, &end);
+        }
+
+        int to_int() const {
+            char* end;
+            return strtod(c_str, &end);
         }
 
     private:

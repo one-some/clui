@@ -170,7 +170,7 @@ public:
             i++;
         }
         
-        return new JSONNumber(num.as_float());
+        return new JSONNumber(num.to_float());
     }
     
     JSONString* parse_string() {

@@ -34,13 +34,7 @@ public:
 
             ASSERT(tcgetattr(slave_fd, &terminal_attrs) != -1, "termattr get error");
 
-            terminal_attrs.c_lflag |= ICANON;
-            terminal_attrs.c_lflag |= ECHO;
-            terminal_attrs.c_lflag |= ISIG;
-            terminal_attrs.c_oflag |= OPOST;
-            terminal_attrs.c_iflag |= ICRNL;
-
-            terminal_attrs.c_cc[VERASE] = '\b';
+            cfmakeraw(&terminal_attrs);
 
             ASSERT(tcsetattr(slave_fd, TCSANOW, &terminal_attrs) != -1, "termattr write error");
 
@@ -89,7 +83,7 @@ public:
 
         String in = "Content-Length: ";
         in.append(String::from_int(len));
-        in.append("\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
+        in.append("\r\n\r\n");
         in.append(payload);
 
         printf("Payload: %s\n", payload.as_c());
@@ -103,9 +97,9 @@ public:
         while (true) {
             // WHAT'S UP WITH THIS TERRIBLY UNOPTIMIZED THING!?!?! WOW!!!!!!
             char c; 
-            read(master_pty_fd, &c, 1);
+            ssize_t bytes_read = read(master_pty_fd, &c, 1);
 
-            ASSERT(c != EOF, "Oook we just hit eof in header ROFL");
+            ASSERT(bytes_read != EOF, "Oook we just hit eof in header ROFL");
             header_chunk.add_char(c);
 
             // After this we're in bodyland...ominous...
@@ -115,29 +109,26 @@ public:
         }
 
         std::map<String, String> headers;
-        // TODO: Make .split() accept a string so we dont need these \r hax
-        // TODO: Also make a .strip() lol
-        for (auto& line : header_chunk.split('\n')) {
-            if (line == "\r") continue;
+        // TODO: Make a .strip() lol
+        for (auto& line : header_chunk.split("\r\n")) {
             if (!line.length()) continue;
+            printf("%s\n", line.as_c());
             
-            // SUPERTODO: Ok this is seriously getting annoying with the one char dilemeter
-            auto header_line = line.split(':');
+            auto header_line = line.split(": ");
 
             // Realistically this isn't impossible but let's hope it pretends to be
             ASSERT(header_line.size() == 2, "Ok who did that");
 
-            headers[header_line[0]] = header_line[1].slice(1, header_line[1].length());
+            headers[header_line[0]] = header_line[1];
         }
 
-        for (auto& pair : headers) { 
-            // FIXMENEXTTIME: I think the 212 (pair.second) has a null character...........................shiiiiiiiiteeeeeeeeeeeeeeeeeeee.......................ok goodnight 2:22AM
-            printf("'%s': '%s'\n", pair.first.as_c(), pair.second.as_c());
-        }
+        int content_length = headers["Content-Length"].to_int();
+        printf("Content length: %d\n", content_length);
 
-        // printf("Out: %s\n", out.as_c());
+        String packet = String::from_fd(master_pty_fd, content_length, 1024);
+        printf("BEGIN%sEND\n", packet.as_c());
 
         // TODO FIXME
-        return header_chunk;
+        return packet;
     }
 };

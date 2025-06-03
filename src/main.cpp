@@ -88,7 +88,7 @@ int main(int argc, char *argv[], char *envp[]) {
     // auto styles = json->get<JSONArray>("styles");
     
     // printf("Style is: %s\n", (*styles).get<JSONString>(3)->value.as_c());
-    exit(0);
+    // exit(0);
     
     LogContainer::swallow_stdout();
 
