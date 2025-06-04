@@ -1,29 +1,29 @@
 #include "Claire/JSON/JSON.h"
 
 JSONValue* JSONObject::get(String key) {
-    bool valid = data->find(key) != data->end();
-    if (!valid) {
+    auto it = data->find(key);
+    if (it == data->end()) {
         printf("Keys: ");
         for (auto& pair : *data) {
             printf("'%s' ", pair.first.as_c());
         }
         printf("\n");
-        ASSERT(valid, "Bad key '%s' for object", key.as_c());
+        ASSERT_NOT_REACHED("Bad key '%s' for object", key.as_c());
     }
 
-    return (*data)[key];
+    return it->second.get();
 }
 
-void JSONObject::set(String key, JSONValue* val) {
-    (*data)[key] = val;
+void JSONObject::set(String key, std::unique_ptr<JSONValue> val) {
+    (*data)[key] = std::move(val);
 }
 
 void JSONObject::set(String key, String val) {
-    set(key, new JSONString(val));
+    set(key, std::make_unique<JSONString>(val));
 }
 
 void JSONObject::set(String key, double val) {
-    set(key, new JSONNumber(val));
+    set(key, std::make_unique<JSONNumber>(val));
 }
 
 String JSONObject::to_string() {

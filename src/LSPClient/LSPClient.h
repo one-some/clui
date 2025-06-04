@@ -6,51 +6,38 @@
 
 class LSPClient {
 public:
-    int master_pty_fd = -1;
+    int to_lsp_pipe[2];
+    int from_lsp_pipe[2];
 
     LSPClient() {
-        init_pty();
+        open_pipes();
     }
 
-    void init_pty() {
+    void open_pipes() {
         printf("Starting clangd...\n");
 
-        int slave_fd;
-
-        ASSERT(
-            openpty(&master_pty_fd, &slave_fd, NULL, NULL, NULL)
-            == 0,
-            "Failure in openpty()"
-        );
+        ASSERT(pipe(to_lsp_pipe) != -1, "Unable to pipe to lsp");
+        ASSERT(pipe(from_lsp_pipe) != -1, "Unable to pipe from lsp");
 
         if (fork() == 0) {
-            // Child
-            close(master_pty_fd);
+            close(to_lsp_pipe[1]);  // write
+            close(from_lsp_pipe[0]);  // read
 
-            setsid();
-            ioctl(slave_fd, TIOCSCTTY, 1);
+            // in -> to_lsp
+            dup2(to_lsp_pipe[0], STDIN_FILENO);
+            close(to_lsp_pipe[0]);
 
-            struct termios terminal_attrs;
+            dup2(from_lsp_pipe[1], STDOUT_FILENO);
+            close(from_lsp_pipe[1]);
 
-            ASSERT(tcgetattr(slave_fd, &terminal_attrs) != -1, "termattr get error");
-
-            cfmakeraw(&terminal_attrs);
-
-            ASSERT(tcsetattr(slave_fd, TCSANOW, &terminal_attrs) != -1, "termattr write error");
-
-            dup2(slave_fd, 0);  // STDIN
-            dup2(slave_fd, 1);  // STDOUT
-            dup2(slave_fd, 2);  // STDERR
-
-            close(slave_fd);
-
-            // setenv("TERM", "dumb", 1);
             execl("/usr/bin/clangd", "/usr/bin/clangd", NULL);
+
+            ASSERT_NOT_REACHED("execl failure");
             return;
         }
 
-        // Parent
-        close(slave_fd);
+        close(to_lsp_pipe[0]); // read
+        close(from_lsp_pipe[1]); // write
     }
 
     String build_request() {
@@ -59,20 +46,17 @@ public:
         object->set("id", 1);
         object->set("method", "initialize");
         
-        auto params = new JSONObject();
-        object->set("params", params);
+        auto params = object->set_new<JSONObject>("params");
 
-        params->set("processId", JSONNull::the());
+        params->set_new<JSONNull>("processId");
         // params->set("rootPath", JSONNull::the());
         params->set("rootUri", "file:///home/susan/clui");
 
-        auto client_info = new JSONObject();
-        params->set("clientInfo", client_info);
+        auto client_info = params->set_new<JSONObject>("clientInfo");
         client_info->set("name", "claires lsp client");
         client_info->set("version", "0.000000001");
 
-        auto capabilities = new JSONObject();
-        params->set("capabilities", capabilities);
+        auto capabilities = params->set_new<JSONObject>("capabilities");
         // TODO: Be able!
 
         return object->to_string();
@@ -88,7 +72,7 @@ public:
 
         printf("Payload: %s\n", payload.as_c());
 
-        write(master_pty_fd, in.as_c(), in.length());
+        write(to_lsp_pipe[1], in.as_c(), in.length());
         printf("Done writing\n");
 
         // Now we wait....
@@ -97,7 +81,7 @@ public:
         while (true) {
             // WHAT'S UP WITH THIS TERRIBLY UNOPTIMIZED THING!?!?! WOW!!!!!!
             char c; 
-            ssize_t bytes_read = read(master_pty_fd, &c, 1);
+            ssize_t bytes_read = read(from_lsp_pipe[0], &c, 1);
 
             ASSERT(bytes_read != EOF, "Oook we just hit eof in header ROFL");
             header_chunk.add_char(c);
@@ -125,8 +109,18 @@ public:
         int content_length = headers["Content-Length"].to_int();
         printf("Content length: %d\n", content_length);
 
-        String packet = String::from_fd(master_pty_fd, content_length, 1024);
+        String packet = String::from_fd(from_lsp_pipe[0], content_length, 1024);
         printf("BEGIN%sEND\n", packet.as_c());
+
+        // I HATE THIS. FIX THIS SOON.
+        auto _object = JSONParser(packet).parse();
+        auto object = _object->as<JSONObject>();
+
+        for (auto& pair : *(object->data)) {
+            printf("%s\n", pair.first.as_c());
+        }
+
+
 
         // TODO FIXME
         return packet;

@@ -121,9 +121,10 @@ class String {
             return cmp_out < 0;
         }
         
-        constexpr static bool is_number(const char c) {
-            return c >= '0' && c <= '9';
-        }
+        constexpr static bool is_number(const char c) { return c >= '0' && c <= '9'; }
+        constexpr static bool is_lowercase(const char c) { return c >= 'a' && c <= 'z'; }
+        constexpr static bool is_uppercase(const char c) { return c >= 'A' && c <= 'Z'; }
+        constexpr static bool is_letter(const char c) { return is_lowercase(c) || is_uppercase(c); }
 
         constexpr static u_int64_t hash(const char* str) {
             // djb2 by Dan Bernstein

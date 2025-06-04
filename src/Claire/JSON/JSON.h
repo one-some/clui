@@ -3,6 +3,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <concepts>
 #include "Claire/Assert.h"
 #include "Claire/String.h"
@@ -28,16 +29,22 @@ public:
 
 class JSONObject : public JSONValue {
 public:
-    std::map<String, JSONValue*>* data = new std::map<String, JSONValue*>;
-
-    ~JSONObject() {
-        delete data;
-    } 
+    // Sharedptr for values??
+    std::unique_ptr<std::map<String, std::unique_ptr<JSONValue>>> data = std::make_unique<std::map<String, std::unique_ptr<JSONValue>>>();
 
     JSONValue* get(String key);
-    void set(String key, JSONValue* val);
+    void set(String key, std::unique_ptr<JSONValue> val);
     void set(String key, String val);
     void set(String key, double val);
+
+    template<JSONValueDerivative T, typename... Args>
+    T* set_new(String key, Args&&... args) {
+        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
+        T* raw_ptr = ptr.get();
+
+        set(key, std::move(ptr));
+        return raw_ptr;
+    }
 
     // What a cute shortcut!
     template<JSONValueDerivative T>
@@ -50,10 +57,10 @@ public:
 
 class JSONArray : public JSONValue {
 public:
-    std::vector<JSONValue*>* data = new std::vector<JSONValue*>;
+    std::unique_ptr<std::vector<std::unique_ptr<JSONValue>>> data = std::make_unique<std::vector<std::unique_ptr<JSONValue>>>();
 
-    void append(JSONValue* val) {
-        data->push_back(val);
+    void append(std::unique_ptr<JSONValue> val) {
+        data->push_back(std::move(val));
     }
 
     template<JSONValueDerivative T>
@@ -99,15 +106,17 @@ public:
     String to_string() override {
         return "null";
     }
+};
 
-    static JSONNull* the() {
-        // Awesome - Meyers' Singleton
-        static JSONNull _the;
-        return &_the;
+class JSONBoolean : public JSONValue {
+public:
+    bool value;
+
+    JSONBoolean(bool val): value(val) { }
+
+    String to_string() override {
+        return value ? "true" : "false";
     }
-
-private:
-    JSONNull() = default;
 };
 
 class JSONParser {
@@ -135,12 +144,12 @@ public:
         ASSERT(text[i], "My oh my thats the null terminator!");
     }
 
-    JSONValue* parse() {
+    std::unique_ptr<JSONValue> parse() {
         i = 0;
         return parse_value();
     }
 
-    JSONValue* parse_value() {
+    std::unique_ptr<JSONValue> parse_value() {
         char first_char = text[i];
         
         switch (first_char) {
@@ -156,24 +165,42 @@ public:
         if (String::is_number(first_char)) {
             return parse_number();
         }
+
+        if (String::is_letter(first_char)) {
+            return parse_symbol();
+        }
         
         printf("'%s'\n", text.as_c() + i);
         ASSERT_NOT_REACHED("No idea how to parse this value");
     }
     
-    JSONNumber* parse_number() {
+    std::unique_ptr<JSONNumber> parse_number() {
         ASSERT(String::is_number(text[i]), "Number not a number! WE ARE NOT JS....");
         
         String num;
         while (String::is_number(text[i])) {
-            num.add_char(text[i]);
-            i++;
+            num.add_char(text[i++]);
         }
         
-        return new JSONNumber(num.to_float());
+        return std::make_unique<JSONNumber>(num.to_float());
+    }
+
+    std::unique_ptr<JSONValue> parse_symbol() {
+        ASSERT(String::is_letter(text[i]), "This isn't how my limited worldview works");
+
+        String symbol;
+        while (String::is_letter(text[i])) {
+            symbol.add_char(text[i++]);
+        }
+
+        if (symbol == "true") return std::make_unique<JSONBoolean>(true);
+        if (symbol == "false") return std::make_unique<JSONBoolean>(false);
+        if (symbol == "null") return std::make_unique<JSONNull>();
+
+        ASSERT_NOT_REACHED("Unknown constant %s", symbol.as_c());
     }
     
-    JSONString* parse_string() {
+    std::unique_ptr<JSONString> parse_string() {
         char starting_quote = text[i++];
         ASSERT(starting_quote == '"' || starting_quote == '\'', "Doesn't look like a string to me!");
 
@@ -186,19 +213,19 @@ public:
         
         i++;
         
-        return new JSONString(out_string);
+        return std::make_unique<JSONString>(out_string);
     }
 
-    JSONArray* parse_array() {
+    std::unique_ptr<JSONArray> parse_array() {
         ASSERT(text[i] == '[', "Doesn't look like an array to me!");
 
-        JSONArray* array = new JSONArray();
+        auto array = std::make_unique<JSONArray>();
         if (text[++i] == ']') return array;
 
         while (true) {
             zap_whitespace();
-            JSONValue* val = parse_value();
-            array->append(val);
+            auto val = parse_value();
+            array->append(std::move(val));
             zap_whitespace();
 
             if (text[i] == ']') {
@@ -212,21 +239,21 @@ public:
         return array;
     }
     
-    JSONObject* parse_object() {
+    std::unique_ptr<JSONObject> parse_object() {
         ASSERT(text[i] == '{', "Doesn't look like an object to me!");
 
-        JSONObject* object = new JSONObject();
+        auto object = std::make_unique<JSONObject>();
         if (text[++i] == '}') return object;
 
         while (true) {
             zap_whitespace();
-            JSONString* key = parse_string();
+            auto key = parse_string();
             ASSERT(text[i++] == ':', "Expected ':' in object creation");
 
             zap_whitespace();
-            JSONValue* value = parse_value();
+            auto value = parse_value();
             
-            object->set(key->value, value);
+            object->set(key->value, std::move(value));
 
             zap_whitespace();
             if (text[i] == '}') break;

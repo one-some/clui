@@ -49,7 +49,11 @@
         "ranges": "cpp",
         "assert.h": "c",
         "cstring": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "sstream": "cpp",
+        "variant": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }
