@@ -79,12 +79,11 @@ void reload_self(int argc, char *argv[], char *envp[]) {
 }
 
 int main(int argc, char *argv[], char *envp[]) {
-    auto lsp_client = new LSPClient();
-    lsp_client->init();
-
     LogContainer::swallow_stdout();
 
-    printf("Hello\n");
+    printf("Hello from claire\n");
+    
+    LSPClient::the().init();
 
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
@@ -171,6 +170,7 @@ int main(int argc, char *argv[], char *envp[]) {
         RayLib::AwesomeSetMouseCursor(FrameManager::get_frame_cursor());
 
         FrameManager::run_queued_operations();
+        LSPClient::the().check_lsp();
         LogContainer::flush_stdout();
 
         frames++;

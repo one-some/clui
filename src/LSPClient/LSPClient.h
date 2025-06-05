@@ -6,12 +6,18 @@
 #include "Claire/JSON/JSON.h"
 
 class LSPClient {
+private:
+    LSPClient() {
+        open_pipes();
+    }
+
 public:
     int to_lsp_pipe[2];
     int from_lsp_pipe[2];
 
-    LSPClient() {
-        open_pipes();
+    static LSPClient& the() {
+        static LSPClient real_deal;
+        return real_deal;
     }
 
     void open_pipes() {
@@ -73,9 +79,9 @@ public:
 
         send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
 
-        printf("I dont know what this is going to be\n");
-        response = await_lsp_response();
-        printf("%s\n", response.as_c());
+        // printf("I dont know what this is going to be\n");
+        // response = await_lsp_response();
+        // printf("%s\n", response.as_c());
     }
 
     String build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
@@ -101,6 +107,41 @@ public:
 
         write(to_lsp_pipe[1], in.as_c(), in.length());
         printf("Done writing\n");
+    }
+
+    void check_lsp() {
+        struct pollfd fd_array[1] = {{from_lsp_pipe[0], POLLIN, 0}};
+        int poll_ret = poll(fd_array, 1, 0);
+        ASSERT(poll_ret != -1, "Unable to poll");
+
+        if (poll_ret == 0) return;
+        if (!(fd_array[0].revents & POLLIN)) return;
+
+        String body = await_lsp_response();
+        process_lsp_response(body);
+    }
+
+    void process_lsp_response(String body) {
+        printf("%s\n", body.as_c());
+
+        // I HATE THIS. FIX THIS SOON.
+        auto _object = JSONParser(body).parse();
+        auto object = _object->as<JSONObject>();
+
+        for (auto& pair : *(object->data)) {
+            printf("%s\n", pair.first.as_c());
+        }
+
+        if (object->get<JSONString>("method")->value == "textDocument/publishDiagnostics") {
+            printf("DIAGNOSTICS!\n");
+
+            auto diagnostics = object->get<JSONObject>("params")->get<JSONArray>("diagnostics");
+
+            for (auto& v : *(diagnostics->data)) {
+                auto message = v->as<JSONObject>()->get<JSONString>("message")->value;
+                printf("%s\n", message.as_c());
+            }
+        }
     }
 
     String await_lsp_response() {
@@ -138,19 +179,8 @@ public:
         int content_length = headers["Content-Length"].to_int();
         printf("Content length: %d\n", content_length);
 
-        String packet = String::from_fd(from_lsp_pipe[0], content_length, 1024);
-        printf("%s\n", packet.as_c());
-
-        // I HATE THIS. FIX THIS SOON.
-        auto _object = JSONParser(packet).parse();
-        auto object = _object->as<JSONObject>();
-
-        for (auto& pair : *(object->data)) {
-            printf("%s\n", pair.first.as_c());
-        }
-
-
-        // TODO FIXME
-        return packet;
+        String body = String::from_fd(from_lsp_pipe[0], content_length, 1024);
+        // printf("Debug: %s\n", body.as_c());
+        return body;
     }
 };
