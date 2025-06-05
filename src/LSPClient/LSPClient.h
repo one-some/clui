@@ -1,6 +1,7 @@
 #include <pty.h>
 #include <poll.h>
 
+#include "Claire/File.h"
 #include "Claire/String.h"
 #include "Claire/JSON/JSON.h"
 
@@ -30,7 +31,7 @@ public:
             dup2(from_lsp_pipe[1], STDOUT_FILENO);
             close(from_lsp_pipe[1]);
 
-            execl("/usr/bin/clangd", "/usr/bin/clangd", NULL);
+            execl("/usr/bin/clangd", "/usr/bin/clangd", "--log=error", NULL);
 
             ASSERT_NOT_REACHED("execl failure");
             return;
@@ -40,14 +41,8 @@ public:
         close(from_lsp_pipe[1]); // write
     }
 
-    String build_request() {
-        auto object = new JSONObject();
-        object->set("jsonrpc", "2.0");
-        object->set("id", 1);
-        object->set("method", "initialize");
-        
-        auto params = object->set_new<JSONObject>("params");
-
+    void init() {
+        auto params = std::make_unique<JSONObject>();
         params->set_new<JSONNull>("processId");
         // params->set("rootPath", JSONNull::the());
         params->set("rootUri", "file:///home/susan/clui");
@@ -57,12 +52,44 @@ public:
         client_info->set("version", "0.000000001");
 
         auto capabilities = params->set_new<JSONObject>("capabilities");
-        // TODO: Be able!
+        auto capabilities_window = capabilities->set_new<JSONObject>("window");
+        capabilities_window->set_new<JSONBoolean>("workDoneProgress", true);
+
+
+        send_lsp_message(build_request("initialize", 0, std::move(params)));
+        auto response = await_lsp_response();
+        printf("%s\n", response.as_c());
+
+        params = std::make_unique<JSONObject>();
+        send_lsp_message(build_request("initialized", Optional<int>(), std::move(params)));
+
+        params = std::make_unique<JSONObject>();
+        auto text_document = params->set_new<JSONObject>("textDocument");
+        text_document->set_new<JSONString>("uri", "file:///home/susan/clui/src/main.cpp");
+        text_document->set_new<JSONString>("languageId", "cpp");
+        text_document->set_new<JSONNumber>("version", 1);
+        text_document->set_new<JSONString>("text", File("src/main.cpp").read());
+        // TEXT
+
+        send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
+
+        printf("I dont know what this is going to be\n");
+        response = await_lsp_response();
+        printf("%s\n", response.as_c());
+    }
+
+    String build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
+        auto object = new JSONObject();
+
+        object->set("jsonrpc", "2.0");
+        if (id) object->set("id", *id);
+        object->set("method", method);
+        if (params) object->set("params", std::move(params));
 
         return object->to_string();
     }
 
-    String await_lsp_response(String payload) {
+    void send_lsp_message(String payload) {
         size_t len = payload.length();
 
         String in = "Content-Length: ";
@@ -74,7 +101,9 @@ public:
 
         write(to_lsp_pipe[1], in.as_c(), in.length());
         printf("Done writing\n");
+    }
 
+    String await_lsp_response() {
         // Now we wait....
 
         String header_chunk;
@@ -110,7 +139,7 @@ public:
         printf("Content length: %d\n", content_length);
 
         String packet = String::from_fd(from_lsp_pipe[0], content_length, 1024);
-        printf("BEGIN%sEND\n", packet.as_c());
+        printf("%s\n", packet.as_c());
 
         // I HATE THIS. FIX THIS SOON.
         auto _object = JSONParser(packet).parse();
@@ -119,7 +148,6 @@ public:
         for (auto& pair : *(object->data)) {
             printf("%s\n", pair.first.as_c());
         }
-
 
 
         // TODO FIXME

@@ -80,16 +80,8 @@ void reload_self(int argc, char *argv[], char *envp[]) {
 
 int main(int argc, char *argv[], char *envp[]) {
     auto lsp_client = new LSPClient();
-    auto request = lsp_client->await_lsp_response(lsp_client->build_request());
+    lsp_client->init();
 
-    printf("WOW lol\n");
-    
-    // auto json = (JSONParser(File("test.json").read()).parse())->as<JSONObject>();
-    // auto styles = json->get<JSONArray>("styles");
-    
-    // printf("Style is: %s\n", (*styles).get<JSONString>(3)->value.as_c());
-    // exit(0);
-    
     LogContainer::swallow_stdout();
 
     printf("Hello\n");
@@ -97,6 +89,9 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
+
+    RayLib::SetWindowIcon(RayLib::LoadImage("claire_head.png"));
+
     RayLib::SetTargetFPS(60);
     uint64_t frames = 0;
     
@@ -136,6 +131,9 @@ int main(int argc, char *argv[], char *envp[]) {
 
                 auto log = std::make_unique<LogContainer>();
                 bottom_tabs->add_tab("Babble", std::move(log));
+
+                auto issues = std::make_unique<Container>();
+                bottom_tabs->add_tab("Code Issues", std::move(issues));
 
 
     while (!RayLib::WindowShouldClose()) {

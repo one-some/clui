@@ -78,6 +78,9 @@ public:
     JSONString(String val): value(val) { }
 
     static String to_string(String s) {
+        s = s.replace("\n", "\\n");
+        s = s.replace("\"", "\\\"");
+
         String out = "\"";
         out.append(s);
         out.append("\"");
@@ -205,13 +208,40 @@ public:
         ASSERT(starting_quote == '"' || starting_quote == '\'', "Doesn't look like a string to me!");
 
         String out_string;
-        while (text[i] != starting_quote) {
+        while (true) {
             ASSERT(text[i], "It would really suck if the string ended here right");
-            out_string.add_char(text[i]);
+
+            if (text[i] == starting_quote) {
+                // Closing quote
+                i++;
+                break;
+            } else if (text[i] != '\\') {
+                // Normal chars
+                out_string.add_char(text[i++]);
+                continue;
+            }
+
+            // its a backslash. Brace for impact everybody
+            i++;
+            ASSERT(text[i], "Ok that's just weirdo behavior ending things right there.");
+
+            switch (text[i]) {
+                case '"':
+                case '\\':
+                case '/':
+                    out_string.add_char(text[i]);
+                    break;
+                case 'n': out_string.add_char('\n'); break;
+                case 'r': out_string.add_char('\r'); break;
+                case 'b': out_string.add_char('\b'); break;
+                case 'f': out_string.add_char('\f'); break;
+                case 't': out_string.add_char('\t'); break;
+                default:
+                    ASSERT_NOT_REACHED("Lol \\%c what is that", text[i]);
+            }
+
             i++;
         }
-        
-        i++;
         
         return std::make_unique<JSONString>(out_string);
     }
@@ -220,7 +250,12 @@ public:
         ASSERT(text[i] == '[', "Doesn't look like an array to me!");
 
         auto array = std::make_unique<JSONArray>();
-        if (text[++i] == ']') return array;
+
+        zap_whitespace();
+        if (text[++i] == ']') {
+            i++;
+            return array;
+        }
 
         while (true) {
             zap_whitespace();
@@ -229,13 +264,13 @@ public:
             zap_whitespace();
 
             if (text[i] == ']') {
+                i++;
                 break;
             }
 
             ASSERT(text[i++] == ',', "Expected ',' or ']' after array value");
         }
 
-        i++;
         return array;
     }
     
@@ -243,7 +278,10 @@ public:
         ASSERT(text[i] == '{', "Doesn't look like an object to me!");
 
         auto object = std::make_unique<JSONObject>();
-        if (text[++i] == '}') return object;
+        if (text[++i] == '}') {
+            i++;
+            return object;
+        }
 
         while (true) {
             zap_whitespace();
@@ -256,7 +294,11 @@ public:
             object->set(key->value, std::move(value));
 
             zap_whitespace();
-            if (text[i] == '}') break;
+
+            if (text[i] == '}') {
+                i++;
+                break;
+            }
             
             ASSERT(text[i] == ',', "Expected ',' in object continuation");
             i++;

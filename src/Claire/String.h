@@ -204,6 +204,22 @@ class String {
             return out;
         }
 
+        String replace(const String& target, const String& replacement) const {
+            String out;
+            size_t last_end = 0;
+            Optional<size_t> maybe_location;
+
+            while ((maybe_location = find(target, last_end))) {
+                out.append(slice(last_end, *maybe_location));
+                out.append(replacement);
+                last_end = *maybe_location + target.length();
+            }
+
+            out.append(slice(last_end, length()));
+
+            return out;
+        }
+
         Optional<size_t> find(const String& string, size_t start = 0) const {
             size_t sample_size = string.length();
             if (sample_size > length()) return Optional<size_t>();
