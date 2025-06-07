@@ -53,7 +53,12 @@
         "charconv": "cpp",
         "format": "cpp",
         "sstream": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "ctime": "cpp",
+        "map": "cpp",
+        "span": "cpp",
+        "stacktrace": "cpp",
+        "text_encoding": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }

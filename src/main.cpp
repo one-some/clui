@@ -27,40 +27,6 @@
 
 std::unique_ptr<RayLib::Font, RLFontDeleter> Font::the_raw;
 
-class TextureRect : public Container {
-    public:
-        std::unique_ptr<RayLib::Texture2D> texture;
-
-        TextureRect(const char* file_name) {
-            texture = std::make_unique<RayLib::Texture2D>(RayLib::LoadTexture(file_name));
-            size->set_raw({ texture->width, texture->height });
-        }
-
-        void draw_self() override {
-            if (!texture) return;
-
-            Vector2 pos = position->get_global();
-            RayLib::DrawTexturePro(
-                *texture,
-                { 0.0, 0.0, (float)texture->width, (float)texture->height },
-                Vector2::to_ray_rect(pos, size->get()),
-                { 0, 0 },
-                0.0,
-                RayLib::WHITE
-            );
-        }
-};
-
-class ColorRect : public Container {
-    public:
-        RayLib::Color color = RayLib::RED;
-
-        void draw_self() override {
-            Vector2 pos = position->get_global();
-            RayLib::DrawRectangle(pos.x, pos.y, size->get().x, size->get().y, color);
-        }
-};
-
 void reload_self(int argc, char *argv[], char *envp[]) {
     printf("ROFL RELOAD\n");
 
@@ -160,8 +126,6 @@ int main(int argc, char *argv[], char *envp[]) {
         RayLib::BeginDrawing();
         RayLib::ClearBackground(Colors::BG.to_ray());
 
-        // if (frames % 2 == 0) rect->position.x += 1;
-
         root.draw_tree();
         FrameManager::draw_debug_points();
 
@@ -170,7 +134,6 @@ int main(int argc, char *argv[], char *envp[]) {
         RayLib::AwesomeSetMouseCursor(FrameManager::get_frame_cursor());
 
         FrameManager::run_queued_operations();
-        LSPClient::the().check_lsp();
         LogContainer::flush_stdout();
 
         frames++;
