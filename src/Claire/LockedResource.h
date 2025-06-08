@@ -21,6 +21,8 @@ public:
 
     LockedPointer<T> borrow() { return LockedPointer<T>(resource, mutex); }
 
+    // TODO: with_lock(std::function<void(T& resource)>)
+
 private:
     T resource;
     mutable std::mutex mutex;

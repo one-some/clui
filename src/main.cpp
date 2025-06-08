@@ -19,6 +19,7 @@
 #include "Actions/EditorActions.h"
 #include "UI/Stack/Stack.h"
 #include "UI/TabContainer/TabContainer.h"
+#include "UI/IssueContainer/IssueContiainer.h"
 #include "fontglobal.h"
 #include "terminal.h"
 #include "UI/FileList/FileList.h"
@@ -97,7 +98,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 auto log = std::make_unique<LogContainer>();
                 bottom_tabs->add_tab("Babble", std::move(log));
 
-                auto issues = std::make_unique<Container>();
+                auto issues = std::make_unique<IssueContainer>();
                 bottom_tabs->add_tab("Code Issues", std::move(issues));
 
 
