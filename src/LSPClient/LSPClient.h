@@ -7,6 +7,7 @@
 #include "Claire/Thread.h"
 #include "Claire/String.h"
 #include "Claire/JSON/JSON.h"
+#include "Claire/LockedResource.h"
 
 class LSPClient {
 private:
@@ -17,6 +18,7 @@ private:
 public:
     int to_lsp_pipe[2];
     int from_lsp_pipe[2];
+    LockedResource<std::vector<String>> diagnostic_messages;
 
     static LSPClient& the() {
         static LSPClient real_deal;
@@ -31,7 +33,6 @@ public:
         });
         thread.start();
         thread.daemonify();
-        // printf("I dont know what this is going to be\n");
     }
 
     String build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params);

@@ -28,14 +28,14 @@ void LSPClient::open_pipes() {
 }
 
 String LSPClient::build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
-    auto object = new JSONObject();
+    auto object = JSONObject();
 
-    object->set("jsonrpc", "2.0");
-    if (id) object->set("id", *id);
-    object->set("method", method);
-    if (params) object->set("params", std::move(params));
+    object.set("jsonrpc", "2.0");
+    if (id) object.set("id", *id);
+    object.set("method", method);
+    if (params) object.set("params", std::move(params));
 
-    return object->to_string();
+    return object.to_string();
 }
 
 void LSPClient::send_lsp_message(String payload) {
@@ -65,15 +65,15 @@ void LSPClient::poll_lsp() {
 }
 
 void LSPClient::process_lsp_response(String body) {
-    printf("%s\n", body.as_c());
+    // printf("%s\n", body.as_c());
 
     // I HATE THIS. FIX THIS SOON.
     auto _object = JSONParser(body).parse();
     auto object = _object->as<JSONObject>();
 
-    for (auto& pair : *(object->data)) {
-        printf("%s\n", pair.first.as_c());
-    }
+    // for (auto& pair : *(object->data)) {
+    //     printf("%s\n", pair.first.as_c());
+    // }
 
     auto method = object->get<JSONString>("method")->value;
 
@@ -81,11 +81,14 @@ void LSPClient::process_lsp_response(String body) {
         printf("DIAGNOSTICS!\n");
 
         auto diagnostics = object->get<JSONObject>("params")->get<JSONArray>("diagnostics");
+        auto diag_messages = diagnostic_messages.borrow();
 
         for (auto& v : *(diagnostics->data)) {
             auto message = v->as<JSONObject>()->get<JSONString>("message")->value;
+            diag_messages->push_back(message.as_c());
             printf("Diag: %s\n", message.as_c());
         }
+
     } else {
         printf("Unknown method '%s'\n", method.as_c());
     }
