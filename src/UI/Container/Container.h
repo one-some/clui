@@ -79,7 +79,14 @@ public:
     }
 
     void dispatch_event(Event& event) {
-        const auto type = std::type_index(typeid(event));
+        const auto& type_info = typeid(event);
+        const auto type = std::type_index(type_info);
+
+        // Don't propagate events that aren't hovered over.
+        // TODO: Maybe move into event?
+        if (type_info == typeid(ClickEvent) && !is_hovered()) {
+            return;
+        }
         
         if (auto it = object_event_handlers.find(type); it != object_event_handlers.end()) {
             it->second(event);

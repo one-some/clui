@@ -58,7 +58,15 @@
         "map": "cpp",
         "span": "cpp",
         "stacktrace": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "typeindex": "cpp",
+        "any": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true,
     "C_Cpp.default.compilerPath": "/usr/bin/g++"
