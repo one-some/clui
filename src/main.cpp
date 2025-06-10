@@ -113,7 +113,11 @@ int main(int argc, char *argv[], char *envp[]) {
         }
 
         root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
-        if (RayLib::IsMouseButtonPressed(0)) root.propagate_click();
+        if (RayLib::IsMouseButtonPressed(0)) {
+            auto event = ClickEvent();
+            root.dispatch_event(event);
+            // root.propagate_click();
+        }
 
         if (Container::focused_element) {
             Container::focused_element->on_input();
