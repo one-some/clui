@@ -78,15 +78,13 @@ void LSPClient::process_lsp_response(String body) {
     auto method = object->get<JSONString>("method")->value;
 
     if (method == "textDocument/publishDiagnostics") {
-        printf("diagnostics!\n");
-
         auto diagnostics = object->get<JSONObject>("params")->get<JSONArray>("diagnostics");
 
         diagnostic_messages.perform_on([&diagnostics](auto& messages) {
             for (auto& v : *(diagnostics->data)) {
                 auto message = v->as<JSONObject>()->get<JSONString>("message")->value;
                 messages.push_back(message.as_c());
-                printf("diag: %s\n", message.as_c());
+                // printf("diag: %s\n", message.as_c());
             }
         });
 

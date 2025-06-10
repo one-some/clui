@@ -7,13 +7,13 @@
 class Button : public Container {
     public:
         std::function<void()> callback_on_click;
+
         Button() {
             register_class_handler<ClickEvent, Button>(&Button::on_click);
         }
 
     private:
         void on_click(ClickEvent& event) {
-            printf("HELPPPP!!");
             if (!callback_on_click) return;
             FrameManager::queue_operation(callback_on_click);
         }

@@ -60,5 +60,6 @@
         "stacktrace": "cpp",
         "text_encoding": "cpp"
     },
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "C_Cpp.default.compilerPath": "/usr/bin/g++"
 }

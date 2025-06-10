@@ -5,6 +5,8 @@
 
 class Event {
 public:
+    virtual ~Event() = default;
+
     // TODO: Pick one
     void stop_propagation() { do_propagate = false; }
     void prevent_default() { do_default = false; }
@@ -13,6 +15,7 @@ public:
     bool do_default = true;
 
     void reset() {
+        do_propagate = true;
         do_default = true;
     }
 };

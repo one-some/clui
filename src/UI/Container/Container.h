@@ -80,7 +80,7 @@ public:
 
     void dispatch_event(Event& event) {
         const auto type = std::type_index(typeid(event));
-
+        
         if (auto it = object_event_handlers.find(type); it != object_event_handlers.end()) {
             it->second(event);
         }
@@ -90,12 +90,11 @@ public:
         }
 
         // Unhandled....
-        if (event.do_propagate) {
-            event.reset();
+        if (!event.do_propagate) return;
 
-            for (auto& child : children) {
-                child->dispatch_event(event);
-            }
+        for (auto& child : children) {
+            event.reset();
+            child->dispatch_event(event);
         }
     }
 
@@ -113,8 +112,10 @@ protected:
     template<typename TEvent, typename TClass>
     void register_class_handler(void (TClass::*handler)(TEvent&)) {
         const auto type = std::type_index(typeid(TEvent));
+        printf("REGISTERING %d\n", type);
 
         class_event_handlers[type] = [this, handler](Event& event) {
+            printf("C\n");
             (static_cast<TClass*>(this)->*handler)(static_cast<TEvent&>(event));
         };
     }

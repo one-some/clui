@@ -1,4 +1,4 @@
-# .SILENT:
+.SILENT:
 
 # Compiler and flags
 CXX = ccache g++
