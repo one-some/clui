@@ -112,10 +112,8 @@ protected:
     template<typename TEvent, typename TClass>
     void register_class_handler(void (TClass::*handler)(TEvent&)) {
         const auto type = std::type_index(typeid(TEvent));
-        printf("REGISTERING %d\n", type);
 
         class_event_handlers[type] = [this, handler](Event& event) {
-            printf("C\n");
             (static_cast<TClass*>(this)->*handler)(static_cast<TEvent&>(event));
         };
     }
