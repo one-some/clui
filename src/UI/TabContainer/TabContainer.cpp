@@ -93,7 +93,7 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
     button->size->set_x(lab->text_bounds().x + x_padding);
 
     button->callback_on_click = [this, &tab] {
-        this->active_tab = &tab;
+        focus_tab(&tab);
     };
 
     return &tab;

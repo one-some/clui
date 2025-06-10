@@ -25,6 +25,10 @@ class Stack : public Container {
 
 
     protected:
+        Stack() {
+            register_class_handler<AddChildEvent, Stack>(&Stack::on_child_added);
+        }
+
         Container* grabee = nullptr;
 
         virtual RayLib::MouseCursor drag_cursor() const = 0;
@@ -41,7 +45,7 @@ class Stack : public Container {
 
         virtual bool check_dragger_collision(Vector2 position, int32_t border) = 0;
 
-        void on_child_added(std::unique_ptr<Container>& child) override {
+        void on_child_added(AddChildEvent& event) {
             reposition_children();
         }
 

@@ -3,10 +3,8 @@
 
 TabContainer* EditorActions::primary_tab_container = nullptr;
 
-void EditorActions::open_file_in_new_tab(const char* path) {
-    printf("HELLO!?\n");
+void EditorActions::open_file_in_new_tab(String path) {
     if (!primary_tab_container) return;
-    printf("%s\n", path);
 
     if (File(path).is_probably_binary()) {
         // We do a lot of shite like this which causes us to open like 5 file handles for each file (hopefully we close them...)
@@ -18,7 +16,7 @@ void EditorActions::open_file_in_new_tab(const char* path) {
     editor->debug_name = "editor";
     editor->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
 
-    auto tab = primary_tab_container->add_tab(path, std::move(editor), true);
+    auto tab = primary_tab_container->add_tab(path.as_c(), std::move(editor), true);
     primary_tab_container->focus_tab(tab);
 }
 

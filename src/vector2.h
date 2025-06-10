@@ -14,12 +14,16 @@ struct Vector2 {
         return {x - that.x, y - that.y};
     }
 
-    Vector2 operator*(const float that) {
+    Vector2 operator*(const double that) {
         return {(int32_t)(x * that), (int32_t)(y * that)};
     }
 
-    Vector2 operator/(const float that) {
+    Vector2 operator/(const double that) {
         return {(int32_t)(x / that), (int32_t)(y / that)};
+    }
+
+    operator bool() const {
+        return x || y;
     }
 
     bool in_rectangle(Vector2 pos, Vector2 size) {

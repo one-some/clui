@@ -75,10 +75,16 @@ void TextEdit::save_to_file() {
     file.write(text);
 }
 
-void TextEdit::on_wheel(float delta) {
-    scroll_offset->y += delta * font_size_px * 5;
+void TextEdit::on_wheel(WheelEvent& event) {
+    scroll_offset->y += event.delta_y * font_size_px * 5;
 
     if (scroll_offset->y > 0) scroll_offset->y = 0;
+}
+
+void TextEdit::on_tab_focus(TabFocusEvent& event) {
+    String title = file.get_path();
+    title.append(" - Claire's Editor");
+    RayLib::SetWindowTitle(title.as_c());
 }
 
 void TextEdit::on_input() {
@@ -86,7 +92,7 @@ void TextEdit::on_input() {
 
     if (RayLib::IsKeyPressed(RayLib::KEY_S) && RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
         // CTRL+S
-        printf("Save! %s\n", file.get_path());
+        printf("Save! %s\n", file.get_path().as_c());
         save_to_file();
         return;
     }
@@ -284,7 +290,7 @@ Vector2 TextEdit::survey_position(size_t index) {
     return out;
 }
 
-void TextEdit::on_click() {
+void TextEdit::on_click(ClickEvent& event) {
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - get_draw_position();
 

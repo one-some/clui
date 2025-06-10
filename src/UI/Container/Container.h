@@ -44,17 +44,14 @@ public:
         return raw_ptr;
     }
 
-    void propagate_mouse_motion(Vector2 pos);
-    void propagate_click();
     virtual void on_input() { };
-    virtual void on_wheel(float delta) { };
 
     inline bool is_focused() { return Container::focused_element == this; }
+    bool is_hovered() { return last_hovered; }
+    virtual bool manages_child_size() { return false; }
 
     virtual void draw_tree();
     virtual void draw_self() { }
-
-    bool is_hovered() { return _is_hovered; }
 
     virtual std::vector<Container*> visible_children() {
         std::vector<Container*> out;
@@ -67,8 +64,6 @@ public:
     Vector2 get_draw_position() {
         return position->get_global() + *scroll_offset;
     }
-
-    virtual bool manages_child_size() { return false; }
 
     template <typename TEvent>
     void register_handler(std::function<void(TEvent&)> handler) {
@@ -84,10 +79,32 @@ public:
 
         // Don't propagate events that aren't hovered over.
         // TODO: Maybe move into event?
-        if (type_info == typeid(ClickEvent) && !is_hovered()) {
-            return;
+        // TODO: Maybe turn the class registration into a vector of functions instead of one....
+        // then the base class (ex Container) could implement base stuff like this...
+        if (type_info == typeid(ClickEvent)) {
+            if (!is_hovered()) return;
+
+            // TODO: Focus chain
+            Container::focused_element = this;
         }
+
+        if (type_info == typeid(MouseMotionEvent)) {
+            auto& squeak = (MouseMotionEvent&)event;
+            bool hovered = Vector2({squeak.x, squeak.y}).in_rectangle(
+                position->get_global(),
+                size->get()
+            );
+
+            if (hovered != last_hovered) {
+                last_hovered = hovered;
+                auto hover_event = MouseHoverChangeEvent(hovered);
+                dispatch_event(hover_event);
+            }
+        }
+
+        if (type_info == typeid(WheelEvent) && !is_hovered()) return;
         
+
         if (auto it = object_event_handlers.find(type); it != object_event_handlers.end()) {
             it->second(event);
         }
@@ -106,12 +123,11 @@ public:
     }
 
 protected:
-    bool _is_hovered = false;
+    bool last_hovered = false;
 
+    std::map<std::type_index, std::function<void(Event&)>> object_event_handlers;
+    std::map<std::type_index, std::function<void(Event&)>> class_event_handlers;
 
-    virtual void on_hover_change(bool is_hovered) { };
-    virtual void on_child_added(std::unique_ptr<Container>& child) { };
-    virtual void on_click() { };
 
     virtual void pre_draw_tree() { };
     virtual void post_draw_tree() { };
@@ -124,7 +140,4 @@ protected:
             (static_cast<TClass*>(this)->*handler)(static_cast<TEvent&>(event));
         };
     }
-
-    std::map<std::type_index, std::function<void(Event&)>> object_event_handlers;
-    std::map<std::type_index, std::function<void(Event&)>> class_event_handlers;
 };

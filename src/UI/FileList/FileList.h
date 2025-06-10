@@ -49,7 +49,7 @@ class FileList : public VStack {
                 String new_path = Path::join(dir.path, dir_child.name);
                 button->callback_on_click = [this, button, new_path, dir_child, cont, depth]{
                     if (dir_child.type == DirectoryChildType::TYPE_FILE) {
-                        EditorActions::open_file_in_new_tab(new_path.as_c());
+                        EditorActions::open_file_in_new_tab(new_path);
                     } else if (dir_child.type == DirectoryChildType::TYPE_DIRECTORY) {
                         if (!button->open) {
                             sprawl({ new_path }, cont, depth + 1);

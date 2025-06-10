@@ -23,23 +23,29 @@ class TextEdit : public Container {
 
         int32_t font_size_px = 16;
 
-        void draw_self() override;
-        void on_wheel(float wheel) override;
-        void move_caret(Vector2 delta);
-        void save_to_file();
-        static size_t str_index_from_vec2(const char* text, Vector2 vec);
-
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
-        TextEdit(const char* path): file(path) {
-            printf("Waiiit....Hello from crazy world...\n");
+        TextEdit(String path): file(path) {
+            register_class_handler<ClickEvent, TextEdit>(&TextEdit::on_click);
+            register_class_handler<WheelEvent, TextEdit>(&TextEdit::on_wheel);
+            register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
+
+            // printf("Waiiit....Hello from crazy world... '%s'\n", file.get_path().as_c());
             text = file.read();
             parser = CPPParser(&text);
             parser.parse();
         }
+
+        void draw_self() override;
+        void move_caret(Vector2 delta);
+        void save_to_file();
+        static size_t str_index_from_vec2(const char* text, Vector2 vec);
     
     private:
-        void on_click() override;
+        void on_click(ClickEvent& event);
+        void on_wheel(WheelEvent& event);
+        void on_tab_focus(TabFocusEvent& event);
+
         void on_input() override;
         void draw_text();
         void draw_text_plain_jane();

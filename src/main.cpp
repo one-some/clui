@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include "FrameManager/FrameManager.h"
 #include "Claire/JSON/JSON.h"
+#include "Claire/Utilization.h"
 
 #include "UI/Container/Container.h"
 #include "color.h"
@@ -65,6 +66,12 @@ int main(int argc, char *argv[], char *envp[]) {
     FrameManager::root_container = &root;
     root.size->set_raw({ 500, 500 });
 
+    // Apparently ? needs escaping... huh.
+    auto ram_usage_label = root.create_child<TextLabel>("(\?\?\?)");
+    ram_usage_label->color = Colors::FG.to_ray();
+    ram_usage_label->position->y_strategy = YPositionStrategy::BOTTOM;
+    ram_usage_label->font_size = 16;
+
     auto sidebar_cont = root.create_child<HStack>();
     sidebar_cont->allow_user_resize = true;
     sidebar_cont->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
@@ -112,20 +119,33 @@ int main(int argc, char *argv[], char *envp[]) {
             reload_self(argc, argv, envp);
         }
 
-        root.propagate_mouse_motion({RayLib::GetMouseX(), RayLib::GetMouseY()});
+        auto motion_event = MouseMotionEvent(RayLib::GetMouseX(), RayLib::GetMouseY());
+        root.dispatch_event(motion_event);
 
         if (RayLib::IsMouseButtonPressed(0)) {
-            auto event = ClickEvent();
-            root.dispatch_event(event);
+            auto click_event = ClickEvent();
+            root.dispatch_event(click_event);
+        }
+
+        Vector2 wheel_vec = Vector2::from_ray(RayLib::GetMouseWheelMoveV());
+        if (RayLib::IsKeyDown(RayLib::KEY_LEFT_SHIFT) || RayLib::IsKeyDown(RayLib::KEY_RIGHT_SHIFT)) {
+            wheel_vec.x += wheel_vec.y;
+            wheel_vec.y = 0;
+        }
+
+        if (wheel_vec) {
+            auto wheel_event = WheelEvent({wheel_vec.x, wheel_vec.y});
+            root.dispatch_event(wheel_event);
         }
 
         if (Container::focused_element) {
             Container::focused_element->on_input();
+        }
 
-            float wheel_delta = RayLib::GetMouseWheelMove();
-            if (wheel_delta) {
-                Container::focused_element->on_wheel(wheel_delta);
-            }
+        if (frames % (60 * 2) == 0) {
+            String mb = String::from_double(ram_mb(), 2);
+            mb.append(" MB");
+            ram_usage_label->text = mb;
         }
 
         RayLib::BeginDrawing();

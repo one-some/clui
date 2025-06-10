@@ -15,7 +15,8 @@ Container* Container::add_child(std::unique_ptr<Container> child) {
     child->parent = this;
     children.push_back(std::move(child));
 
-    on_child_added(children.back());
+    auto event = AddChildEvent(children.back().get());
+    dispatch_event(event);
     return children.back().get();
 }
 
@@ -52,26 +53,4 @@ void Container::draw_tree() {
     }
 
     post_draw_tree();
-}
-
-void Container::propagate_mouse_motion(Vector2 pos) {
-    // Update mouse
-    bool in = pos.in_rectangle(position->get_global(), size->get());
-    _is_hovered = in;
-    on_hover_change(_is_hovered);
-
-    for (const auto& child : children) {
-        child->propagate_mouse_motion(pos);
-    }
-}
-
-void Container::propagate_click() {
-    if (is_hovered()) {
-        Container::focused_element = this;
-        on_click();
-    }
-
-    for (const auto& child : children) {
-        child->propagate_click();
-    }
 }

@@ -13,8 +13,7 @@ class Tab {
         const char* label;
         Container* view;
 
-        Tab(const char* _label, Container* _view): label(_label), view(_view) {
-        }
+        Tab(const char* _label, Container* _view): label(_label), view(_view) { }
 };
 
 class TabContainer : public VStack {
@@ -56,6 +55,9 @@ class TabContainer : public VStack {
 
         void focus_tab(Tab* tab) {
             active_tab = tab;
+
+            auto event = TabFocusEvent();
+            tab->view->dispatch_event(event);
         }
 
     private:

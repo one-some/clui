@@ -32,11 +32,19 @@ class String {
             c_str[capacity - 1] = '\0';
         }
 
-        static String from_double(double val) {
+        static String from_double(double val, int round_places = -1) {
             int len = snprintf(NULL, 0, "%f", val);
             char* buf = (char*) malloc(len + 1);
             snprintf(buf, len + 1, "%f", val);
-            return String::move_from(buf);
+
+            auto out = String::move_from(buf);
+
+            if (round_places > 0) {
+                auto dot_pos = out.find(".");
+                out = out.slice(0, (*dot_pos) + round_places + 1);
+            }
+
+            return out;
         }
 
         static String from_int(int val) {
@@ -125,6 +133,16 @@ class String {
         constexpr static bool is_lowercase(const char c) { return c >= 'a' && c <= 'z'; }
         constexpr static bool is_uppercase(const char c) { return c >= 'A' && c <= 'Z'; }
         constexpr static bool is_letter(const char c) { return is_lowercase(c) || is_uppercase(c); }
+
+        bool is_number() const {
+            if (!length()) return false;
+
+            for (size_t i = 0; i < length(); i++) {
+                if (!String::is_number(c_str[i])) return false;
+            }
+
+            return true;
+        }
 
         constexpr static u_int64_t hash(const char* str) {
             // djb2 by Dan Bernstein
@@ -286,6 +304,11 @@ class String {
             str[end - start] = '\0';
 
             return String(str);
+        }
+
+        bool starts_with(String target) const {
+            if (length() < target.length()) return false;
+            return slice(0, target.length()) == target;
         }
 
         static String from_fd(int fd, ssize_t limit = -1, size_t chunk_size = 1024) {
