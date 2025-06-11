@@ -14,27 +14,84 @@
 class String {
 public:
     String() {
+        // Okay valgrind calm down
+        memset(this, 0, sizeof(*this));
+
         capacity = 16;
         c_str = (char*)calloc(capacity, 1);
     }
 
     String(char c) {
+        memset(this, 0, sizeof(*this));
+
         capacity = 4;
-        c_str = (char*)malloc(capacity);
+        c_str = (char*)calloc(capacity, 1);
         c_str[0] = c;
         c_str[1] = '\0';
     }
 
     String(const char* in_c_str) {
+        memset(this, 0, sizeof(*this));
+
         capacity = strlen(in_c_str) + 1;
-        c_str = (char*) malloc(capacity);
+        c_str = (char*)calloc(capacity, 1);
         strcpy(c_str, in_c_str);
-        c_str[capacity - 1] = '\0';
     }
+
+    String(const String& that) {
+        memset(this, 0, sizeof(*this));
+
+        if (!that.c_str) {
+            capacity = 16;
+            c_str = (char*)calloc(capacity, 1);
+            return;
+        }
+
+        capacity = strlen(that.c_str) + 1;
+        c_str = (char*) calloc(capacity, 1);
+        strcpy(c_str, that.c_str);
+    }
+
+    String(String&& that) : c_str(that.c_str), capacity(that.capacity) {
+        memset(this, 0, sizeof(*this));
+
+        that.c_str = nullptr;
+        that.capacity = 0;
+    }
+
+    String& operator=(const String& that) {
+        if (this == &that) return *this;
+
+        free(c_str);
+
+        if (!that.c_str) {
+            capacity = 16;
+            c_str = (char*)calloc(capacity, 1);
+            return *this;
+        }
+
+        capacity = that.capacity;
+        c_str = (char*) calloc(capacity, 1);
+        strcpy(c_str, that.c_str);
+        return *this;
+    }
+
+    String& operator=(String&& other) noexcept {
+        if (this == &other) return *this;
+
+        free(c_str);
+        c_str = other.c_str;
+        capacity = other.capacity;
+
+        other.c_str = nullptr;
+        other.capacity = 0;
+        return *this;
+    }
+
 
     static String from_double(double val, int round_places = -1) {
         int len = snprintf(NULL, 0, "%f", val);
-        char* buf = (char*) malloc(len + 1);
+        char* buf = (char*) calloc(len + 1, 1);
         snprintf(buf, len + 1, "%f", val);
 
         auto out = String::move_from(buf);
@@ -49,7 +106,7 @@ public:
 
     static String from_int(int val) {
         int len = snprintf(NULL, 0, "%d", val);
-        char* buf = (char*) malloc(len + 1);
+        char* buf = (char*) calloc(len + 1, 1);
         snprintf(buf, len + 1, "%d", val);
         return String::move_from(buf);
     }
@@ -79,41 +136,12 @@ public:
         return c_str[index];
     }
 
-    String(const String& that) : c_str(nullptr), capacity(0) {
-        if (!that.c_str) return;
-
-        capacity = strlen(that.c_str) + 1;
-        c_str = (char*) calloc(capacity, 1);
-        strcpy(c_str, that.c_str);
-    }
-
-    String& operator=(const String& that) {
-        if (this == &that) return *this;
-
-        free(c_str);
-        capacity = that.capacity;
-        c_str = (char*) calloc(capacity, 1);
-        strcpy(c_str, that.c_str);
-        return *this;
-    }
-
-    String& operator=(String&& other) noexcept {
-        if (this == &other) return *this;
-
-        free(c_str);
-        c_str = other.c_str;
-        capacity = other.capacity;
-
-        other.c_str = nullptr;
-        other.capacity = 0;
-        return *this;
-    }
-
     bool operator==(const String& that) const {
-        return strcmp(c_str, that.c_str) == 0;
+        return *this == that.c_str;
     }
 
     bool operator==(const char* that) const {
+        ASSERT(c_str && that, "BAD PTRS");
         return strcmp(c_str, that) == 0;
     }
 
@@ -262,7 +290,7 @@ public:
                 // fingers crossed
                 size_t new_len = i - substring_start;
 
-                char* new_string = (char*)malloc(new_len + 1);
+                char* new_string = (char*)calloc(new_len + 1, 1);
                 memcpy((void*)new_string, c_str + substring_start, new_len);
 
                 new_string[new_len] = '\0';
@@ -325,7 +353,7 @@ public:
 
             }
 
-            buf = (char*) malloc(chunk_size + 1);
+            buf = (char*)calloc(chunk_size + 1, 1);
 
             ssize_t bytes_read = read(fd, buf, chunk_size);
             ASSERT(bytes_read >= 0, "ERROR READING!");
