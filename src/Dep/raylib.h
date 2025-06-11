@@ -16,4 +16,15 @@ namespace RayLib {
     inline bool IsKeyTyped(int key) {
         return IsKeyPressed(key) || IsKeyPressedRepeat(key);
     }
+
+    class SmartImage {
+    public:
+        Image image;
+
+        SmartImage(const char* path) : image(LoadImage(path)) { }
+
+        ~SmartImage() {
+            UnloadImage(image);
+        }
+    };
 }

@@ -57,7 +57,8 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
 
-    RayLib::SetWindowIcon(RayLib::LoadImage("claire_head.png"));
+    auto icon = RayLib::SmartImage("claire_head.png");
+    RayLib::SetWindowIcon(icon.image);
 
     RayLib::SetTargetFPS(60);
     uint64_t frames = 0;

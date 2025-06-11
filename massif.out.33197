@@ -1,0 +1,1613 @@
+desc: (none)
+cmd: ./main
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=272040811
+mem_heap_B=1546255
+mem_heap_extra_B=102633
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=660116752
+mem_heap_B=22006791
+mem_heap_extra_B=1279185
+mem_stacks_B=0
+heap_tree=peak
+n16: 22006791 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529744 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128368 in 58 places, all below massif's threshold (1.00%)
+ n0: 4383387 in 2348 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n1: 722532 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722532 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722532 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722532 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722532 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 394650 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 373088 0x135E1C10: ???
+  n0: 373088 in 24 places, all below massif's threshold (1.00%)
+ n2: 330240 0x151343EC: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+  n2: 268320 0x1521DBF2: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+   n2: 264192 0x1523C10B: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+    n1: 264192 0x151DFC4E: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+     n1: 264192 0x1505B935: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+      n1: 264192 0x1505B858: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+       n1: 264192 0x1519E60F: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+        n1: 264192 0x14EFE9D2: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+         n1: 264192 0x14171B2B: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+          n1: 264192 0x17A27D5B: llvm::FPPassManager::runOnFunction(llvm::Function&) (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libLLVM-14.so)
+           n1: 264192 0x17A27F88: llvm::FPPassManager::runOnModule(llvm::Module&) (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libLLVM-14.so)
+            n2: 264192 0x17A284C8: llvm::legacy::PassManagerImpl::run(llvm::Module&) (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libLLVM-14.so)
+             n1: 264192 0x14310EC3: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+              n1: 264192 0x1430FF55: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+               n1: 264192 0x13F432D5: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+                n1: 264192 0x13F4583A: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+                 n1: 264192 0x13F480EC: ??? (in /usr/lib/wsl/drivers/iigd_dch.inf_amd64_b57fc4f35ff4051b/libigc.so)
+                  n1: 264192 0x12D52B2C: ???
+                   n1: 264192 0x12D48E7F: ???
+                    n1: 264192 0x12D4701D: ???
+                     n2: 264192 0x12D42BDC: ???
+                      n1: 264192 0x12D4218A: ???
+                       n1: 264192 0x12D40BE5: ???
+                        n1: 264192 0x12D4139F: ???
+                         n1: 264192 0x12C4A6BF: ???
+                          n1: 264192 0x12C4AE0A: ???
+                           n1: 264192 0x4C91AA3: start_thread (pthread_create.c:447)
+                            n0: 264192 0x4D1EA33: clone (clone.S:100)
+                      n0: 0 in 1 place, below massif's threshold (1.00%)
+             n0: 0 in 1 place, below massif's threshold (1.00%)
+    n0: 0 in 2 places, all below massif's threshold (1.00%)
+   n0: 4128 in 1 place, below massif's threshold (1.00%)
+  n0: 61920 in 16 places, all below massif's threshold (1.00%)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=3
+#-----------
+time=969136284
+mem_heap_B=21170652
+mem_heap_extra_B=1246364
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=1351587704
+mem_heap_B=21170820
+mem_heap_extra_B=1246356
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=1760109335
+mem_heap_B=21169276
+mem_heap_extra_B=1246212
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=2125408322
+mem_heap_B=21133628
+mem_heap_extra_B=1245668
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=2394403743
+mem_heap_B=21133628
+mem_heap_extra_B=1245636
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=2872892768
+mem_heap_B=21133636
+mem_heap_extra_B=1245732
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=3403420735
+mem_heap_B=21133875
+mem_heap_extra_B=1245725
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=3782075760
+mem_heap_B=21134251
+mem_heap_extra_B=1245685
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=4302103081
+mem_heap_B=21460163
+mem_heap_extra_B=1251317
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=4767188418
+mem_heap_B=21460155
+mem_heap_extra_B=1251325
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=5278013291
+mem_heap_B=21461571
+mem_heap_extra_B=1251397
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=5584677955
+mem_heap_B=21458803
+mem_heap_extra_B=1251277
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=5942248018
+mem_heap_B=21460163
+mem_heap_extra_B=1251341
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=6453044190
+mem_heap_B=21458779
+mem_heap_extra_B=1251309
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=6964280756
+mem_heap_B=21458779
+mem_heap_extra_B=1251325
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=7322616637
+mem_heap_B=21458779
+mem_heap_extra_B=1251357
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=7861457951
+mem_heap_B=21458779
+mem_heap_extra_B=1251309
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=8169430976
+mem_heap_B=21461203
+mem_heap_extra_B=1251397
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=8477342771
+mem_heap_B=21458779
+mem_heap_extra_B=1251341
+mem_stacks_B=0
+heap_tree=detailed
+n15: 21458779 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529872 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128496 in 58 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n0: 3806703 in 2358 places, all below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n2: 731504 0x135E1C10: ???
+  n0: 492560 in 23 places, all below massif's threshold (1.00%)
+  n2: 238944 0x12DB76D3: ???
+   n1: 234752 0x12E05C50: ???
+    n1: 234752 0x12E0BA6A: ???
+     n0: 234752 in 8 places, all below massif's threshold (1.00%)
+   n0: 4192 in 2 places, all below massif's threshold (1.00%)
+ n1: 722900 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722900 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722900 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722900 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722900 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 395018 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=22
+#-----------
+time=8939174978
+mem_heap_B=21458779
+mem_heap_extra_B=1251293
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=9324067251
+mem_heap_B=21458779
+mem_heap_extra_B=1251309
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=9632504815
+mem_heap_B=21458787
+mem_heap_extra_B=1251341
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=9863573506
+mem_heap_B=21458803
+mem_heap_extra_B=1251341
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=10248556406
+mem_heap_B=21458779
+mem_heap_extra_B=1251373
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=10479467362
+mem_heap_B=21458779
+mem_heap_extra_B=1251325
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=10787531554
+mem_heap_B=21458779
+mem_heap_extra_B=1251293
+mem_stacks_B=0
+heap_tree=detailed
+n15: 21458779 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529872 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128496 in 58 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n0: 3806703 in 2358 places, all below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n2: 731504 0x135E1C10: ???
+  n0: 492560 in 23 places, all below massif's threshold (1.00%)
+  n2: 238944 0x12DB76D3: ???
+   n1: 234752 0x12E05C50: ???
+    n1: 234752 0x12E0BA6A: ???
+     n0: 234752 in 8 places, all below massif's threshold (1.00%)
+   n0: 4192 in 2 places, all below massif's threshold (1.00%)
+ n1: 722900 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722900 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722900 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722900 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722900 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 395018 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=29
+#-----------
+time=11299323483
+mem_heap_B=21458859
+mem_heap_extra_B=1251365
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=11720421756
+mem_heap_B=21482198
+mem_heap_extra_B=1258818
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=12001242267
+mem_heap_B=21483838
+mem_heap_extra_B=1258834
+mem_stacks_B=0
+heap_tree=detailed
+n15: 21483838 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529872 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128496 in 58 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n0: 3831762 in 2359 places, all below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n2: 731504 0x135E1C10: ???
+  n0: 492560 in 23 places, all below massif's threshold (1.00%)
+  n2: 238944 0x12DB76D3: ???
+   n1: 234752 0x12E05C50: ???
+    n1: 234752 0x12E0BA6A: ???
+     n0: 234752 in 8 places, all below massif's threshold (1.00%)
+   n0: 4192 in 2 places, all below massif's threshold (1.00%)
+ n1: 722900 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722900 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722900 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722900 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722900 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 395018 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=32
+#-----------
+time=12281926578
+mem_heap_B=21459027
+mem_heap_extra_B=1251285
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=12562591780
+mem_heap_B=21459027
+mem_heap_extra_B=1251269
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=12843263259
+mem_heap_B=21459027
+mem_heap_extra_B=1251269
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=13124249661
+mem_heap_B=21459035
+mem_heap_extra_B=1251333
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=13404913988
+mem_heap_B=21459027
+mem_heap_extra_B=1251349
+mem_stacks_B=0
+heap_tree=detailed
+n15: 21459027 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529872 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128496 in 58 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n0: 3806951 in 2359 places, all below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n2: 731504 0x135E1C10: ???
+  n0: 492560 in 23 places, all below massif's threshold (1.00%)
+  n2: 238944 0x12DB76D3: ???
+   n1: 234752 0x12E05C50: ???
+    n1: 234752 0x12E0BA6A: ???
+     n0: 234752 in 8 places, all below massif's threshold (1.00%)
+   n0: 4192 in 2 places, all below massif's threshold (1.00%)
+ n1: 722900 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722900 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722900 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722900 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722900 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 395018 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=37
+#-----------
+time=13685697176
+mem_heap_B=21490389
+mem_heap_extra_B=1267251
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=14106713326
+mem_heap_B=21490381
+mem_heap_extra_B=1267251
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=14527915855
+mem_heap_B=21490397
+mem_heap_extra_B=1267291
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=14948947240
+mem_heap_B=21490381
+mem_heap_extra_B=1267267
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=15369957864
+mem_heap_B=21490397
+mem_heap_extra_B=1267243
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=15791056003
+mem_heap_B=21490401
+mem_heap_extra_B=1267223
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=16071767134
+mem_heap_B=21490409
+mem_heap_extra_B=1267335
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=16492792588
+mem_heap_B=21490401
+mem_heap_extra_B=1267319
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=16773931935
+mem_heap_B=21490401
+mem_heap_extra_B=1267271
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=17054621309
+mem_heap_B=21490401
+mem_heap_extra_B=1267335
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=17335355855
+mem_heap_B=21490401
+mem_heap_extra_B=1267303
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=17756370815
+mem_heap_B=21490401
+mem_heap_extra_B=1267223
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=18037114697
+mem_heap_B=21492825
+mem_heap_extra_B=1267391
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=18268025711
+mem_heap_B=21492969
+mem_heap_extra_B=1267391
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=18498939987
+mem_heap_B=21492825
+mem_heap_extra_B=1267311
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=18729851033
+mem_heap_B=21487149
+mem_heap_extra_B=1267163
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=18960772654
+mem_heap_B=21490401
+mem_heap_extra_B=1267287
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=19191707198
+mem_heap_B=21490409
+mem_heap_extra_B=1267255
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=19422645065
+mem_heap_B=21490425
+mem_heap_extra_B=1267367
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=19653605901
+mem_heap_B=21490409
+mem_heap_extra_B=1267335
+mem_stacks_B=0
+heap_tree=detailed
+n15: 21490409 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n3: 7529872 0x5F274FC: ???
+  n5: 6779216 0x5F27554: ???
+   n0: 5261264 in 971 places, all below massif's threshold (1.00%)
+   n2: 722688 0x6270CCC: ???
+    n0: 483264 in 155 places, all below massif's threshold (1.00%)
+    n1: 239424 0x627FBFF: ???
+     n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 316416 0x62C0791: ???
+    n0: 316416 in 119 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FB88: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+   n1: 239424 0x627FBB4: ???
+    n0: 239424 in 1247 places, all below massif's threshold (1.00%)
+  n2: 622160 0x5F280C6: ???
+   n2: 556656 0x5F281B4: ???
+    n0: 294768 in 3 places, all below massif's threshold (1.00%)
+    n1: 261888 0x6351AD3: ???
+     n0: 261888 in 7 places, all below massif's threshold (1.00%)
+   n0: 65504 in 1 place, below massif's threshold (1.00%)
+  n0: 128496 in 58 places, all below massif's threshold (1.00%)
+ n1: 4263936 0x135D55FC: ???
+  n2: 4263936 0x135D9C39: ???
+   n1: 4194304 0x135DAB2B: ???
+    n2: 4194304 0x135DB18D: ???
+     n1: 2097152 0x135DD96C: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+     n1: 2097152 0x135DDB35: ???
+      n1: 2097152 0x135D7E07: ???
+       n1: 2097152 0x135DCE2D: ???
+        n1: 2097152 0x12DD489C: ???
+         n1: 2097152 0x12E478F9: ???
+          n1: 2097152 0x12E41DAD: ???
+           n1: 2097152 0x12E3E5FF: ???
+            n1: 2097152 0x12D0CE38: ???
+             n1: 2097152 0x12B784CF: ???
+              n1: 2097152 0x12B7636D: ???
+               n1: 2097152 0x12B760C0: ???
+                n1: 2097152 0x12A8CF38: ???
+                 n1: 2097152 0x12A456C6: ???
+                  n1: 2097152 0x1250D4B1: ???
+                   n1: 2097152 0x1250D1C5: ???
+                    n1: 2097152 0x12B7A4FB: ???
+                     n1: 2097152 0x12B7A316: ???
+                      n1: 2097152 0x12A8C9F5: ???
+                       n1: 2097152 0x12A456C6: ???
+                        n1: 2097152 0x1250D4B1: ???
+                         n1: 2097152 0x1250D1C5: ???
+                          n1: 2097152 0x12AA5CDE: ???
+                           n1: 2097152 0x12AA934E: ???
+                            n1: 2097152 0x12A9B7EB: ???
+                             n1: 2097152 0x6AA7620: ???
+                              n0: 2097152 0x6AA7E78: ???
+   n0: 69632 in 1 place, below massif's threshold (1.00%)
+ n0: 3838333 in 2359 places, all below massif's threshold (1.00%)
+ n1: 1048576 0x19A76F: stbi__malloc_mad3 (in /home/susan/clui/main)
+  n1: 1048576 0x19A82E: stbi__create_png_image_raw (in /home/susan/clui/main)
+   n1: 1048576 0x19FB25: stbi__parse_png_file (in /home/susan/clui/main)
+    n1: 1048576 0x1A0564: stbi__load_main (in /home/susan/clui/main)
+     n1: 1048576 0x1A236F: stbi__load_and_postprocess_8bit (in /home/susan/clui/main)
+      n1: 1048576 0x1A2610: stbi_load_from_memory (in /home/susan/clui/main)
+       n1: 1048576 0x1A7410: LoadImageFromMemory (in /home/susan/clui/main)
+        n1: 1048576 0x1A7694: LoadImage (in /home/susan/clui/main)
+         n1: 1048576 0x14240F: RayLib::SmartImage::SmartImage(char const*) (raylib.h:24)
+          n0: 1048576 0x141958: main (main.cpp:60)
+ n1: 831344 0x5FA9063: ???
+  n1: 831344 0x5FBC1AC: ???
+   n1: 831344 0x5EE5A1E: ???
+    n1: 831344 0x5EE969F: ???
+     n1: 831344 0x5D881A7: ???
+      n1: 831344 0x5D86741: ???
+       n1: 831344 0x5C88E02: ???
+        n1: 831344 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+         n1: 831344 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+          n1: 831344 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+           n1: 831344 0x175CE1: InitPlatform (in /home/susan/clui/main)
+            n1: 831344 0x176A7B: InitWindow (in /home/susan/clui/main)
+             n0: 831344 0x14193F: main (main.cpp:58)
+ n2: 731504 0x135E1C10: ???
+  n0: 492560 in 23 places, all below massif's threshold (1.00%)
+  n2: 238944 0x12DB76D3: ???
+   n1: 234752 0x12E05C50: ???
+    n1: 234752 0x12E0BA6A: ???
+     n0: 234752 in 8 places, all below massif's threshold (1.00%)
+   n0: 4192 in 2 places, all below massif's threshold (1.00%)
+ n1: 722900 0x4013BDD: malloc (rtld-malloc.h:56)
+  n1: 722900 0x4013BDD: allocate_dtv_entry (dl-tls.c:679)
+   n1: 722900 0x4013BDD: allocate_and_init (dl-tls.c:704)
+    n1: 722900 0x4013BDD: tls_get_addr_tail (dl-tls.c:904)
+     n2: 722900 0x401785B: __tls_get_addr (tls_get_addr.S:55)
+      n0: 395018 in 6 places, all below massif's threshold (1.00%)
+      n1: 327882 0x12D4BB88: ???
+       n1: 327882 0x12D4A095: ???
+        n1: 327882 0x12D48C4A: ???
+         n1: 327882 0x12D47012: ???
+          n1: 327882 0x12D42BDC: ???
+           n1: 327882 0x12D4218A: ???
+            n1: 327882 0x12D40BE5: ???
+             n1: 327882 0x12D4139F: ???
+              n1: 327882 0x12C4A6BF: ???
+               n1: 327882 0x12C4AE0A: ???
+                n1: 327882 0x4C91AA3: start_thread (pthread_create.c:447)
+                 n0: 327882 0x4D1EA33: clone (clone.S:100)
+ n1: 393232 0x135DBC2D: ???
+  n1: 393232 0x135DB65A: ???
+   n1: 393232 0x135DC0B4: ???
+    n1: 393232 0x135E22DF: ???
+     n0: 393232 in 2 places, all below massif's threshold (1.00%)
+ n1: 393216 0x15C5CB: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 393216 0x15C5E8: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 393216 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 393216 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 393216 0x14193F: main (main.cpp:58)
+ n1: 314928 0x5AE3B64: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+  n1: 314928 0x5AE5F75: _XimLocalOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+   n2: 314928 0x5ADEE40: _XimOpenIM (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+    n1: 314928 0x1D77B1: inputMethodInstantiateCallback (in /home/susan/clui/main)
+     n1: 314928 0x5AE1153: _XimRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+      n1: 314928 0x5AC7B92: XRegisterIMInstantiateCallback (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+       n1: 314928 0x1D3FEC: _glfwInitX11 (in /home/susan/clui/main)
+        n1: 314928 0x1CF8D0: glfwInit (in /home/susan/clui/main)
+         n1: 314928 0x175984: InitPlatform (in /home/susan/clui/main)
+          n1: 314928 0x176A7B: InitWindow (in /home/susan/clui/main)
+           n0: 314928 0x14193F: main (main.cpp:58)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 271272 0x61F5F36: ???
+  n1: 271272 0x60E68B8: ???
+   n1: 271272 0x5FA90C2: ???
+    n1: 271272 0x5FBC1AC: ???
+     n1: 271272 0x5EE5A1E: ???
+      n1: 271272 0x5EE969F: ???
+       n1: 271272 0x5D881A7: ???
+        n1: 271272 0x5D86741: ???
+         n1: 271272 0x5C88E02: ???
+          n1: 271272 0x1D8625: _glfwCreateContextGLX (in /home/susan/clui/main)
+           n1: 271272 0x1D91AC: _glfwCreateWindowX11 (in /home/susan/clui/main)
+            n1: 271272 0x1C9735: glfwCreateWindow (in /home/susan/clui/main)
+             n1: 271272 0x175CE1: InitPlatform (in /home/susan/clui/main)
+              n1: 271272 0x176A7B: InitWindow (in /home/susan/clui/main)
+               n0: 271272 0x14193F: main (main.cpp:58)
+ n1: 262144 0x15C5DA: rlLoadRenderBatch (in /home/susan/clui/main)
+  n1: 262144 0x16123C: rlglInit (in /home/susan/clui/main)
+   n1: 262144 0x176A95: InitWindow (in /home/susan/clui/main)
+    n0: 262144 0x14193F: main (main.cpp:58)
+ n1: 262080 0x4C3C0BC: __new_exitfn (cxa_atexit.c:112)
+  n1: 262080 0x4C3C230: __internal_atexit (cxa_atexit.c:44)
+   n1: 262080 0x4C3C230: __cxa_atexit (cxa_atexit.c:68)
+    n0: 262080 in 215 places, all below massif's threshold (1.00%)
+ n1: 233856 0x5D86EBD: ???
+  n0: 233856 in 2 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=57
+#-----------
+time=19884551387
+mem_heap_B=21490409
+mem_heap_extra_B=1267319
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=20115549531
+mem_heap_B=21490409
+mem_heap_extra_B=1267319
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=20346461427
+mem_heap_B=21490401
+mem_heap_extra_B=1267271
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=20577430986
+mem_heap_B=21490409
+mem_heap_extra_B=1267319
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=61
+#-----------
+time=20808354134
+mem_heap_B=21490409
+mem_heap_extra_B=1267303
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=21039265363
+mem_heap_B=21490401
+mem_heap_extra_B=1267271
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=63
+#-----------
+time=21270234981
+mem_heap_B=21490425
+mem_heap_extra_B=1267271
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=21501376058
+mem_heap_B=21490425
+mem_heap_extra_B=1267271
+mem_stacks_B=0
+heap_tree=empty

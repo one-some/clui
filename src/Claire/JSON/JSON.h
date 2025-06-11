@@ -79,6 +79,8 @@ public:
 
     static String to_string(String s) {
         s = s.replace("\n", "\\n");
+        // TODO: ????
+        s = s.replace("\\?", "\\\\?");
         s = s.replace("\"", "\\\"");
 
         String out = "\"";

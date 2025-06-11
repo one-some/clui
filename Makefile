@@ -1,8 +1,8 @@
 .SILENT:
 
 # Compiler and flags
-CXX = ccache g++
-CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -fsanitize=address
+CXX = ccache clang++-19#g++
+CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -Wuninitialized -fsanitize=memory 
 
 # Directories
 SRC_DIR = src

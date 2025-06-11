@@ -1,3 +1,4 @@
+#include <sys/wait.h>
 #include "LSPClient/LSPClient.h"
 
 void LSPClient::open_pipes() {
@@ -6,7 +7,9 @@ void LSPClient::open_pipes() {
     ASSERT(pipe(to_lsp_pipe) != -1, "Unable to pipe to lsp");
     ASSERT(pipe(from_lsp_pipe) != -1, "Unable to pipe from lsp");
 
-    if (fork() == 0) {
+    lsp_pid = fork();
+
+    if (lsp_pid == 0) {
         close(to_lsp_pipe[1]);  // write
         close(from_lsp_pipe[0]);  // read
 
@@ -25,6 +28,23 @@ void LSPClient::open_pipes() {
 
     close(to_lsp_pipe[0]); // read
     close(from_lsp_pipe[1]); // write
+}
+
+void LSPClient::shutdown() {
+    printf("Say goodbye to LSP!\n");
+    
+    send_lsp_message(build_request("shutdown", 777, nullptr));
+    await_lsp_response();
+    send_lsp_message(build_request("exit", Optional<int>(), nullptr));
+
+    close(to_lsp_pipe[1]);
+
+    printf("Waiting for LSP to exit\n");
+    int _status;
+    waitpid(lsp_pid, &_status, 0);
+
+    printf("Goodbye!\n");
+    close(from_lsp_pipe[0]);
 }
 
 String LSPClient::build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
@@ -46,7 +66,7 @@ void LSPClient::send_lsp_message(String payload) {
     in.append("\r\n\r\n");
     in.append(payload);
 
-    // printf("Payload: %s\n", payload.as_c());
+    printf("Payload: %s\n", payload.as_c());
 
     write(to_lsp_pipe[1], in.as_c(), in.length());
     // printf("Done writing\n");

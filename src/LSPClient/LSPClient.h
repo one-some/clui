@@ -15,9 +15,16 @@ private:
         open_pipes();
     }
 
+    ~LSPClient() {
+        shutdown();
+    }
+
+    void shutdown();
+
 public:
     int to_lsp_pipe[2];
     int from_lsp_pipe[2];
+    pid_t lsp_pid;
     FamousResource<std::vector<String>, FamousLocking::Mutex> diagnostic_messages;
 
     static LSPClient& the() {

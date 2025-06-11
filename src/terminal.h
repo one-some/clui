@@ -19,7 +19,7 @@ class Terminal : public Container {
             init_terminal();
         }
 
-        virtual void draw_self();
+        virtual void draw_self() override;
         void draw_text();
         void init_terminal();
     
