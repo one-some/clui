@@ -2,7 +2,7 @@
 
 # Compiler and flags
 CXX = ccache clang++-19#g++
-CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -Wuninitialized -fsanitize=memory 
+CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -Wuninitialized -fsanitize=memory -fsanitize-memory-track-origins=2
 
 # Directories
 SRC_DIR = src

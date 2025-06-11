@@ -13,80 +13,93 @@
 
 class String {
 public:
-    String() {
-        // Okay valgrind calm down
-        memset(this, 0, sizeof(*this));
 
+    void print_state(const char* event) const {
+        fprintf(stderr, "[STRING EVENT] %-20s | Addr: %p | Cap: %-4zu | Len: %-4zu | Data: \"%s\"\n",
+            event, (void*)this, capacity, length(), c_str ? c_str : "null");
+    }
+
+    String() {
         capacity = 16;
         c_str = (char*)calloc(capacity, 1);
+
+        print_state("Default const");
     }
 
     String(char c) {
-        memset(this, 0, sizeof(*this));
-
         capacity = 4;
         c_str = (char*)calloc(capacity, 1);
         c_str[0] = c;
         c_str[1] = '\0';
+
+        print_state("Char const");
     }
 
     String(const char* in_c_str) {
-        memset(this, 0, sizeof(*this));
+        if (!in_c_str) {
+            capacity = 16;
+            c_str = (char*) calloc(capacity, 1);
+            print_state("const char* null");
+            return;
+        }
 
         capacity = strlen(in_c_str) + 1;
         c_str = (char*)calloc(capacity, 1);
         strcpy(c_str, in_c_str);
+
+        print_state("const char* const");
     }
 
     String(const String& that) {
-        memset(this, 0, sizeof(*this));
-
-        if (!that.c_str) {
-            capacity = 16;
-            c_str = (char*)calloc(capacity, 1);
-            return;
-        }
-
-        capacity = strlen(that.c_str) + 1;
-        c_str = (char*) calloc(capacity, 1);
-        strcpy(c_str, that.c_str);
-    }
-
-    String(String&& that) : c_str(that.c_str), capacity(that.capacity) {
-        memset(this, 0, sizeof(*this));
-
-        that.c_str = nullptr;
-        that.capacity = 0;
-    }
-
-    String& operator=(const String& that) {
-        if (this == &that) return *this;
-
-        free(c_str);
-
-        if (!that.c_str) {
-            capacity = 16;
-            c_str = (char*)calloc(capacity, 1);
-            return *this;
-        }
+        ASSERT(that.c_str, "No CSTR");
 
         capacity = that.capacity;
-        c_str = (char*) calloc(capacity, 1);
+        c_str = (char*)calloc(capacity, 1);
+        ASSERT(c_str, "Can't allocate");
+
         strcpy(c_str, that.c_str);
+        print_state("Copy const deep");
+    }
+
+    String(String&& that) noexcept : String() {
+        ASSERT(that.c_str, "Source has null cstr");
+
+        std::swap(capacity, that.capacity);
+        std::swap(c_str, that.c_str);
+
+        print_state("Move const");
+    }
+
+    String& operator=(String that) noexcept {
+        ASSERT(c_str, "No dest cstr");
+        ASSERT(that.c_str, "No dest cstr");
+        std::swap(c_str, that.c_str);
+        std::swap(capacity, that.capacity);
+        print_state("Assignment");
         return *this;
     }
 
-    String& operator=(String&& other) noexcept {
-        if (this == &other) return *this;
-
+    ~String() {
+        ASSERT(c_str, "Destroying corrupt string");
+        print_state("GONE");
         free(c_str);
-        c_str = other.c_str;
-        capacity = other.capacity;
-
-        other.c_str = nullptr;
-        other.capacity = 0;
-        return *this;
     }
+
+    // String& operator=(String&& other) noexcept {
+    //     if (this == &other) {
+    //         print_state("move assign shortcut");
+    //         return *this;
+    //     }
+
+    //     free(c_str);
+    //     c_str = other.c_str;
+    //     capacity = other.capacity;
+
+    //     other.c_str = nullptr;
+    //     other.capacity = 0;
+    //     print_state("move assign");
+    //     return *this;
+    // }
 
 
     static String from_double(double val, int round_places = -1) {
@@ -119,17 +132,15 @@ public:
     static String move_from(char* in_c_str) {
         if (!in_c_str) return String("");
 
+        return String(in_c_str, strlen(in_c_str) + 1);
+
         // TODO: Make "empty" constructor
-        String out;
-        free(out.c_str);
+        // String out;
+        // free(out.c_str);
 
-        out.capacity = strlen(in_c_str) + 1;
-        out.c_str = in_c_str;
-        return out;
-    }
-
-    ~String() {
-        free(c_str);
+        // out.capacity = strlen(in_c_str) + 1;
+        // out.c_str = in_c_str;
+        // return out;
     }
     
     const char operator[](size_t index) {
@@ -145,14 +156,8 @@ public:
         return strcmp(c_str, that) == 0;
     }
 
-    bool operator<(const String& that) const {
-        size_t this_len = length();
-        size_t that_len = that.length();
-        size_t min_len = min(this_len, that_len);
-
-        int cmp_out = std::strncmp(c_str, that.c_str, min_len);
-        if (cmp_out == 0) return this_len < that_len;
-        return cmp_out < 0;
+    friend bool operator<(const String& lhs, const String& rhs) {
+        return strcmp(lhs.as_c(), rhs.as_c()) < 0;
     }
     
     constexpr static bool is_number(const char c) { return c >= '0' && c <= '9'; }
@@ -188,7 +193,7 @@ public:
     }
     
     size_t length() const {
-        return strlen(c_str);
+        return c_str ? strlen(c_str) : 0;
     }
 
     void add_char(char c) {
@@ -389,16 +394,20 @@ private:
     char* c_str = nullptr;
     size_t capacity = 0;
 
-    void expand_for(size_t extra_chars) {
-        if (capacity >= (strlen(c_str) + 1 + extra_chars)) return;
+    String(char* stolen_ptr, size_t stolen_capacity) : c_str(stolen_ptr), capacity(stolen_capacity) {
+        print_state("Private move_from const");
+    }
 
-        size_t old_capacity = capacity;
+    void expand_for(size_t extra_chars) {
+        size_t old_len = strlen(c_str);
+        if (capacity >= (old_len + 1 + extra_chars)) return;
+
         capacity = (capacity + extra_chars) * 2;
 
         char* new_string = (char*)calloc(capacity, 1);
-        memcpy(new_string, c_str, old_capacity);
-        free(c_str);
+        memcpy(new_string, c_str, old_len + 1);
 
+        free(c_str);
         c_str = new_string;
     }
 };

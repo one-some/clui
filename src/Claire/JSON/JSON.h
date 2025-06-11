@@ -33,12 +33,12 @@ public:
     std::unique_ptr<std::map<String, std::unique_ptr<JSONValue>>> data = std::make_unique<std::map<String, std::unique_ptr<JSONValue>>>();
 
     JSONValue* get(String key);
-    void set(String key, std::unique_ptr<JSONValue> val);
-    void set(String key, String val);
-    void set(String key, double val);
+    void set(const String& key, std::unique_ptr<JSONValue> val);
+    void set(const String& key, String val);
+    void set(const String& key, double val);
 
     template<JSONValueDerivative T, typename... Args>
-    T* set_new(String key, Args&&... args) {
+    T* set_new(const String& key, Args&&... args) {
         auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
         T* raw_ptr = ptr.get();
 

@@ -14,15 +14,20 @@ JSONValue* JSONObject::get(String key) {
     return it->second.get();
 }
 
-void JSONObject::set(String key, std::unique_ptr<JSONValue> val) {
+void JSONObject::set(const String& key, std::unique_ptr<JSONValue> val) {
+    fprintf(stderr, "--- Breakpoint: JSONObject::set for key ---\n");
+    key.print_state("MAP KEY BEING USED");
+    fprintf(stderr, "------------------------------------------\n");
+
     (*data)[key] = std::move(val);
+
 }
 
-void JSONObject::set(String key, String val) {
+void JSONObject::set(const String& key, String val) {
     set(key, std::make_unique<JSONString>(val));
 }
 
-void JSONObject::set(String key, double val) {
+void JSONObject::set(const String& key, double val) {
     set(key, std::make_unique<JSONNumber>(val));
 }
 
