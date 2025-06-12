@@ -94,6 +94,11 @@ int main(int argc, char *argv[], char *envp[]) {
             EditorActions::register_primary_tab_container(tabs);
             EditorActions::open_file_in_new_tab("src/main.cpp");
             // EditorActions::open_file_in_new_tab("src/textedit.cpp");
+            if (argc > 1) {
+                String new_file = String(argv[1]);
+		printf("Opening '%s'\n", new_file.as_c());
+                EditorActions::open_file_in_new_tab(new_file);
+	    }
             
             auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
             bottom_tabs->debug_name = String("bottom_tabs");

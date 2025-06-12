@@ -56,7 +56,7 @@ class File {
 
         void write(String content) {
             FILE* fp = fopen(path.as_c(), "w");
-            ASSERT(fp != NULL, "Couldn't open file");
+            ASSERT(fp != NULL, "Couldn't open file '%s' for writing.", path.as_c());
 
             fprintf(fp, "%s", content.as_c());
 
@@ -71,7 +71,7 @@ class File {
         FILE* get_read_pointer() {
             // Remember you gotta close it...
             FILE* fp = fopen(path.as_c(), "rb");
-            ASSERT(fp != NULL, "Couldn't open file");
+            ASSERT(fp != NULL, "Couldn't open file '%s' for reading.", path.as_c());
 
             return fp;
         }
