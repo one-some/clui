@@ -15,6 +15,7 @@ class String {
 public:
 
     void print_state(const char* event) const {
+	return;
         fprintf(stderr, "[STRING EVENT] %-20s | Addr: %p | Cap: %-4zu | Len: %-4zu | Data: \"%s\"\n",
             event, (void*)this, capacity, length(), c_str ? c_str : "null");
     }

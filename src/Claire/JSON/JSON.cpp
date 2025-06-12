@@ -15,9 +15,9 @@ JSONValue* JSONObject::get(String key) {
 }
 
 void JSONObject::set(const String& key, std::unique_ptr<JSONValue> val) {
-    fprintf(stderr, "--- Breakpoint: JSONObject::set for key ---\n");
-    key.print_state("MAP KEY BEING USED");
-    fprintf(stderr, "------------------------------------------\n");
+    //fprintf(stderr, "--- Breakpoint: JSONObject::set for key ---\n");
+    //key.print_state("MAP KEY BEING USED");
+    //fprintf(stderr, "------------------------------------------\n");
 
     (*data)[key] = std::move(val);
 
