@@ -2,17 +2,19 @@
 
 # Compiler and flags
 CXX = ccache clang++#g++
+SANFLAGS = -fsanitize=undefined
 CXXFLAGS = \
+	-MMD -MP \
 	-std=c++23 \
 	-I./src \
 	-g \
 	-march=native \
-	-fsanitize=undefined \
+	$(SANFLAGS) \
 	-fsafe-buffer-usage-suggestions \
-    -Wall \
-    -Wextra \
-    -Wpedantic \
-    -Wshadow \
+	-Wall \
+	-Wextra \
+	-Wpedantic \
+	-Wshadow \
 	-Wno-switch \
 	-Wno-sign-conversion \
 	-Wno-unused-parameter \
@@ -23,6 +25,16 @@ CXXFLAGS = \
 	-Wno-float-conversion \
 	-Wno-c++11-narrowing
 #-fsanitize=memory -fsanitize-memory-track-origins=2
+LDFLAGS = \
+	$(SANFLAGS) \
+	-lraylib \
+	-lGL \
+	-lX11 \
+	-lpthread \
+	-lm \
+	-lrt \
+	-lbacktrace \
+	-lstdc++exp
 
 # Directories
 SRC_DIR = src
@@ -38,31 +50,28 @@ DESKTOP_FILE_NAME = claire.desktop
 DESKTOP_DIR = $(HOME)/.local/share/applications
 DESKTOP_PATH = $(DESKTOP_DIR)/$(DESKTOP_FILE_NAME)
 
-# Libraries
-LIBS = -lraylib -lGL -lX11 -lpthread -lm -lrt -lbacktrace -lstdc++exp
-
-# Source files (finds all .cpp files recursively in the SRC_DIR)
 SOURCES := $(shell find $(SRC_DIR) -name '*.cpp')
-
-# Object files (creates corresponding .o files in the BUILD_DIR)
 OBJECTS := $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+DEPS	:= $(OBJECTS:.o=.d)
 
-# Default target
+NPROC ?= $(shell nproc || echo 1)
+MAKEFLAGS += -j$(NPROC)
+
+.DEFAULT_GOAL := $(EXEC_PATH)
 all: $(EXEC_PATH)
-
-# Create build directory if it doesn't exist
-$(BUILD_DIR):
-	mkdir -p $@
-
-# Compile source files into object files
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
-	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Link object files into the final executable
 $(EXEC_PATH): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $(BIN_DIR)/$(TARGET) $(LIBS)
+	@echo "LD    :: $@"
+	$(CXX) $^ -o $@ $(LDFLAGS)
 	$(MAKE) $(DESKTOP_PATH)
+
+# Compile source files into object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	@echo "CXX    :: $@"
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 
 $(DESKTOP_DIR)/$(DESKTOP_FILE_NAME):
 	mkdir -p $(DESKTOP_DIR)
@@ -81,7 +90,10 @@ $(DESKTOP_DIR)/$(DESKTOP_FILE_NAME):
 clean:
 	rm -rf $(BUILD_DIR) $(EXEC_PATH) $(DESKTOP_PATH)
 
-run: $(TARGET)
+run: $(EXEC_PATH)
+	@echo "RUN    :: $(EXEC_FULL_PATH)"
 	$(EXEC_FULL_PATH)
 
 .PHONY: all clean run
+
+-include $(DEPS)
