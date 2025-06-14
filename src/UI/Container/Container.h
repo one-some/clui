@@ -13,12 +13,18 @@
 #include "vector2.h"
 #include "Claire/String.h"
 
+enum class RenderSection {
+    CULL,
+    DRAW,
+};
+
 class Container {
 public:
     // Don't allow setting the whole position...
     std::unique_ptr<Position> const position = std::make_unique<Position>(Position(this));
     std::unique_ptr<Size> const size = std::make_unique<Size>(Size(this));
     std::unique_ptr<Vector2> const scroll_offset = std::make_unique<Vector2>();
+    RenderSection render_section = RenderSection::CULL;
 
     bool allow_scroll = false;
 
@@ -52,7 +58,7 @@ public:
     bool is_hovered() { return last_hovered; }
     virtual bool manages_child_size() { return false; }
 
-    virtual void draw_tree();
+    virtual void draw_tree(Optional<RayLib::Rectangle> parent_scissor = Optional<RayLib::Rectangle>());
     virtual void draw_self() { }
 
     virtual std::vector<Container*> visible_children() {
@@ -64,7 +70,18 @@ public:
     }
 
     Vector2 get_draw_position() {
-        return position->get_global() + *scroll_offset;
+        Vector2 pos = position->get_local();
+        // Container* target = parent;
+
+        if (parent) {
+            pos = pos + parent->get_draw_position();
+        }
+
+        if (render_section == RenderSection::DRAW) {
+            pos = pos + *scroll_offset;
+        }
+
+        return pos;
     }
 
     template <typename TEvent>
@@ -93,6 +110,7 @@ public:
         if (type_info == typeid(MouseMotionEvent)) {
             auto& squeak = (MouseMotionEvent&)event;
             bool hovered = Vector2({squeak.x, squeak.y}).in_rectangle(
+                // get_draw_position(),
                 position->get_global(),
                 size->get()
             );
@@ -152,7 +170,8 @@ protected:
 private:
     void on_wheel(WheelEvent& event) {
         if (!allow_scroll) return;
-        scroll_offset->y += event.delta_y * 200;
-        printf("%d\n", scroll_offset->y);
+
+        scroll_offset->y += event.delta_y * 16;
+        if (scroll_offset->y > 0) scroll_offset->y = 0;
     }
 };

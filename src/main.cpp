@@ -20,7 +20,7 @@
 #include "Actions/EditorActions.h"
 #include "UI/Stack/Stack.h"
 #include "UI/TabContainer/TabContainer.h"
-#include "UI/IssueContainer/IssueContiainer.h"
+#include "UI/IssueContainer/IssueContainer.h"
 #include "fontglobal.h"
 #include "terminal.h"
 #include "UI/FileList/FileList.h"

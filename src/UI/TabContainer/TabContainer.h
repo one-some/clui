@@ -32,13 +32,13 @@ class TabContainer : public VStack {
         Tab* add_tab(const char* label, std::unique_ptr<Container> view, bool allow_close = false);
         void recalculate_tab_positions();
 
-        void draw_tree() override {
+        void draw_tree(Optional<RayLib::Rectangle> parent_scissor) override {
             draw_self();
 
-            tab_button_stack->draw_tree();
+            tab_button_stack->draw_tree(parent_scissor);
 
             if (!active_tab) return;
-            active_tab->view->draw_tree();
+            active_tab->view->draw_tree(parent_scissor);
         }
 
         std::vector<Container*> visible_children() override {

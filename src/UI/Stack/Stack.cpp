@@ -109,7 +109,7 @@ void Stack::do_user_resizing() {
 
     ssize_t border = -1;
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
-    mouse_pos = mouse_pos - position->get_global();
+    mouse_pos = mouse_pos - get_draw_position();
 
     for (size_t i = 0; i < borders.size() - 1; i++) {
         // If not around the border, ignore

@@ -23,7 +23,6 @@ public:
 
             for (auto& message : *messages) {
                 auto label = this->create_child<TextLabel>(message.as_c());
-                printf("%d | %d, %d\n", this->parent, label->size->get().x, label->size->get().y);
                 label->font_size = 16;
                 label->color = Colors::FG.to_ray();
             }

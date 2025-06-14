@@ -25,10 +25,11 @@ class TextEdit : public Container {
 
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
-        TextEdit(String path): file(path) {
+        TextEdit(String path) : file(path) {
             register_class_handler<ClickEvent, TextEdit>(&TextEdit::on_click);
-            register_class_handler<WheelEvent, TextEdit>(&TextEdit::on_wheel);
             register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
+
+            allow_scroll = true;
 
             // printf("Waiiit....Hello from crazy world... '%s'\n", file.get_path().as_c());
             text = file.read();

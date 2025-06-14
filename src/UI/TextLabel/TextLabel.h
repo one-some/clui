@@ -20,7 +20,7 @@ class TextLabel : public Container {
         }
 
         void draw_self() override {
-            Vector2 pos = position->get_global();
+            Vector2 pos = get_draw_position();
 
             size->set_raw(text_bounds());
 

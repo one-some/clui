@@ -4,7 +4,7 @@
 #include "UI/Container/Container.h"
 #include <functional>
 
-// #define DEBUG_DRAW
+#define DEBUG_DRAW
 
 Container* Container::focused_element = nullptr;
 
@@ -31,28 +31,39 @@ void Container::remove_child(Container* child) {
     );
 }
 
-void Container::draw_tree() {
+void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
     pre_draw_tree();
 
-    Vector2 pos = position->get_global();
+    // Vector2 pos = position->get_global();
+
+    render_section = RenderSection::CULL;
+
+    Vector2 pos = get_draw_position();
+    Vector2 s = size->get();
+
+    RayLib::Rectangle scissor = { pos.x, pos.y, s.x, s.y };
+    if (parent_scissor) {
+        scissor = RayLib::GetCollisionRec(scissor, *parent_scissor);
+    }
 
     // TODO: Scissor optional
-    RayLib::BeginScissorMode(pos.x, pos.y, size->get().x, size->get().y);
+    RayLib::BeginScissorMode(scissor.x, scissor.y, scissor.width, scissor.height);
 
-#ifdef DEBUG_DRAW
-    if (is_hovered()) {
-        Vector2 s = size->get();
-        //RayLib::DrawRectangleLines(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x88});
-        RayLib::DrawRectangle(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x0F});
-    }
-#endif
+    #ifdef DEBUG_DRAW
+        RayLib::DrawRectangleLines(scissor.x, scissor.y, scissor.width, scissor.height, {0xFF, 0x00, 0xFF, 0x88});
+        if (is_hovered()) {
+            RayLib::DrawRectangle(scissor.x, scissor.y, scissor.width, scissor.height, {0xFF, 0x00, 0xFF, 0x0F});
+        }
+    #endif
+
+    render_section = RenderSection::DRAW;
+
 
     draw_self();
-
     RayLib::EndScissorMode();
 
     for (const auto& child : children) {
-        child->draw_tree();
+        child->draw_tree(Optional<RayLib::Rectangle>(scissor));
     }
 
     post_draw_tree();

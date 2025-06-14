@@ -75,12 +75,6 @@ void TextEdit::save_to_file() {
     file.write(text);
 }
 
-void TextEdit::on_wheel(WheelEvent& event) {
-    scroll_offset->y += event.delta_y * font_size_px * 5;
-
-    if (scroll_offset->y > 0) scroll_offset->y = 0;
-}
-
 void TextEdit::on_tab_focus(TabFocusEvent& event) {
     String title = file.get_path();
     title.append(" - Claire's Editor");

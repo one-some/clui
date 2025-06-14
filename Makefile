@@ -13,7 +13,6 @@ CXXFLAGS = \
     -Wextra \
     -Wpedantic \
     -Wshadow \
-    -Wconversion \
 	-Wno-switch \
 	-Wno-sign-conversion \
 	-Wno-unused-parameter \
@@ -21,6 +20,8 @@ CXXFLAGS = \
 	-Wno-implicit-int-float-conversion \
 	-Wno-shorten-64-to-32 \
 	-Wno-gnu-zero-variadic-macro-arguments \
+	-Wno-float-conversion \
+	-Wno-c++11-narrowing
 #-fsanitize=memory -fsanitize-memory-track-origins=2
 
 # Directories
