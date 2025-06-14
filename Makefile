@@ -2,7 +2,25 @@
 
 # Compiler and flags
 CXX = ccache clang++#g++
-CXXFLAGS = -Wall -std=c++23 -I./src -Wno-switch -g -march=native -Wuninitialized -fsanitize=address
+CXXFLAGS = \
+	-std=c++23 \
+	-I./src \
+	-g \
+	-march=native \
+	-fsanitize=undefined \
+	-fsafe-buffer-usage-suggestions \
+    -Wall \
+    -Wextra \
+    -Wpedantic \
+    -Wshadow \
+    -Wconversion \
+	-Wno-switch \
+	-Wno-sign-conversion \
+	-Wno-unused-parameter \
+	-Wno-implicit-float-conversion \
+	-Wno-implicit-int-float-conversion \
+	-Wno-shorten-64-to-32 \
+	-Wno-gnu-zero-variadic-macro-arguments \
 #-fsanitize=memory -fsanitize-memory-track-origins=2
 
 # Directories

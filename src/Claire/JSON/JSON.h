@@ -78,10 +78,14 @@ public:
     JSONString(String val): value(val) { }
 
     static String to_string(String s) {
-        s = s.replace("\n", "\\n");
-        // TODO: ????
-        s = s.replace("\\?", "\\\\?");
+        s = s.replace("\\", "\\\\");
+
         s = s.replace("\"", "\\\"");
+        s = s.replace("\n", "\\n");
+        s = s.replace("\r", "\\r");
+        s = s.replace("\t", "\\t");
+        s = s.replace("\b", "\\b");
+        s = s.replace("\f", "\\f");
 
         String out = "\"";
         out.append(s);

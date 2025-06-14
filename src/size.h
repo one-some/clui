@@ -22,7 +22,7 @@ class Size {
 
         Vector2 get();
 
-        void set_raw(Vector2 raw) { this->raw = raw; }
+        void set_raw(Vector2 _raw) { this->raw = _raw; }
         void set_x(int32_t x) { this->raw.x = x; }
         void set_y(int32_t y) { this->raw.y = y; }
     

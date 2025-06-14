@@ -62,11 +62,11 @@ void LSPClient::send_lsp_message(String payload) {
     size_t len = payload.length();
 
     String in = "Content-Length: ";
-    in.append(String::from_int(len));
+    in.append(String::from_int((int)len));
     in.append("\r\n\r\n");
     in.append(payload);
 
-    printf("Payload: %s\n", payload.as_c());
+    printf("Payload: %s\n", payload.truncated().as_c());
 
     write(to_lsp_pipe[1], in.as_c(), in.length());
     // printf("Done writing\n");
@@ -188,7 +188,7 @@ String LSPClient::await_lsp_response() {
     send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
 
 
-    struct timespec sleep_time = { 0 };
+    struct timespec sleep_time = { 0, 0 };
     sleep_time.tv_nsec = 10 * 1000 * 1000;
 
     while (true) {

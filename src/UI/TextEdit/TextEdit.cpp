@@ -99,7 +99,7 @@ void TextEdit::on_input() {
 
 
     char c = '\0';
-    while ((c = RayLib::GetCharPressed())) {
+    while ((c = (char)RayLib::GetCharPressed())) {
         text.insert(c, caret_index);
         changes_made = true;
         move_caret({1, 0});
@@ -262,7 +262,7 @@ void TextEdit::draw_text() {
             color
         );
 
-        pointer.x += RayLib::MeasureTextEx(font, node.text.as_c(), font_size_px, 0).x;
+        pointer.x += (int32_t)RayLib::MeasureTextEx(font, node.text.as_c(), (float)font_size_px, 0.0f).x;
     }
 }
 
@@ -284,7 +284,7 @@ Vector2 TextEdit::survey_position(size_t index) {
     }
 
     String partial_line = text.slice(last_newline, index);
-    int32_t width = RayLib::MeasureTextEx(font, partial_line.as_c(), font_size_px, 0).x;
+    int32_t width = (int32_t)RayLib::MeasureTextEx(font, partial_line.as_c(), font_size_px, 0).x;
     out.x = width;
 
     return out;
@@ -303,12 +303,12 @@ void TextEdit::on_click(ClickEvent& event) {
 
     size_t line_length = strlen(line.as_c());
     for (size_t i=1; i < line_length; i++) {
-        int32_t width = RayLib::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
+        int32_t width = (int32_t)RayLib::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
 
         if (width < x_left && i != line_length - 1) continue;
 
         caret_position_px.x = width;
-        caret_position_px.y = line_number * font_size_px;
+        caret_position_px.y = (int32_t)line_number * font_size_px;
         caret_blink_timer = 0;
 
         caret_index = str_index_from_vec2(text.as_c(), {(int32_t)i, (int32_t)line_number});

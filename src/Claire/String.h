@@ -144,7 +144,7 @@ public:
         // return out;
     }
     
-    const char operator[](size_t index) {
+    char operator[](size_t index) {
         return c_str[index];
     }
 
@@ -336,6 +336,18 @@ public:
         return String::move_from(str);
     }
 
+    String truncated(size_t to=100) {
+        if (length() <= to) return String(*this);
+
+        size_t left = length() - to;
+        String out = first_n(to);
+        out.append(" ... (plus ");
+        out.append(String::from_int((int)left));
+        out.append(" characters)");
+        
+        return out;
+    }
+
     bool starts_with(String target) const {
         if (length() < target.length()) return false;
         return slice(0, target.length()) == target;
@@ -367,7 +379,7 @@ public:
 
             buf[bytes_read] = '\0';
             string.append(buf);
-            total_read += bytes_read;
+            total_read += (size_t)bytes_read;
 
             free(buf);
             if ((size_t)bytes_read < chunk_size) break;
@@ -388,7 +400,7 @@ public:
 
     int to_int() const {
         char* end;
-        return strtod(c_str, &end);
+        return (int)strtod(c_str, &end);
     }
 
 private:

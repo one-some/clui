@@ -37,12 +37,12 @@ void Terminal::draw_text() {
 
     if (caret_visible && is_focused()) {
         // TODO: Wht tf is this every frame whyyyyyyyyyy
-        RayLib::Vector2 mono_size = RayLib::MeasureTextEx(
+        auto mono_size = Vector2::from_ray(RayLib::MeasureTextEx(
             font,
             "s",
             font_size_px,
             0
-        );
+        ));
 
         RayLib::DrawRectangle(
             pos.x + (mono_size.x * lines.back().length()) + 4,
@@ -151,7 +151,7 @@ void Terminal::on_input() {
     char c = '\0';
     String keys;
 
-    while ((c = RayLib::GetCharPressed())) {
+    while ((c = (char)RayLib::GetCharPressed())) {
         keys.add_char(c);
     }
 
