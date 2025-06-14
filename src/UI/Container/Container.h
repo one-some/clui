@@ -20,6 +20,8 @@ public:
     std::unique_ptr<Size> const size = std::make_unique<Size>(Size(this));
     std::unique_ptr<Vector2> const scroll_offset = std::make_unique<Vector2>();
 
+    bool allow_scroll = false;
+
     // TODO: Private?
     Container* parent = nullptr;
     std::vector<std::unique_ptr<Container>> children;
@@ -126,7 +128,13 @@ protected:
     bool last_hovered = false;
 
     std::map<std::type_index, std::function<void(Event&)>> object_event_handlers;
-    std::map<std::type_index, std::function<void(Event&)>> class_event_handlers;
+    std::map<std::type_index, std::function<void(Event&)>> class_event_handlers = {
+        // RLY UGLY Default setup for base class
+        {
+            std::type_index(typeid(WheelEvent)),
+            [this](Event& event) { on_wheel(static_cast<WheelEvent&>(event)); }
+        }
+    };
 
 
     virtual void pre_draw_tree() { };
@@ -139,5 +147,12 @@ protected:
         class_event_handlers[type] = [this, handler](Event& event) {
             (static_cast<TClass*>(this)->*handler)(static_cast<TEvent&>(event));
         };
+    }
+
+private:
+    void on_wheel(WheelEvent& event) {
+        if (!allow_scroll) return;
+        scroll_offset->y += event.delta_y * 200;
+        printf("%d\n", event.delta_y);
     }
 };

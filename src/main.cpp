@@ -64,6 +64,7 @@ int main(int argc, char *argv[], char *envp[]) {
     uint64_t frames = 0;
     
     auto root = Container();
+    root.debug_name = "root";
     FrameManager::root_container = &root;
     root.size->set_raw({ 500, 500 });
 
@@ -102,6 +103,7 @@ int main(int argc, char *argv[], char *envp[]) {
             
             auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
             bottom_tabs->debug_name = String("bottom_tabs");
+            bottom_tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
             bottom_tabs->size->strategy_y = SizeStrategy::FORCE;
             bottom_tabs->size->set_y(200);
 

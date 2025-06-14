@@ -3,6 +3,12 @@
 #include "UI/Container/Container.h"
 
 Vector2 Size::get() {
+    if (!owner->parent) {
+        // O_o
+        // printf("Who are you: %s\n", owner->debug_name.as_c());
+        return raw;
+    }
+
     if (owner->parent && owner->parent->manages_child_size()) return raw;
 
     Vector2 out;

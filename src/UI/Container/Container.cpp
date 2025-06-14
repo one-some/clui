@@ -39,10 +39,13 @@ void Container::draw_tree() {
     // TODO: Scissor optional
     RayLib::BeginScissorMode(pos.x, pos.y, size->get().x, size->get().y);
 
-#ifdef DEBUG_DRAW
-    Vector2 s = size->get();
-    RayLib::DrawRectangleLines(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x88});
-#endif
+// #ifdef DEBUG_DRAW
+    if (is_hovered()) {
+        Vector2 s = size->get();
+        //RayLib::DrawRectangleLines(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x88});
+        RayLib::DrawRectangle(pos.x, pos.y, s.x, s.y, {0xFF, 0x00, 0xFF, 0x0F});
+    }
+// #endif
 
     draw_self();
 

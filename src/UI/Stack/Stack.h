@@ -38,6 +38,7 @@ class Stack : public Container {
         virtual int32_t relevant_axis(Vector2 v) const = 0;
         virtual int32_t inv_relevant_axis(Vector2 v) const = 0;
         virtual SizeStrategy relevant_strat(Size* s) const = 0;
+        virtual SizeStrategy inv_relevant_strat(Size* s) const = 0;
         virtual void set_relevant(Size* s, int32_t a) const = 0;
         virtual void set_inv_relevant(Size* s, int32_t a) const = 0;
         virtual void set_relevant(Position* s, int32_t a) const = 0;
@@ -60,6 +61,7 @@ class VStack : public Stack {
         inline int32_t relevant_axis(Vector2 v) const override final { return v.y; };
         inline int32_t inv_relevant_axis(Vector2 v) const override final { return v.x; };
         inline SizeStrategy relevant_strat(Size* s) const override final { return s->strategy_y; }
+        inline SizeStrategy inv_relevant_strat(Size* s) const override final { return s->strategy_x; }
         void set_relevant(Size* s, int32_t a) const override final { s->set_y(a); }
         void set_inv_relevant(Size* s, int32_t a) const override final { s->set_x(a); }
         void set_relevant(Position* s, int32_t a) const override final { s->set_y(a); }
@@ -81,6 +83,7 @@ class HStack : public Stack {
         inline int32_t relevant_axis(Vector2 v) const override final { return v.x; };
         inline int32_t inv_relevant_axis(Vector2 v) const override final { return v.y; };
         inline SizeStrategy relevant_strat(Size* s) const override final { return s->strategy_x; }
+        inline SizeStrategy inv_relevant_strat(Size* s) const override final { return s->strategy_y; }
         virtual void set_relevant(Size* s, int32_t a) const override final { s->set_x(a); }
         virtual void set_inv_relevant(Size* s, int32_t a) const override final { s->set_y(a); }
         virtual void set_relevant(Position* s, int32_t a) const override final { s->set_x(a); }
