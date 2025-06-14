@@ -153,6 +153,6 @@ private:
     void on_wheel(WheelEvent& event) {
         if (!allow_scroll) return;
         scroll_offset->y += event.delta_y * 200;
-        printf("%d\n", event.delta_y);
+        printf("%d\n", scroll_offset->y);
     }
 };
