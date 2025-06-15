@@ -110,8 +110,8 @@ public:
         if (type_info == typeid(MouseMotionEvent)) {
             auto& squeak = (MouseMotionEvent&)event;
             bool hovered = Vector2({squeak.x, squeak.y}).in_rectangle(
-                get_draw_position(),
-                // position->get_global(),
+                // get_draw_position(),
+                position->get_global(),
                 size->get()
             );
 
