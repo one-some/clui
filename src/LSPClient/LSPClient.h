@@ -49,6 +49,7 @@ public:
     void process_lsp_response(String body);
 
     String await_lsp_response();
+    void file_did_open(String path);
 
     [[noreturn]] void lsp_thread();
 };

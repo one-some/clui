@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "Claire/Path.h"
 #include "Dep/raylib.h"
 
 struct RLFontDeleter {
@@ -15,7 +16,7 @@ class Font {
         static RayLib::Font the() {
             if (!the_raw) {
                 // Copy to heap and reset ptr to preserve deleter
-                the_raw.reset(new RayLib::Font(RayLib::LoadFont("ibm.ttf")));
+                the_raw.reset(new RayLib::Font(RayLib::LoadFont(Path::exec_relative("ibm.ttf").as_c())));
             }
             return *the_raw;
         }

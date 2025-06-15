@@ -153,6 +153,17 @@ String LSPClient::await_lsp_response() {
     return body;
 }
 
+void LSPClient::file_did_open(String path) {
+    auto params = std::make_unique<JSONObject>();
+    auto text_document = params->set_new<JSONObject>("textDocument");
+    text_document->set_new<JSONString>("uri", "file://" + path);
+    text_document->set_new<JSONString>("languageId", "cpp");
+    text_document->set_new<JSONNumber>("version", 1);
+    text_document->set_new<JSONString>("text", File(path).read());
+
+    send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
+}
+
 [[noreturn]] void LSPClient::lsp_thread() {
     printf("[lsp] hey from lsp thread\n");
 
@@ -176,17 +187,6 @@ String LSPClient::await_lsp_response() {
 
     params = std::make_unique<JSONObject>();
     send_lsp_message(build_request("initialized", Optional<int>(), std::move(params)));
-
-    params = std::make_unique<JSONObject>();
-    auto text_document = params->set_new<JSONObject>("textDocument");
-    text_document->set_new<JSONString>("uri", "file:///home/susan/clui/src/main.cpp");
-    text_document->set_new<JSONString>("languageId", "cpp");
-    text_document->set_new<JSONNumber>("version", 1);
-    text_document->set_new<JSONString>("text", File("src/main.cpp").read());
-    // TEXT
-
-    send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
-
 
     struct timespec sleep_time = { 0, 0 };
     sleep_time.tv_nsec = 10 * 1000 * 1000;

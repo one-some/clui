@@ -16,7 +16,7 @@ public:
 
     void print_state(const char* event) const {
 	return;
-        fprintf(stderr, "[STRING EVENT] %-20s | Addr: %p | Cap: %-4zu | Len: %-4zu | Data: \"%s\"\n",
+        fprintf(stderr, "[Test STRING EVENT] %-20s | Addr: %p | Cap: %-4zu | Len: %-4zu | Data: \"%s\"\n",
             event, (void*)this, capacity, length(), c_str ? c_str : "null");
     }
 
@@ -86,22 +86,9 @@ public:
         free(c_str);
     }
 
-    // String& operator=(String&& other) noexcept {
-    //     if (this == &other) {
-    //         print_state("move assign shortcut");
-    //         return *this;
-    //     }
-
-    //     free(c_str);
-    //     c_str = other.c_str;
-    //     capacity = other.capacity;
-
-    //     other.c_str = nullptr;
-    //     other.capacity = 0;
-    //     print_state("move assign");
-    //     return *this;
-    // }
-
+    void operator+=(const String& that) {
+        append(that);
+    }
 
     static String from_double(double val, int round_places = -1) {
         int len = snprintf(NULL, 0, "%f", val);
@@ -424,3 +411,9 @@ private:
         c_str = new_string;
     }
 };
+
+inline String operator+(const String& lhs, const String& rhs) {
+    String out = String(lhs);
+    out.append(rhs);
+    return out;
+}

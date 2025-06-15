@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Claire/Assert.h"
 #include <cstdarg>
 
 namespace RayLib {
@@ -21,7 +22,9 @@ namespace RayLib {
     public:
         Image image;
 
-        SmartImage(const char* path) : image(LoadImage(path)) { }
+        SmartImage(const char* path) : image(LoadImage(path)) {
+            ASSERT(image.width + image.height, "Bad image load at '%s'", path);
+        }
 
         ~SmartImage() {
             UnloadImage(image);

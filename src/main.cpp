@@ -57,7 +57,7 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
 
-    auto icon = RayLib::SmartImage("claire_head.png");
+    auto icon = RayLib::SmartImage(Path::exec_relative("claire_head.png").as_c());
     RayLib::SetWindowIcon(icon.image);
 
     RayLib::SetTargetFPS(60);
@@ -93,13 +93,9 @@ int main(int argc, char *argv[], char *envp[]) {
             tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
             tabs->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
             EditorActions::register_primary_tab_container(tabs);
-            EditorActions::open_file_in_new_tab("src/main.cpp");
+            // EditorActions::open_file_in_new_tab("src/main.cpp");
             // EditorActions::open_file_in_new_tab("src/textedit.cpp");
-            if (argc > 1) {
-                String new_file = String(argv[1]);
-		printf("Opening '%s'\n", new_file.as_c());
-                EditorActions::open_file_in_new_tab(new_file);
-	    }
+            if (argc > 1) EditorActions::open_file_in_new_tab(argv[1]);
             
             auto bottom_tabs = tabs_terminal_stack->create_child<TabContainer>();
             bottom_tabs->debug_name = String("bottom_tabs");
