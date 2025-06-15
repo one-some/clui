@@ -24,7 +24,7 @@ public:
             for (auto& message : *messages) {
                 auto label = this->create_child<TextLabel>(message.as_c());
                 label->font_size = 16;
-                label->color = Colors::FG.to_ray();
+                label->color = Colors::ERROR.to_ray();
             }
         });
     }

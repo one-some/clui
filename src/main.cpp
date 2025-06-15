@@ -10,7 +10,7 @@
 #include "FrameManager/FrameManager.h"
 #include "Claire/JSON/JSON.h"
 #include "Claire/Utilization.h"
-
+#include "Project/Project.h"
 #include "UI/Container/Container.h"
 #include "color.h"
 #include "cpp.h"
@@ -63,6 +63,8 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetTargetFPS(60);
     uint64_t frames = 0;
     
+    auto project = Project(Path::dir_path(Path::exec_path()));
+
     auto root = Container();
     root.debug_name = "root";
     FrameManager::root_container = &root;
@@ -93,7 +95,7 @@ int main(int argc, char *argv[], char *envp[]) {
             tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
             tabs->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
             EditorActions::register_primary_tab_container(tabs);
-            // EditorActions::open_file_in_new_tab("src/main.cpp");
+            EditorActions::open_file_in_new_tab(Path::exec_relative("src/main.cpp"));
             // EditorActions::open_file_in_new_tab("src/textedit.cpp");
             if (argc > 1) EditorActions::open_file_in_new_tab(argv[1]);
             

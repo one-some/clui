@@ -154,10 +154,12 @@ String LSPClient::await_lsp_response() {
 }
 
 void LSPClient::file_did_open(String path) {
+    auto file_type = path.split(".").back();
+
     auto params = std::make_unique<JSONObject>();
     auto text_document = params->set_new<JSONObject>("textDocument");
     text_document->set_new<JSONString>("uri", "file://" + path);
-    text_document->set_new<JSONString>("languageId", "cpp");
+    text_document->set_new<JSONString>("languageId", file_type);
     text_document->set_new<JSONNumber>("version", 1);
     text_document->set_new<JSONString>("text", File(path).read());
 

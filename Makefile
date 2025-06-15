@@ -88,11 +88,59 @@ $(DESKTOP_DIR)/$(DESKTOP_FILE_NAME):
 
 # Clean target to remove build files and the executable
 clean:
-	rm -rf $(BUILD_DIR) $(EXEC_PATH) $(DESKTOP_PATH)
+	rm -rf $(BUILD_DIR) $(EXEC_PATH) $(DESKTOP_PATH) $(BUILD_DIR_WIN) $(TARGET_WIN)
 
 run: $(EXEC_PATH)
 	@echo "RUN    :: $(EXEC_FULL_PATH)"
 	$(EXEC_FULL_PATH)
+
+# Windows
+CXX_WIN = x86_64-w64-mingw32-g++
+BUILD_DIR_WIN = build-win
+TARGET_WIN = claire.exe
+
+SOURCES_WIN := $(shell find $(SRC_DIR) -name '*.cpp')
+OBJECTS_WIN := $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR_WIN)/%.o)
+
+CXXFLAGS_WIN = \
+	-MMD -MP \
+	-std=c++23 \
+	-I./src \
+	-g \
+	-I/usr/local/include \
+	-Wall \
+	-Wextra \
+	-Wpedantic \
+	-Wshadow \
+	-Wno-switch \
+	-Wno-sign-conversion \
+	-Wno-unused-parameter
+
+LDFLAGS_WIN = \
+	-Llib \
+	-lraylib \
+	-lopengl32 \
+	-lgdi32 \
+	-lwinmm \
+	-static-libgcc \
+	-static-libstdc++
+
+windows: $(TARGET_WIN)
+
+$(TARGET_WIN): $(OBJECTS_WIN)
+	@echo "LD-WIN  :: $@"
+	$(CXX_WIN) $^ -o $@ $(LDFLAGS_WIN)
+
+# Rule to compile source files into Windows object files
+$(BUILD_DIR_WIN)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	@echo "CXX-WIN :: $@"
+	$(CXX_WIN) $(CXXFLAGS_WIN) -c $< -o $@
+
+# Update the existing run-win rule to depend on the new windows target
+run-win: windows
+	@echo "RUN-WIN :: Running $(TARGET_WIN) via Windows Explorer"
+	/mnt/c/Windows/explorer.exe $(TARGET_WIN)
 
 .PHONY: all clean run
 

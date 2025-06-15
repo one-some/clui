@@ -22,4 +22,5 @@ class Color {
 namespace Colors {
     inline auto BG = ::Color(0x000022);
     inline auto FG = ::Color(0xFFF9A6);
+    inline auto ERROR = ::Color(0xFF6464);
 }

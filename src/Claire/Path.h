@@ -1,4 +1,8 @@
 #pragma once
+
+#include <errno.h>
+#include <unistd.h>
+#include <dirent.h>
 #include "Claire/String.h"
 
 class Path {
@@ -44,5 +48,22 @@ public:
 
     static String exec_relative(String path) {
         return join(dir_path(exec_path()), path);
+    }
+
+    static bool is_dir(String path) {
+        DIR* dir = opendir(path.as_c());
+
+        if (dir) {
+            closedir(dir);
+            return true;
+        }
+
+        ASSERT(errno == ENOENT, "Weird error when checking for dir %s", path.as_c());
+
+        return false;
+    }
+
+    static bool is_file(String path) {
+        return access(path.as_c(), F_OK) == 0;
     }
 };
