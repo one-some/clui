@@ -64,7 +64,7 @@ all: $(EXEC_PATH)
 $(EXEC_PATH): $(OBJECTS)
 	@echo "LD    :: $@"
 	$(CXX) $^ -o $@ $(LDFLAGS)
-	$(MAKE) $(DESKTOP_PATH)
+	+$(MAKE) $(DESKTOP_PATH)
 
 # Compile source files into object files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

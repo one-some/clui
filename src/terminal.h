@@ -16,6 +16,7 @@ class Terminal : public Container {
         uint32_t caret_pos = 0;
 
         Terminal() {
+            allow_scroll = true;
             init_terminal();
         }
 

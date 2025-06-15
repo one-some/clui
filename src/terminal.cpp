@@ -11,7 +11,7 @@ void Terminal::draw_self() {
 }
 
 void Terminal::draw_text() {
-    Vector2 pos = position->get_global();
+    Vector2 pos = get_draw_position();
     std::vector<String> lines = text.split('\n');
 
     for (size_t i=0; i<lines.size();i++) {

@@ -171,7 +171,7 @@ private:
     void on_wheel(WheelEvent& event) {
         if (!allow_scroll) return;
 
-        scroll_offset->y += event.delta_y * 16;
+        scroll_offset->y += event.delta_y * 16 * 3;
         if (scroll_offset->y > 0) scroll_offset->y = 0;
     }
 };
