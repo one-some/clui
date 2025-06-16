@@ -84,6 +84,9 @@ int main(int argc, char *argv[], char *envp[]) {
         auto file_list = sidebar_cont->create_child<FileList>("./");
         file_list->size->strategy_x = SizeStrategy::FORCE;
         file_list->size->set_x(200);
+        file_list->decoration = std::make_unique<ContainerDecoration>();
+        file_list->decoration->border_color = Color(0x181818);
+        file_list->decoration->border_right_px = 1;
 
         auto tabs_terminal_stack = sidebar_cont->create_child<VStack>();
         tabs_terminal_stack->debug_name = String("tabs_terminal_stack");
@@ -92,6 +95,10 @@ int main(int argc, char *argv[], char *envp[]) {
         tabs_terminal_stack->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
 
             auto tabs = tabs_terminal_stack->create_child<TabContainer>();
+            tabs->decoration = std::make_unique<ContainerDecoration>();
+            tabs->decoration->border_color = Color(0xFF0000);
+            tabs->decoration->border_top_px = 2;
+
             tabs->size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
             tabs->size->strategy_y = SizeStrategy::EXPAND_TO_FILL;
             EditorActions::register_primary_tab_container(tabs);
@@ -174,6 +181,7 @@ int main(int argc, char *argv[], char *envp[]) {
         frames++;
     }
 
+    auto window_pos = RayLib::GetWindowPosition();
     RayLib::CloseWindow();
 
     return 0;

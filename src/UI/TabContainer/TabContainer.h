@@ -25,6 +25,11 @@ class TabContainer : public VStack {
             unique_tabs->size->set_y(30);
             unique_tabs->size->strategy_y = SizeStrategy::FORCE;
 
+            unique_tabs->decoration = std::make_unique<ContainerDecoration>();
+            unique_tabs->decoration->border_color = Color(0x282828);
+            unique_tabs->decoration->border_bottom_px = 1;
+            unique_tabs->decoration->border_top_px = 1;
+
             tab_button_stack = unique_tabs.get();
             add_child(std::move(unique_tabs));
         }

@@ -60,6 +60,49 @@ void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
 
 
     draw_self();
+
+    if (decoration) {
+        if (decoration->border_top_px) {
+            RayLib::DrawRectangle(
+                pos.x,
+                pos.y,
+                s.x,
+                decoration->border_top_px,
+                decoration->border_color.to_ray()
+            );
+        }
+
+        if (decoration->border_bottom_px) {
+            RayLib::DrawRectangle(
+                pos.x,
+                pos.y + s.y - decoration->border_bottom_px,
+                s.x,
+                decoration->border_bottom_px,
+                decoration->border_color.to_ray()
+            );
+        }
+
+        if (decoration->border_left_px) {
+            RayLib::DrawRectangle(
+                pos.x,
+                pos.y,
+                decoration->border_left_px,
+                s.y,
+                decoration->border_color.to_ray()
+            );
+        }
+
+        if (decoration->border_right_px) {
+            RayLib::DrawRectangle(
+                pos.x + s.x - decoration->border_right_px,
+                pos.y,
+                decoration->border_right_px,
+                s.y,
+                decoration->border_color.to_ray()
+            );
+        }
+    }
+
     RayLib::EndScissorMode();
 
     for (const auto& child : children) {

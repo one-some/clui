@@ -1,4 +1,4 @@
 {
-    "F1": {"context": "shell", "command": "echo Hi from claire"},
-    "J": {"context": "shell", "command": "shutdown now"}
+    "F5": {"context": "shell", "command": "make"},
+    "F6": {"context": "shell", "command": "make run"}
 }

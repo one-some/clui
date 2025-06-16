@@ -22,6 +22,10 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
     auto button = tab_button_stack->create_child<Button>();
     button->size->set_y(tab_button_stack->size->get().y);
 
+    button->decoration = std::make_unique<ContainerDecoration>();
+    button->decoration->border_color = Color(0x282828);
+    button->decoration->border_right_px = 1;
+
     recalculate_tab_positions();
 
     auto lab = button->create_child<TextLabel>(label);

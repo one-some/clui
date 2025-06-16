@@ -7,6 +7,7 @@
 #include <typeindex>
 #include <memory>
 
+#include "color.h"
 #include "UI/Events/Events.h"
 #include "position.h"
 #include "size.h"
@@ -16,6 +17,16 @@
 enum class RenderSection {
     CULL,
     DRAW,
+};
+
+class ContainerDecoration {
+public:
+    int32_t border_top_px = 0;
+    int32_t border_bottom_px = 0;
+    int32_t border_left_px = 0;
+    int32_t border_right_px = 0;
+
+    Color border_color = Color(0xAAAAAA);
 };
 
 class Container {
@@ -29,6 +40,7 @@ public:
     bool allow_scroll = false;
 
     // TODO: Private?
+    std::unique_ptr<ContainerDecoration> decoration;
     Container* parent = nullptr;
     std::vector<std::unique_ptr<Container>> children;
     String debug_name;
