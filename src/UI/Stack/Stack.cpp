@@ -17,8 +17,9 @@ int32_t Stack::calculate_min_size(Container* thing) {
     // Its a stack....
     int32_t out = 0;
 
-    for (auto& child : thing->visible_children()) {
-        out += calculate_min_size(child);
+    for (auto& child : thing->children) {
+        if (!child->is_visible()) continue;
+        out += calculate_min_size(&*child);
     }
 
     return out;
@@ -37,7 +38,9 @@ void Stack::reposition_children() {
     int32_t budget = relevant_axis(size->get());
     int32_t expandable_child_count = 0;
 
-    for (auto& child : visible_children()) {
+    for (auto& child : children) {
+        if (!child->is_visible()) continue;
+
         auto child_strat = relevant_strat(child->size.get());
         if (
             child_strat == SizeStrategy::EXPAND_TO_FILL
@@ -54,7 +57,9 @@ void Stack::reposition_children() {
     if (budget < 0) budget = 0;
 
     int32_t current_pos = 0;
-    for (auto& child : visible_children()) {
+    for (auto& child : children) {
+        if (!child->is_visible()) continue;
+
         // Make their secondary axis match ours
         set_inv_relevant(child->size.get(), inv_relevant_axis(size->get()));
 
@@ -98,10 +103,13 @@ void Stack::do_user_resizing() {
 
     // Where are those borders anyways
     std::vector<int32_t> borders;
-    std::vector<Container*> visible = visible_children();
+    std::vector<Container*> visible;
 
     int32_t current_pos = 0;
-    for (auto& child : visible) {
+    for (auto& child : children) {
+        if (!child->is_visible()) continue;
+        visible.push_back(&*child);
+
         current_pos += relevant_axis(child->size->get());
 
         borders.push_back(current_pos);

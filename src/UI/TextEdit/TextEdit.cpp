@@ -147,17 +147,9 @@ void TextEdit::draw_self() {
         caret_visible = false;
     }
 
-    Vector2 pos = get_draw_position();
-    RayLib::DrawRectangle(
-        pos.x,
-        pos.y,
-        1,
-        size->get().y,
-        RayLib::ColorAlpha(Colors::FG.to_ray(), 0.2)
-    );
-
     draw_text();
 
+    Vector2 pos = get_draw_position();
     if (caret_visible && is_focused()) {
         RayLib::DrawRectangle(
             pos.x + caret_position_px.x + 1,
@@ -285,6 +277,7 @@ Vector2 TextEdit::survey_position(size_t index) {
 }
 
 void TextEdit::on_click(ClickEvent& event) {
+    printf("Editor with file %s got clicked\n", file.get_path().as_c());
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - get_draw_position();
 

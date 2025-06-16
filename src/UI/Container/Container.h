@@ -64,6 +64,18 @@ public:
         return raw_ptr;
     }
 
+    bool is_visible() {
+        if (parent) {
+            if (!parent->is_visible()) return false;
+            if (!parent->is_child_visible(this)) return false;
+        }
+
+        // TODO: if (!visible) return false
+        return true;
+    }
+
+    virtual bool is_child_visible(Container* child) { return true; }
+
     virtual void on_input() { };
 
     inline bool is_focused() { return Container::focused_element == this; }
@@ -72,14 +84,6 @@ public:
 
     virtual void draw_tree(Optional<RayLib::Rectangle> parent_scissor = Optional<RayLib::Rectangle>());
     virtual void draw_self() { }
-
-    virtual std::vector<Container*> visible_children() {
-        std::vector<Container*> out;
-        for (auto &child : children) {
-            out.push_back(child.get());
-        }
-        return out;
-    }
 
     Vector2 get_draw_position() {
         Vector2 pos = position->get_local();
@@ -105,6 +109,9 @@ public:
     }
 
     void dispatch_event(Event& event) {
+        // This definitly won't bite us in the butt later
+        if (!is_visible()) return;
+
         const auto& type_info = typeid(event);
         const auto type = std::type_index(type_info);
 

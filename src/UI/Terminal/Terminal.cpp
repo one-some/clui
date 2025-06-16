@@ -12,8 +12,24 @@ void Terminal::draw_self() {
     draw_text();
 }
 
+void Terminal::scroll_to_bottom() {
+    // FIXME: Terribly terrible way to do this
+    int32_t line_count = text.split('\n').size();
+
+    int32_t bottom_line = (-scroll_offset->y + size->get().y) / font_size_px;
+
+    if (bottom_line < line_count) {
+        scroll_offset->x = 0;
+        scroll_offset->y = (-line_count * font_size_px) + size->get().y / 16 * 16;
+    }
+}
+
 void Terminal::draw_text() {
     Vector2 pos = get_draw_position();
+
+    pos.x += 1;
+    pos.y += 5;
+
     std::vector<String> lines = text.split('\n');
 
     for (size_t i=0; i<lines.size();i++) {
@@ -136,6 +152,7 @@ void Terminal::sync_pty() {
             }
 
             if (c == '\r') continue;
+            if (c == '\a') continue;  // BING BING BING
 
             if (c == '\n') {
                 caret_pos = 0;
@@ -144,6 +161,7 @@ void Terminal::sync_pty() {
             }
 
             text.add_char(c);
+            scroll_to_bottom();
         }
     }
     return;
@@ -165,5 +183,8 @@ void Terminal::on_input() {
         if (RayLib::IsKeyTyped(RayLib::KEY_C)) keys.add_char('\x03');
     }
 
-    write(master_pty_fd, keys.as_c(), keys.length());
+    if (keys.length()) {
+        write(master_pty_fd, keys.as_c(), keys.length());
+        scroll_to_bottom();
+    }
 }

@@ -46,16 +46,12 @@ class TabContainer : public VStack {
             active_tab->view->draw_tree(parent_scissor);
         }
 
-        std::vector<Container*> visible_children() override {
-            std::vector<Container*> out;
+        bool is_child_visible(Container* child) override {
+            if (children.empty()) return false;  // Needed?
 
-            if (children.empty()) return out;
-            out.push_back(children[0].get());
-
-            if (!active_tab) return out;
-
-            out.push_back(active_tab->view);
-            return out;
+            if (child == children[0].get()) return true;
+            if (active_tab && child == active_tab->view) return true;
+            return false;
         }
 
         void focus_tab(Tab* tab) {

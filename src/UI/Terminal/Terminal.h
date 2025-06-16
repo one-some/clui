@@ -33,6 +33,7 @@ public:
     virtual void draw_self() override;
     void draw_text();
     void init_terminal();
+    void scroll_to_bottom();
 
     void send_command(String command) {
         write(master_pty_fd, "\x03", 1);

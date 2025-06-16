@@ -61,9 +61,10 @@ public:
                         sprawl({ new_path }, cont, depth + 1);
                     } else {
                         // Yucky
-                        for (auto& child : cont->visible_children()) {
-                            if (child == button) continue;
-                            cont->remove_child(child);
+                        for (auto& child : cont->children) {
+                            if (!child->is_visible()) continue;
+                            if (&*child == button) continue;
+                            cont->remove_child(&*child);
                         }
                     }
 

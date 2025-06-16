@@ -3,7 +3,8 @@
 
 void TabContainer::recalculate_tab_positions() {
     uint32_t x_offset = 0;
-    for (auto child : tab_button_stack->visible_children()) {
+    for (auto& child : tab_button_stack->children) {
+        if (!child->is_visible()) continue;
         child->position->set_x(x_offset);
         x_offset += child->size->get().x;
     }
