@@ -1,6 +1,6 @@
 #include "Claire/JSON/JSON.h"
 
-JSONValue* JSONObject::get(String key) {
+JSONValue* JSONObject::get(String key) const {
     auto it = data->find(key);
     if (it == data->end()) {
         printf("Keys: ");

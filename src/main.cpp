@@ -22,7 +22,7 @@
 #include "UI/TabContainer/TabContainer.h"
 #include "UI/IssueContainer/IssueContainer.h"
 #include "fontglobal.h"
-#include "terminal.h"
+#include "UI/Terminal/Terminal.h"
 #include "UI/FileList/FileList.h"
 #include <fcntl.h>
 #include "log.h"
@@ -120,6 +120,10 @@ int main(int argc, char *argv[], char *envp[]) {
 
         root.size->set_x(RayLib::GetRenderWidth());
         root.size->set_y(RayLib::GetRenderHeight());
+
+        while (int key = RayLib::GetKeyPressed()) {
+            project.do_keybind_action(key);
+        }
 
         if (RayLib::IsKeyPressed(RayLib::KEY_RIGHT_SHIFT)) {
             reload_self(argc, argv, envp);

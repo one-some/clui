@@ -32,7 +32,7 @@ public:
     // Sharedptr for values??
     std::unique_ptr<std::map<String, std::unique_ptr<JSONValue>>> data = std::make_unique<std::map<String, std::unique_ptr<JSONValue>>>();
 
-    JSONValue* get(String key);
+    JSONValue* get(String key) const;
     void set(const String& key, std::unique_ptr<JSONValue> val);
     void set(const String& key, String val);
     void set(const String& key, double val);
@@ -48,7 +48,7 @@ public:
 
     // What a cute shortcut!
     template<JSONValueDerivative T>
-    T* get(String key) {
+    T* get(String key) const {
         return get(key)->as<T>();
     }
 
