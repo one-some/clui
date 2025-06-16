@@ -22,7 +22,18 @@ public:
     }
 };
 
-class ClickEvent : public Event { };
+enum class MouseButton {
+    LEFT,
+    RIGHT,
+    MIDDLE
+};
+
+class ClickEvent : public Event {
+public:
+    MouseButton button;
+
+    ClickEvent(MouseButton button) : button(button) { }
+};
 
 class MouseMotionEvent : public Event {
 public:

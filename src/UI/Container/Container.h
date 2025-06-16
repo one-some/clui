@@ -123,7 +123,7 @@ public:
             if (!is_hovered()) return;
 
             // TODO: Focus chain
-            Container::focused_element = this;
+            if (((ClickEvent&)event).button == MouseButton::LEFT) Container::focused_element = this;
         }
 
         if (type_info == typeid(MouseMotionEvent)) {

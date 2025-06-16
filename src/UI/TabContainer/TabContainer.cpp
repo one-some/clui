@@ -51,7 +51,7 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
         close_button->position->x_strategy = XPositionStrategy::RIGHT;
         close_button->position->y_strategy = YPositionStrategy::CENTER;
 
-        close_button->callback_on_click = [this, &tab, button] {
+        auto close_tab = [this, &tab, button] {
             auto tab_iterator = std::find_if(
                 tabs.begin(),
                 tabs.end(),
@@ -91,6 +91,13 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
                 tabs.end()
             );
         };
+
+        close_button->callback_on_click = close_tab;
+
+        button->register_handler<ClickEvent>([close_button, close_tab](ClickEvent& event) {
+            if (event.button != MouseButton::MIDDLE) return;
+            FrameManager::queue_operation(close_tab);
+        });
 
         x_padding += 32;
     }

@@ -139,8 +139,18 @@ int main(int argc, char *argv[], char *envp[]) {
         auto motion_event = MouseMotionEvent(RayLib::GetMouseX(), RayLib::GetMouseY());
         root.dispatch_event(motion_event);
 
-        if (RayLib::IsMouseButtonPressed(0)) {
-            auto click_event = ClickEvent();
+        if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_LEFT)) {
+            auto click_event = ClickEvent(MouseButton::LEFT);
+            root.dispatch_event(click_event);
+        }
+
+        if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_RIGHT)) {
+            auto click_event = ClickEvent(MouseButton::RIGHT);
+            root.dispatch_event(click_event);
+        }
+
+        if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_MIDDLE)) {
+            auto click_event = ClickEvent(MouseButton::MIDDLE);
             root.dispatch_event(click_event);
         }
 

@@ -14,6 +14,7 @@ class Button : public Container {
 
     private:
         void on_click(ClickEvent& event) {
+            if (event.button != MouseButton::LEFT) return;
             if (!callback_on_click) return;
             FrameManager::queue_operation(callback_on_click);
         }

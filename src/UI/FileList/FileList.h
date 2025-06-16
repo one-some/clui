@@ -60,11 +60,9 @@ public:
                     if (!button->open) {
                         sprawl({ new_path }, cont, depth + 1);
                     } else {
-                        // Yucky
-                        for (auto& child : cont->children) {
-                            if (!child->is_visible()) continue;
-                            if (&*child == button) continue;
-                            cont->remove_child(&*child);
+                        // Sketchy...
+                        while (cont->children.size() > 1) {
+                            cont->remove_child(cont->children[1].get());
                         }
                     }
 

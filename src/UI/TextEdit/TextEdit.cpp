@@ -257,8 +257,6 @@ Vector2 TextEdit::survey_position(size_t index) {
 
     size_t last_newline = 0;
 
-    printf("===\n");
-
     for (size_t i = 0; i < index; i++) {
         char c = text.as_c()[i];
         ASSERT(c, "Can't survey the end of time");
@@ -277,7 +275,8 @@ Vector2 TextEdit::survey_position(size_t index) {
 }
 
 void TextEdit::on_click(ClickEvent& event) {
-    printf("Editor with file %s got clicked\n", file.get_path().as_c());
+    if (event.button != MouseButton::LEFT) return;
+
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - get_draw_position();
 
@@ -305,5 +304,5 @@ void TextEdit::on_click(ClickEvent& event) {
         break;
     }
 
-    printf("%i, %i\n", caret_position_px.x, caret_position_px.y);
+    // printf("%i, %i\n", caret_position_px.x, caret_position_px.y);
 }
