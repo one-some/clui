@@ -288,10 +288,10 @@ void TextEdit::on_click(ClickEvent& event) {
     int32_t x_left = mouse_pos.x;
 
     size_t line_length = strlen(line.as_c());
-    for (size_t i=1; i < line_length; i++) {
+    for (size_t i=1; i <= line_length; i++) {
         int32_t width = (int32_t)RayLib::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
 
-        if (width < x_left && i != line_length - 1) continue;
+        if (width < x_left && i != line_length) continue;
 
         caret_position_px.x = width;
         caret_position_px.y = (int32_t)line_number * font_size_px;
