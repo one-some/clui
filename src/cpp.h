@@ -42,9 +42,7 @@ class CPPParser {
         
         CPPParser() {}
 
-        CPPParser(String* input) {
-            this->input = input;
-        }
+        CPPParser(String* in) : input(in) { }
 
         void reuse_or_push_if_differs(TokenType token_type) {
             if (active_token.type == token_type) return;

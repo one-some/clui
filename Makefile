@@ -107,14 +107,15 @@ CXXFLAGS_WIN = \
 	-std=c++23 \
 	-I./src \
 	-g \
-	-I/usr/local/include \
+	-march=native \
 	-Wall \
 	-Wextra \
 	-Wpedantic \
-	-Wshadow \
 	-Wno-switch \
+	-Wno-narrowing \
 	-Wno-sign-conversion \
-	-Wno-unused-parameter
+	-Wno-unused-parameter \
+	-Wno-float-conversion \
 
 LDFLAGS_WIN = \
 	-Llib \

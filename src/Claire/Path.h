@@ -5,6 +5,11 @@
 #include <dirent.h>
 #include "Claire/String.h"
 
+#ifdef _WIN32
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
+#endif
+
 class Path {
 public:
     static String join(String a, String b) {
@@ -42,6 +47,7 @@ public:
     }
 
     static String exec_path() {
+#ifdef _WIN32
         char* exec_path = realpath("/proc/self/exe", nullptr);
         return String::move_from(exec_path);
     }

@@ -50,9 +50,7 @@ public:
         ASSERT(ret == 0, "Error detaching thread");
         joinable = false;
     }
-
     
-
 private:
     std::function<void()>* target;
     pthread_t thread;

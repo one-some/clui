@@ -1,5 +1,6 @@
-#include <sys/wait.h>
 #include "LSPClient/LSPClient.h"
+#include <sys/wait.h>
+#include "Claire/Time.h"
 
 void LSPClient::open_pipes() {
     printf("Starting clangd...\n");
@@ -190,13 +191,8 @@ void LSPClient::file_did_open(String path) {
     params = std::make_unique<JSONObject>();
     send_lsp_message(build_request("initialized", Optional<int>(), std::move(params)));
 
-    struct timespec sleep_time = { 0, 0 };
-    sleep_time.tv_nsec = 10 * 1000 * 1000;
-
     while (true) {
-        nanosleep(&sleep_time, NULL);
+        Time::sleep_ms(10);
         poll_lsp();
-        // auto response = await_lsp_response();
-        // printf("%s\n", response.as_c());
     }
 }

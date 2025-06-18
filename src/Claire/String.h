@@ -10,6 +10,7 @@
 #include <vector>
 #include <stdio.h>
 #include <cstring>
+#include <cstdint>
 
 class String {
 public:
@@ -163,9 +164,9 @@ public:
         return true;
     }
 
-    constexpr static u_int64_t hash(const char* str) {
+    constexpr static uint64_t hash(const char* str) {
         // djb2 by Dan Bernstein
-        u_int64_t hash = 5381;
+        uint64_t hash = 5381;
         int c = 0;
 
         while ((c = *str++)) {
@@ -175,7 +176,7 @@ public:
         return hash;
     }
 
-    u_int64_t hash() const {
+    uint64_t hash() const {
         return String::hash(c_str);
     
     }
