@@ -2,12 +2,11 @@
 
 #ifdef __linux__
     #include <pty.h>
+    #include <poll.h>
 #elif _WIN32
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
 #endif
-
-#include <poll.h>
 
 #include "Claire/File.h"
 #include "Claire/Thread.h"
