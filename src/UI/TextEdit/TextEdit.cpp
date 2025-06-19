@@ -111,6 +111,8 @@ void TextEdit::on_input() {
             changes_made = true;
         }
 
+        // TODO: Remove 4 spaces behind
+
         move_caret({-1, 0});
     }
 
@@ -118,6 +120,15 @@ void TextEdit::on_input() {
         text.insert('\n', caret_index);
         changes_made = true;
         move_caret({1, 0});
+    }
+
+    if (RayLib::IsKeyTyped(RayLib::KEY_TAB)) {
+        // HACK:
+        for (int i=0;i<4;i++) {
+            text.insert(' ', caret_index);
+            move_caret({1, 0});
+        }
+        changes_made = true;
     }
 
     Vector2 caret_delta = Vector2::zero();
