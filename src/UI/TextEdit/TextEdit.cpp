@@ -159,6 +159,10 @@ void TextEdit::draw_self() {
             Colors::FG.to_ray()
         );
     }
+
+    if (is_hovered()) {
+        FrameManager::set_frame_cursor(RayLib::MOUSE_CURSOR_IBEAM);
+    }
 }
 
 void TextEdit::draw_text_plain_jane() {

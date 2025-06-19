@@ -21,6 +21,8 @@ class Button : public Container {
 
         void post_draw_tree() override {
             if (!is_hovered()) return;
+
+            FrameManager::set_frame_cursor(RayLib::MOUSE_CURSOR_POINTING_HAND);
             
             bool mouse_held = RayLib::IsMouseButtonDown(0);
             float alpha = mouse_held ? 0.3 : 0.2;
