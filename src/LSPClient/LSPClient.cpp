@@ -1,3 +1,5 @@
+// TODO: https://include-what-you-use.org/
+
 #include "LSPClient/LSPClient.h"
 #include <sys/wait.h>
 #include "Claire/Time.h"
@@ -5,6 +7,7 @@
 void LSPClient::open_pipes() {
     printf("Starting clangd...\n");
 
+#ifdef __linux__
     ASSERT(pipe(to_lsp_pipe) != -1, "Unable to pipe to lsp");
     ASSERT(pipe(from_lsp_pipe) != -1, "Unable to pipe from lsp");
 
@@ -29,6 +32,51 @@ void LSPClient::open_pipes() {
 
     close(to_lsp_pipe[0]); // read
     close(from_lsp_pipe[1]); // write
+#elif _WIN32
+    HANDLE to_lsp_read = NULL;
+    HANDLE from_lsp_write = NULL;
+
+    // U gotta be kidding me
+    SECURITY_ATTRIBUTES sa;
+    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sa.bInheritHandle = TRUE;
+    sa.lpSecurityDescriptor = NULL;
+
+    ASSERT(CreatePipe(&to_lsp_read, &to_lsp_write, &sa, 0), "Unable to pipe to lsp");
+    ASSERT(CreatePipe(&from_lsp_read, &from_lsp_write, &sa, 0), "Unable to pipe from lsp");
+
+    STARTUPINFO si;
+    ZeroMemory(&si, sizeof(STARTUPINFO));
+    sa.cb = sizeof(STARTUPINFO);
+    si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+    si.hStdOutput = from_lsp_write;
+    si.hStdInput = to_lsp_read;
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+    char exec = "clang.exe";
+
+    BOOL success = CreateProcess(
+        NULL,
+        exec,
+        NULL,
+        NULL,
+        TRUE,
+        0,
+        NULL,
+        NULL,
+        &si,
+        &pi
+    );
+
+    ASSERT(success, "Can't create process");
+    CloseHandle(from_lsp_write);
+    CloseHandle(to_lsp_read);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+
+#endif
 }
 
 void LSPClient::shutdown() {

@@ -1,6 +1,12 @@
 #pragma once
 
-#include <pty.h>
+#ifdef __linux__
+    #include <pty.h>
+#elif _WIN32
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
+#endif
+
 #include <poll.h>
 
 #include "Claire/File.h"
@@ -22,9 +28,14 @@ private:
     void shutdown();
 
 public:
+#ifdef __linux__
     int to_lsp_pipe[2];
     int from_lsp_pipe[2];
     pid_t lsp_pid;
+#elif _WIN32
+    HANDLE to_lsp_write = NULL;
+    HANDLE from_lsp_read = NULL;
+#endif
     FamousResource<std::vector<String>, FamousLocking::Mutex> diagnostic_messages;
 
     static LSPClient& the() {

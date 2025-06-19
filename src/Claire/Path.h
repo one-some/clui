@@ -8,6 +8,9 @@
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
+
+    // this should not be here. why is it here and why am i not moving it..?
+    #undef DrawTextEx
 #endif
 
 class Path {
@@ -47,9 +50,15 @@ public:
     }
 
     static String exec_path() {
-#ifdef _WIN32
+#ifdef __linux__
         char* exec_path = realpath("/proc/self/exe", nullptr);
         return String::move_from(exec_path);
+#elif _WIN32
+        char* path = (char*)calloc(MAX_PATH + 1, 1);
+        DWORD length = GetModuleFileNameA(NULL, path, MAX_PATH);
+        ASSERT(length, "Unable to read own name");
+        return String::move_from(path);
+#endif
     }
 
     static String exec_relative(String path) {
