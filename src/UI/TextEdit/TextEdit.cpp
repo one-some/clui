@@ -186,7 +186,12 @@ void TextEdit::draw_selection() {
     Optional<Vector2> rectangle_start;
     size_t row = 0;
     size_t col = 0;
+    size_t unrectified_end_row_px = 0;
+
     for (size_t i = 0; i <= rectified_selection.end; i++) {
+        // Track the row where the user's cursor is on for scrolling
+        if (i == selection.end) unrectified_end_row_px = row * font_size_px;
+
         // Make a new rectangle if we just started OR we need to continue one
         // from the last line.
         bool in_middle = (i > rectified_selection.start && i < rectified_selection.end);
@@ -220,6 +225,14 @@ void TextEdit::draw_selection() {
         }
     }
 
+    // Let's scroll a bit if we need to...
+    float bottom_overshoot = (float)unrectified_end_row_px - (float)(size->get().y - base_pos.y);
+    float top_overshoot = (float)-scroll_offset->y - (float)unrectified_end_row_px;
+    if (bottom_overshoot > 0) {
+        scroll_offset->y -= bottom_overshoot / 4.0;
+    } else if (top_overshoot > 0) {
+        scroll_offset->y += top_overshoot / 4.0;
+    }
 }
 
 void TextEdit::draw_text() {
