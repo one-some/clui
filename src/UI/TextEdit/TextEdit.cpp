@@ -356,7 +356,7 @@ size_t TextEdit::move_caret_to_mouse() {
     size_t cols_left = round(biased_mouse_pos / char_width);
     size_t rows_left = mouse_pos.y / font_size_px;
     size_t i = 0;
-    while (i <= text.length()) {
+    while (i < text.length()) {
         if (rows_left) {
             if (text.as_c()[i] == '\n') rows_left--;
         } else if (cols_left) {

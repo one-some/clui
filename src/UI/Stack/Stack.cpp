@@ -84,7 +84,7 @@ void Stack::reposition_children() {
 }
 
 void Stack::do_user_resizing() {
-    if (!RayLib::IsMouseButtonDown(RayLib::MOUSE_BUTTON_LEFT)) {
+    if (RayLib::IsMouseButtonReleased(RayLib::MOUSE_BUTTON_LEFT)) {
         grabee = nullptr;
     }
 
@@ -131,7 +131,7 @@ void Stack::do_user_resizing() {
 
     FrameManager::set_frame_cursor(drag_cursor());
 
-    if (!RayLib::IsMouseButtonDown(RayLib::MOUSE_BUTTON_LEFT)) return;
+    if (!RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_LEFT)) return;
 
     // NOW WE ARE HOVERING OVER A BORDER................
     ASSERT((size_t)border + 1 < visible.size(), "Hey who are you grabbing....?");
