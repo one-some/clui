@@ -10,7 +10,7 @@ public:
         size->strategy_x = SizeStrategy::EXPAND_TO_FILL;
 
         layout_style = StackLayout::STACK;
-        allow_scroll = true;
+        scroll_behavior = ScrollBehavior::VERTICAL;
 
         auto button = this->create_child<Button>();
         button->size->set_raw({70, 70});

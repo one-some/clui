@@ -24,6 +24,7 @@ class TabContainer : public VStack {
             auto unique_tabs = std::make_unique<Container>();
             unique_tabs->size->set_y(30);
             unique_tabs->size->strategy_y = SizeStrategy::FORCE;
+            unique_tabs->scroll_behavior = ScrollBehavior::HORIZONTAL;
 
             unique_tabs->decoration = std::make_unique<ContainerDecoration>();
             unique_tabs->decoration->border_color = Color(0x282828);

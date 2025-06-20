@@ -50,7 +50,7 @@ class TextEdit : public Container {
             register_class_handler<MouseMoveEvent, TextEdit>(&TextEdit::on_mouse_move);
             register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
 
-            allow_scroll = true;
+            scroll_behavior = ScrollBehavior::VERTICAL;
 
             // printf("Waiiit....Hello from crazy world... '%s'\n", file.get_path().as_c());
             text = file.read();

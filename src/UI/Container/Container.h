@@ -19,6 +19,12 @@ enum class RenderSection {
     DRAW,
 };
 
+enum class ScrollBehavior {
+    NONE,
+    VERTICAL,
+    HORIZONTAL,
+};
+
 class ContainerDecoration {
 public:
     int32_t border_top_px = 0;
@@ -37,7 +43,7 @@ public:
     std::unique_ptr<Vector2> const scroll_offset = std::make_unique<Vector2>();
     RenderSection render_section = RenderSection::CULL;
 
-    bool allow_scroll = false;
+    ScrollBehavior scroll_behavior = ScrollBehavior::NONE;
 
     // TODO: Private?
     std::unique_ptr<ContainerDecoration> decoration;
@@ -188,9 +194,15 @@ protected:
 
 private:
     void on_wheel(WheelEvent& event) {
-        if (!allow_scroll) return;
-
-        scroll_offset->y += event.delta_y * 16 * 3;
-        if (scroll_offset->y > 0) scroll_offset->y = 0;
+        switch (scroll_behavior) {
+            case ScrollBehavior::VERTICAL:
+                scroll_offset->y += event.delta_y * 16 * 3;
+                if (scroll_offset->y > 0) scroll_offset->y = 0;
+                break;
+            case ScrollBehavior::HORIZONTAL:
+                scroll_offset->x += event.delta_y * 16 * 3;
+                if (scroll_offset->x > 0) scroll_offset->x = 0;
+                break;
+        }
     }
 };

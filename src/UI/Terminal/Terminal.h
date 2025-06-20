@@ -22,7 +22,7 @@ public:
     Terminal() {
         terminals.push_back(this);
 
-        allow_scroll = true;
+        scroll_behavior = ScrollBehavior::VERTICAL;
         init_terminal();
     }
 
