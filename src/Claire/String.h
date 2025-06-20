@@ -213,6 +213,13 @@ public:
         c_str[index] = c;
     }
 
+    void insert(String s, size_t index) {
+        expand_for(s.length());
+
+        memmove(c_str + index + s.length(), c_str + index, length() + s.length() - index);
+        memcpy(c_str + index, s.c_str, s.length());
+    }
+
     void remove(size_t index) {
         // Just keep it current size lol
         memmove(c_str + index, c_str + index + 1, strlen(c_str) - index);

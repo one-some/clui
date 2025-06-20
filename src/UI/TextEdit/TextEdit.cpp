@@ -105,15 +105,19 @@ void TextEdit::on_input() {
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
-        // Not encompassing due to caret timer
         if (caret_index > 0) {
-            text.remove(caret_index - 1);
-            changes_made = true;
+            // HACK: Holy hack wowwww
+            if (caret_index >= 4 && text.slice(caret_index - 4, caret_index) == "    ") {
+                for (int i = 0; i < 4; i++) {
+                    text.remove(caret_index - 1);
+                    set_caret_index(caret_index - 1);
+                }
+            } else {
+                text.remove(caret_index - 1);
+                move_caret({-1, 0});
+            }
         }
-
-        // TODO: Remove 4 spaces behind
-
-        move_caret({-1, 0});
+        changes_made = true;
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
@@ -123,11 +127,8 @@ void TextEdit::on_input() {
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_TAB)) {
-        // HACK:
-        for (int i=0;i<4;i++) {
-            text.insert(' ', caret_index);
-            move_caret({1, 0});
-        }
+        text.insert("    ", caret_index);
+        set_caret_index(caret_index + 4);
         changes_made = true;
     }
 
