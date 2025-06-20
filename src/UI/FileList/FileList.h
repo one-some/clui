@@ -53,7 +53,7 @@ public:
             label->position->set_x(16 * depth);
 
             String new_path = Path::join(dir.path, dir_child.name);
-            button->callback_on_click = [this, label, button, new_path, dir_child, cont, depth]{
+            button->callback_on_mouse_down = [this, label, button, new_path, dir_child, cont, depth]{
                 if (dir_child.type == DirectoryChildType::TYPE_FILE) {
                     EditorActions::open_file_in_new_tab(new_path);
                 } else if (dir_child.type == DirectoryChildType::TYPE_DIRECTORY) {

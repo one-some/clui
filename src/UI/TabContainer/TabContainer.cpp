@@ -92,9 +92,9 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
             );
         };
 
-        close_button->callback_on_click = close_tab;
+        close_button->callback_on_mouse_down = close_tab;
 
-        button->register_handler<ClickEvent>([close_button, close_tab](ClickEvent& event) {
+        button->register_handler<MouseDownEvent>([close_button, close_tab](MouseDownEvent& event) {
             if (event.button != MouseButton::MIDDLE) return;
             FrameManager::queue_operation(close_tab);
         });
@@ -104,7 +104,7 @@ Tab* TabContainer::add_tab(const char* label, std::unique_ptr<Container> view, b
 
     button->size->set_x(lab->text_bounds().x + x_padding);
 
-    button->callback_on_click = [this, &tab] {
+    button->callback_on_mouse_down = [this, &tab] {
         focus_tab(&tab);
     };
 

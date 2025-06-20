@@ -119,15 +119,15 @@ public:
         // TODO: Maybe move into event?
         // TODO: Maybe turn the class registration into a vector of functions instead of one....
         // then the base class (ex Container) could implement base stuff like this...
-        if (type_info == typeid(ClickEvent)) {
+        if (type_info == typeid(MouseDownEvent)) {
             if (!is_hovered()) return;
 
             // TODO: Focus chain
-            if (((ClickEvent&)event).button == MouseButton::LEFT) Container::focused_element = this;
+            if (((MouseDownEvent&)event).button == MouseButton::LEFT) Container::focused_element = this;
         }
 
-        if (type_info == typeid(MouseMotionEvent)) {
-            auto& squeak = (MouseMotionEvent&)event;
+        if (type_info == typeid(MouseMoveEvent)) {
+            auto& squeak = (MouseMoveEvent&)event;
             bool hovered = Vector2({squeak.x, squeak.y}).in_rectangle(
                 // get_draw_position(),
                 position->get_global(),

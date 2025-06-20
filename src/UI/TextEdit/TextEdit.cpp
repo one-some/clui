@@ -176,26 +176,59 @@ void TextEdit::draw_self() {
     }
 }
 
-void TextEdit::draw_text_plain_jane() {
-    Vector2 pos = get_draw_position();
-    std::vector<String> lines = text.split('\n');
+void TextEdit::draw_selection() {
+    if (selection.empty()) return;
+    auto rectified_selection = selection.rectified();
 
-    for (size_t i=0; i<lines.size();i++) {
-        RayLib::DrawTextEx(
-            font,
-            lines[i].as_c(),
-            { (float)pos.x + 4, (float)pos.y + (font_size_px * i) },
-            (float)font_size_px,
-            0,
-            Colors::FG.to_ray()
-        );
+    Vector2 base_pos = get_draw_position();
+    float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
+
+    Optional<Vector2> rectangle_start;
+    size_t row = 0;
+    size_t col = 0;
+    for (size_t i = 0; i <= rectified_selection.end; i++) {
+        // Make a new rectangle if we just started OR we need to continue one
+        // from the last line.
+        bool in_middle = (i > rectified_selection.start && i < rectified_selection.end);
+        if (i == rectified_selection.start || (col == 0 && in_middle)) {
+            rectangle_start = Optional<Vector2>({
+                (int32_t)(col * char_width),
+                (int32_t)(row * font_size_px)
+            });
+        }
+
+        bool is_newline = text.as_c()[i] == '\n';
+        if (rectangle_start && (is_newline || i == rectified_selection.end)) {
+            int32_t width = (char_width * col) - rectangle_start->x;
+            RayLib::DrawRectangle(
+                base_pos.x + rectangle_start->x,
+                base_pos.y + rectangle_start->y,
+                width,
+                font_size_px,
+                RayLib::RED
+            );
+
+            rectangle_start = Optional<Vector2>();
+        }
+
+
+        if (is_newline) {
+            row++;
+            col = 0;
+        } else {
+            col++;
+        }
     }
+
 }
 
 void TextEdit::draw_text() {
     Vector2 base_pos = get_draw_position();
-    Vector2 pointer = base_pos;
 
+    draw_selection();
+
+    // Nodes
+    Vector2 pointer = base_pos;
     for (auto node : parser.tokens) {
         if (node.type == TokenType::NEWLINE) {
             pointer.y += font_size_px;
@@ -289,35 +322,61 @@ Vector2 TextEdit::survey_position(size_t index) {
     return out;
 }
 
-void TextEdit::on_click(ClickEvent& event) {
-    if (event.button != MouseButton::LEFT) return;
+void TextEdit::on_mouse_up(MouseUpEvent& event) {
+    selection.complete = true;
+}
 
+void TextEdit::on_mouse_down(MouseDownEvent& event) {
+    if (event.button != MouseButton::LEFT) return;
+    selection.complete = false;
+    selection.start = move_caret_to_mouse();
+}
+
+void TextEdit::on_mouse_move(MouseMoveEvent& event) {
+    if (selection.complete) return;
+    selection.end = move_caret_to_mouse();
+}
+
+size_t TextEdit::move_caret_to_mouse() {
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - get_draw_position();
 
-    size_t line_number = mouse_pos.y / font_size_px;
-    std::vector<String> lines = text.split('\n');
-    if (line_number > lines.size() - 1) line_number = lines.size() - 1;
-
-    String line = lines[line_number];
-    int32_t x_left = mouse_pos.x;
-
-    size_t line_length = strlen(line.as_c());
-    for (size_t i=1; i <= line_length; i++) {
-        int32_t width = (int32_t)RayLib::MeasureTextEx(font, line.first_n(i).as_c(), font_size_px, 0).x;
-
-        if (width < x_left && i != line_length) continue;
-
-        caret_position_px.x = width;
-        caret_position_px.y = (int32_t)line_number * font_size_px;
-        caret_blink_timer = 0;
-
-        caret_index = str_index_from_vec2(text.as_c(), {(int32_t)i, (int32_t)line_number});
-
-        // printf("(%i, %i)\n", caret_position_px.x, caret_position_px.y);
-        // printf("%c\n", line.as_c()[i - 1]);
-        break;
+    if (mouse_pos.y < 0) {
+        set_caret_index(0);
+        return 0;
     }
 
-    // printf("%i, %i\n", caret_position_px.x, caret_position_px.y);
+    // HACK
+    float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
+
+    // It seems there's often a little bit of leeway added to make selection easier
+    float biased_mouse_pos = mouse_pos.x - (char_width / 2.0f);
+    biased_mouse_pos = max(0.0f, biased_mouse_pos);
+
+    size_t cols_left = round(biased_mouse_pos / char_width);
+    size_t rows_left = mouse_pos.y / font_size_px;
+    size_t i = 0;
+    while (i <= text.length()) {
+        if (rows_left) {
+            if (text.as_c()[i] == '\n') rows_left--;
+        } else if (cols_left) {
+            // If we get a newline from our x position it means our x is greater
+            // than our line width. Just stop at the end of the line.
+            if (text.as_c()[i] == '\n') break;
+            cols_left--;
+        } else {
+            break;
+        }
+
+        i++;
+    }
+
+    set_caret_index(i);
+    return i;
+}
+
+void TextEdit::set_caret_index(size_t index) {
+    caret_position_px.graft(survey_position(index));
+    caret_blink_timer = 0;
+    caret_index = index;
 }

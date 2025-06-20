@@ -28,19 +28,26 @@ enum class MouseButton {
     MIDDLE
 };
 
-class ClickEvent : public Event {
+class MouseDownEvent : public Event {
 public:
     MouseButton button;
 
-    ClickEvent(MouseButton button) : button(button) { }
+    MouseDownEvent(MouseButton button) : button(button) { }
 };
 
-class MouseMotionEvent : public Event {
+class MouseUpEvent : public Event {
+public:
+    MouseButton button;
+
+    MouseUpEvent(MouseButton button) : button(button) { }
+};
+
+class MouseMoveEvent : public Event {
 public:
     int32_t x;
     int32_t y;
 
-    MouseMotionEvent(int32_t x, int32_t y) : x(x), y(y) { }
+    MouseMoveEvent(int32_t x, int32_t y) : x(x), y(y) { }
 };
 
 class MouseHoverChangeEvent : public Event {

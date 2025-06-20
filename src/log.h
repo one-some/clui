@@ -1,5 +1,4 @@
 #pragma once
-#include <sys/stat.h>
 #include <cstdio>
 #include <unistd.h>
 #include <vector>

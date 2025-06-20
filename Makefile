@@ -2,7 +2,8 @@
 
 # Compiler and flags
 CXX = ccache clang++#g++
-SANFLAGS = -fsanitize=undefined
+# SANFLAGS = -fsanitize=undefined
+SANFLAGS = -fsanitize=address
 CXXFLAGS = \
 	-MMD -MP \
 	-std=c++23 \

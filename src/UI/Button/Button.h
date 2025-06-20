@@ -6,17 +6,17 @@
 
 class Button : public Container {
     public:
-        std::function<void()> callback_on_click;
+        std::function<void()> callback_on_mouse_down;
 
         Button() {
-            register_class_handler<ClickEvent, Button>(&Button::on_click);
+            register_class_handler<MouseDownEvent, Button>(&Button::on_mouse_down);
         }
 
     private:
-        void on_click(ClickEvent& event) {
+        void on_mouse_down(MouseDownEvent& event) {
             if (event.button != MouseButton::LEFT) return;
-            if (!callback_on_click) return;
-            FrameManager::queue_operation(callback_on_click);
+            if (!callback_on_mouse_down) return;
+            FrameManager::queue_operation(callback_on_mouse_down);
         }
 
         void post_draw_tree() override {

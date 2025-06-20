@@ -8,6 +8,24 @@
 #include "cpp.h"
 #include "fontglobal.h"
 
+class TextSelection {
+public:
+    size_t start = 0;
+    size_t end = 0;
+
+    bool complete = true;
+
+    TextSelection rectified() {
+        auto copy = *this;
+        if (copy.start > copy.end) std::swap(copy.start, copy.end);
+        return copy;
+    }
+
+    inline bool empty() {
+        return start == end;
+    }
+};
+
 class TextEdit : public Container {
     public:
         String text;
@@ -20,13 +38,16 @@ class TextEdit : public Container {
         size_t caret_index = 0;
         int32_t caret_blink_timer = 0;
         CPPParser parser;
+        TextSelection selection;
 
         int32_t font_size_px = 16;
 
         static const int32_t CARET_BLINK_DURATION = 530 / 8;
 
         TextEdit(String path) : file(path) {
-            register_class_handler<ClickEvent, TextEdit>(&TextEdit::on_click);
+            register_class_handler<MouseDownEvent, TextEdit>(&TextEdit::on_mouse_down);
+            register_class_handler<MouseUpEvent, TextEdit>(&TextEdit::on_mouse_up);
+            register_class_handler<MouseMoveEvent, TextEdit>(&TextEdit::on_mouse_move);
             register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
 
             allow_scroll = true;
@@ -43,13 +64,18 @@ class TextEdit : public Container {
         static size_t str_index_from_vec2(const char* text, Vector2 vec);
     
     private:
-        void on_click(ClickEvent& event);
+        void on_mouse_down(MouseDownEvent& event);
+        void on_mouse_up(MouseUpEvent& event);
+        void on_mouse_move(MouseMoveEvent& event);
         void on_wheel(WheelEvent& event);
         void on_tab_focus(TabFocusEvent& event);
 
         void on_input() override;
         void draw_text();
-        void draw_text_plain_jane();
+
+        size_t move_caret_to_mouse();
+        void draw_selection();
+        void set_caret_index(size_t index);
 
         Vector2 survey_position(size_t index);
 };

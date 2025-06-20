@@ -136,21 +136,36 @@ int main(int argc, char *argv[], char *envp[]) {
             reload_self(argc, argv, envp);
         }
 
-        auto motion_event = MouseMotionEvent(RayLib::GetMouseX(), RayLib::GetMouseY());
+        auto motion_event = MouseMoveEvent(RayLib::GetMouseX(), RayLib::GetMouseY());
         root.dispatch_event(motion_event);
 
         if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_LEFT)) {
-            auto click_event = ClickEvent(MouseButton::LEFT);
+            auto click_event = MouseDownEvent(MouseButton::LEFT);
             root.dispatch_event(click_event);
         }
 
         if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_RIGHT)) {
-            auto click_event = ClickEvent(MouseButton::RIGHT);
+            auto click_event = MouseDownEvent(MouseButton::RIGHT);
             root.dispatch_event(click_event);
         }
 
         if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_MIDDLE)) {
-            auto click_event = ClickEvent(MouseButton::MIDDLE);
+            auto click_event = MouseDownEvent(MouseButton::MIDDLE);
+            root.dispatch_event(click_event);
+        }
+
+        if (RayLib::IsMouseButtonReleased(RayLib::MOUSE_BUTTON_LEFT)) {
+            auto click_event = MouseUpEvent(MouseButton::LEFT);
+            root.dispatch_event(click_event);
+        }
+
+        if (RayLib::IsMouseButtonReleased(RayLib::MOUSE_BUTTON_RIGHT)) {
+            auto click_event = MouseUpEvent(MouseButton::RIGHT);
+            root.dispatch_event(click_event);
+        }
+
+        if (RayLib::IsMouseButtonReleased(RayLib::MOUSE_BUTTON_MIDDLE)) {
+            auto click_event = MouseUpEvent(MouseButton::MIDDLE);
             root.dispatch_event(click_event);
         }
 
