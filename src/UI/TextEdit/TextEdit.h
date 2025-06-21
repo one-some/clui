@@ -5,6 +5,7 @@
 #include "UI/Container/Container.h"
 #include "Claire/String.h"
 #include "Claire/File.h"
+#include "Claire/Math.h"
 #include "cpp.h"
 #include "fontglobal.h"
 
@@ -23,6 +24,20 @@ public:
 
     inline bool empty() {
         return start == end;
+    }
+
+    inline bool reversed() {
+        return start > end;
+    }
+
+    inline size_t length() {
+        return abs((int32_t)(end - start));
+    }
+
+    // Maybe inconsistant api design......
+    void clear() {
+        start = 0;
+        end = 0;
     }
 };
 
@@ -75,7 +90,11 @@ class TextEdit : public Container {
 
         size_t move_caret_to_mouse();
         void draw_selection();
+        void delete_selected_text();
         void set_caret_index(size_t index);
+        String get_selected_text();
+
+        void handle_backspace();
 
         Vector2 survey_position(size_t index);
 };

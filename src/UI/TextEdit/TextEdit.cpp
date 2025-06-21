@@ -81,22 +81,75 @@ void TextEdit::on_tab_focus(TabFocusEvent& event) {
     RayLib::SetWindowTitle(title.as_c());
 }
 
-void TextEdit::on_input() {
-    bool changes_made = false;
+void TextEdit::delete_selected_text() {
+    auto rectified_selection = selection.rectified();
+    text.slice_inplace(rectified_selection.start, rectified_selection.end);
 
-    if (RayLib::IsKeyPressed(RayLib::KEY_S) && RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
-        // CTRL+S
-        printf("Save! %s\n", file.get_path().as_c());
-        save_to_file();
+    if (!selection.reversed()) set_caret_index(caret_index - rectified_selection.length());
+
+    selection.clear();
+}
+
+void TextEdit::handle_backspace() {
+    // Remove selection
+    if (!selection.empty()) {
+        delete_selected_text();
+        return;
+    }
+
+    // Don't backspace the beginning of time
+    if (caret_index <= 0) return;
+
+    // Tab backspace
+    if (text.slice(caret_index - 4, caret_index) == "    ") {
+        for (int i = 0; i < 4; i++) {
+            // TODO: Use slice inplace
+            text.remove(caret_index - 1);
+            set_caret_index(caret_index - 1);
+        }
         return;
     }
 
 
+    text.remove(caret_index - 1);
+    set_caret_index(caret_index - 1);
+}
+
+String TextEdit::get_selected_text() {
+    auto rectified = selection.rectified();
+    return text.slice(rectified.start, rectified.end);
+}
+
+void TextEdit::on_input() {
+    bool changes_made = false;
+
+    if (RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
+        if (RayLib::IsKeyPressed(RayLib::KEY_S)) {
+            printf("Save! %s\n", file.get_path().as_c());
+            save_to_file();
+        }
+
+        if (RayLib::IsKeyPressed(RayLib::KEY_C)) {
+            auto selected_text = get_selected_text();
+            RayLib::SetClipboardText(selected_text.as_c());
+        }
+
+        if (RayLib::IsKeyPressed(RayLib::KEY_V)) {
+            String clipboard = RayLib::GetClipboardText();
+
+            text.insert(clipboard, caret_index);
+            set_caret_index(caret_index + clipboard.length());
+            changes_made = true;
+        }
+    }
+
     char c = '\0';
     while ((c = (char)RayLib::GetCharPressed())) {
+        if (!selection.empty()) delete_selected_text();
+
         text.insert(c, caret_index);
         changes_made = true;
-        move_caret({1, 0});
+        set_caret_index(caret_index + 1);
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_DELETE)) {
@@ -105,18 +158,7 @@ void TextEdit::on_input() {
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
-        if (caret_index > 0) {
-            // HACK: Holy hack wowwww
-            if (caret_index >= 4 && text.slice(caret_index - 4, caret_index) == "    ") {
-                for (int i = 0; i < 4; i++) {
-                    text.remove(caret_index - 1);
-                    set_caret_index(caret_index - 1);
-                }
-            } else {
-                text.remove(caret_index - 1);
-                move_caret({-1, 0});
-            }
-        }
+        handle_backspace();
         changes_made = true;
     }
 

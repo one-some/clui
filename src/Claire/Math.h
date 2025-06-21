@@ -11,3 +11,8 @@ template<typename T>
 T max(T a, T b) {
     return (a <= b) ? b : a;
 }
+
+inline int32_t abs(int32_t x) {
+    if (x < 0) return -x;
+    return x;
+}

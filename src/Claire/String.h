@@ -320,6 +320,8 @@ public:
     }
 
     String slice(size_t start, size_t end) const {
+        if (start < 0) start = 0;
+        if (end < 0) end = 0;
         if (start == end) return String("");
 
         ASSERT(start < end, "Be orderly!");
@@ -329,6 +331,10 @@ public:
         str[end - start] = '\0';
 
         return String::move_from(str);
+    }
+
+    void slice_inplace(size_t start, size_t end) {
+        memmove(c_str + start, c_str + end, length() - end);
     }
 
     String truncated(size_t to=100) {
