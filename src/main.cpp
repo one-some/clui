@@ -184,10 +184,9 @@ int main(int argc, char *argv[], char *envp[]) {
             Container::focused_element->on_input();
         }
 
-        if (frames % (60 * 2) == 0) {
-            String mb = String::from_double(ram_mb(), 2);
-            mb.append(" MB");
-            ram_usage_label->text = mb;
+        if (frames % 60 == 0) {
+            String debug = String::from_double(ram_mb(), 2) + " MB | " + String::from_int(RayLib::GetFPS()) + " FPS";
+            ram_usage_label->text = debug;
         }
 
         RayLib::BeginDrawing();

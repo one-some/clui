@@ -31,6 +31,53 @@ void Container::remove_child(Container* child) {
     );
 }
 
+void Container::draw_decorations() {
+    if (!decoration) return;
+
+    Vector2 pos = get_draw_position();
+    Vector2 s = size->get();
+
+    if (decoration->border_top_px) {
+        RayLib::DrawRectangle(
+            pos.x,
+            pos.y,
+            s.x,
+            decoration->border_top_px,
+            decoration->border_color.to_ray()
+        );
+    }
+
+    if (decoration->border_bottom_px) {
+        RayLib::DrawRectangle(
+            pos.x,
+            pos.y + s.y - decoration->border_bottom_px,
+            s.x,
+            decoration->border_bottom_px,
+            decoration->border_color.to_ray()
+        );
+    }
+
+    if (decoration->border_left_px) {
+        RayLib::DrawRectangle(
+            pos.x,
+            pos.y,
+            decoration->border_left_px,
+            s.y,
+            decoration->border_color.to_ray()
+        );
+    }
+
+    if (decoration->border_right_px) {
+        RayLib::DrawRectangle(
+            pos.x + s.x - decoration->border_right_px,
+            pos.y,
+            decoration->border_right_px,
+            s.y,
+            decoration->border_color.to_ray()
+        );
+    }
+}
+
 void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
     pre_draw_tree();
 
@@ -58,50 +105,17 @@ void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
 
     render_section = RenderSection::DRAW;
 
+    // bool clip = false;
 
-    draw_self();
+    // if (parent) {
+    //     Vector2 parent_size = parent->size->get();
+    //     if (pos.x > parent_size.x || pos.y > parent_size.y) clip = true;
+    // }
 
-    if (decoration) {
-        if (decoration->border_top_px) {
-            RayLib::DrawRectangle(
-                pos.x,
-                pos.y,
-                s.x,
-                decoration->border_top_px,
-                decoration->border_color.to_ray()
-            );
-        }
-
-        if (decoration->border_bottom_px) {
-            RayLib::DrawRectangle(
-                pos.x,
-                pos.y + s.y - decoration->border_bottom_px,
-                s.x,
-                decoration->border_bottom_px,
-                decoration->border_color.to_ray()
-            );
-        }
-
-        if (decoration->border_left_px) {
-            RayLib::DrawRectangle(
-                pos.x,
-                pos.y,
-                decoration->border_left_px,
-                s.y,
-                decoration->border_color.to_ray()
-            );
-        }
-
-        if (decoration->border_right_px) {
-            RayLib::DrawRectangle(
-                pos.x + s.x - decoration->border_right_px,
-                pos.y,
-                decoration->border_right_px,
-                s.y,
-                decoration->border_color.to_ray()
-            );
-        }
-    }
+    // if (!clip) {
+        draw_self();
+        draw_decorations();
+    // }
 
     RayLib::EndScissorMode();
 

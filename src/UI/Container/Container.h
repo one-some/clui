@@ -205,4 +205,6 @@ private:
                 break;
         }
     }
+
+    void draw_decorations();
 };

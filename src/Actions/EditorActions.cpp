@@ -11,7 +11,7 @@ void EditorActions::open_file_in_new_tab(String path) {
 
     if (File(path).is_probably_binary()) {
         // We do a lot of shite like this which causes us to open like 5 file handles for each file (hopefully we close them...)
-        printf("Apparently we are 'probably binary'");
+        printf("Apparently we are 'probably binary'\n");
         return;
     }
 
