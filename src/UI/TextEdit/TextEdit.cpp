@@ -220,7 +220,9 @@ void TextEdit::draw_self() {
 }
 
 void TextEdit::draw_selection() {
+    if (selection.state == SelectionState::CRITICAL_STATE) return;
     if (selection.empty()) return;
+
     auto rectified_selection = selection.rectified();
 
     Vector2 base_pos = get_draw_position();
@@ -379,17 +381,22 @@ Vector2 TextEdit::survey_position(size_t index) {
 }
 
 void TextEdit::on_mouse_up(MouseUpEvent& event) {
-    selection.complete = true;
+    if (selection.state == SelectionState::SELECTING)
+        selection.state = SelectionState::NORMAL;
 }
 
 void TextEdit::on_mouse_down(MouseDownEvent& event) {
     if (event.button != MouseButton::LEFT) return;
-    selection.complete = false;
+
+    selection.state = SelectionState::CRITICAL_STATE;
     selection.start = move_caret_to_mouse();
 }
 
 void TextEdit::on_mouse_move(MouseMoveEvent& event) {
-    if (selection.complete) return;
+    if (selection.state == SelectionState::CRITICAL_STATE)
+        selection.state = SelectionState::SELECTING;
+    
+    if (selection.state != SelectionState::SELECTING) return;
     selection.end = move_caret_to_mouse();
 }
 

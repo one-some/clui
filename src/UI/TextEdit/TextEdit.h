@@ -9,12 +9,20 @@
 #include "cpp.h"
 #include "fontglobal.h"
 
+enum class SelectionState {
+    NORMAL,
+    // CRITICAL_STATE: We've clicked, but the mouse has not yet moved, so end hasn't updated.
+    CRITICAL_STATE,
+    // Time to move!
+    SELECTING,
+};
+
 class TextSelection {
 public:
     size_t start = 0;
     size_t end = 0;
 
-    bool complete = true;
+    SelectionState state = SelectionState::NORMAL;
 
     TextSelection rectified() {
         auto copy = *this;
