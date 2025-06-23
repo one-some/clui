@@ -14,6 +14,10 @@ class LogContainer : public Container {
         RayLib::Font font = Font::the();
         int32_t font_size_px = 16;
 
+        LogContainer() {
+            scroll_behavior = ScrollBehavior::VERTICAL;
+        }
+
         virtual void draw_self();
 
         static void swallow_stdout();

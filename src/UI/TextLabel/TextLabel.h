@@ -9,7 +9,7 @@ class TextLabel : public Container {
         RayLib::Color color = RayLib::BLACK;
         float font_size = Font::the().baseSize;
 
-        TextLabel(const char* _text): text(_text) {
+        TextLabel(String text): text(text) {
             size->strategy_x = SizeStrategy::FORCE;
             size->strategy_y = SizeStrategy::FORCE;
         }

@@ -9,6 +9,31 @@
 #include "cpp.h"
 #include "fontglobal.h"
 
+class TextCoordinate {
+public:
+    size_t line = 0;
+    size_t col = 0;
+};
+
+class EditorDiagnostic {
+public:
+    String message;
+    String file_path;
+    TextCoordinate range_start;
+    TextCoordinate range_end;
+
+    EditorDiagnostic(
+        String message,
+        String file_path,
+        TextCoordinate range_start,
+        TextCoordinate range_end
+    ) : message(message), file_path(file_path), range_start(range_start), range_end(range_end) { }
+
+    String label() const {
+        return file_path + ": " + message;
+    }
+};
+
 enum class SelectionState {
     NORMAL,
     // CRITICAL_STATE: We've clicked, but the mouse has not yet moved, so end hasn't updated.
@@ -105,4 +130,11 @@ class TextEdit : public Container {
         void handle_backspace();
 
         Vector2 survey_position(size_t index);
+
+        void draw_squiggles();
+
+        std::vector<EditorDiagnostic> get_diagnostics() {
+            static std::vector<EditorDiagnostic> hack = {EditorDiagnostic("main.cpp", "There's a probvlem ok", {1, 0}, {10, 5})};
+            return hack;
+        }
 };

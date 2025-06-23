@@ -22,7 +22,7 @@ public:
             this->children.clear();
 
             for (auto& message : *messages) {
-                auto label = this->create_child<TextLabel>(message.as_c());
+                auto label = this->create_child<TextLabel>(message.label());
                 label->font_size = 16;
                 label->color = Colors::ERROR.to_ray();
             }

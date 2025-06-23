@@ -219,6 +219,63 @@ void TextEdit::draw_self() {
     }
 }
 
+void draw_squiggle(Vector2 start, int32_t target_length, RayLib::Color color) {
+    // This is the worst code ive ever written.
+    ASSERT(target_length > 1, "be so fr.");
+
+    Vector2 pointer = Vector2(start);
+
+    int32_t squiggle_height = 4;
+    int32_t squiggle_length = 4;
+
+    bool in_dip = false;
+
+    while (true) {
+        int32_t delta_x = pointer.x - start.x;
+        if (delta_x + squiggle_length > target_length)
+            squiggle_length = target_length - delta_x;
+
+        RayLib::DrawLine(
+            pointer.x,
+            pointer.y,
+            pointer.x += squiggle_length,
+            pointer.y += squiggle_height * (in_dip ? -1 : 1),
+            color
+        );
+        in_dip = !in_dip;
+
+        if (delta_x == target_length) break;
+    }
+}
+
+void TextEdit::draw_squiggles() {
+    Vector2 base_pos = get_draw_position();
+    // HACK
+    float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
+
+    // NEEDLESSLY EXPENSIVE!!! THIS RUNS EVERY FRAME BUT WHATEVER MAN...
+    auto lines = text.split('\n');
+
+    for (auto diag : get_diagnostics()) {
+        for (int line = diag.range_start.line; line <= diag.range_end.line; line++) {
+            int32_t char_length = lines[line].length();
+            Vector2 start = { 0, ((line + 1) * font_size_px) - 4 };
+
+            // Before char_length gets mangled
+            if (line == diag.range_end.line) {
+                char_length -= (char_length - diag.range_end.col);
+            }
+
+            if (line == diag.range_start.line) {
+                start.x = diag.range_start.col * char_width;
+                char_length -= diag.range_start.col;
+            }
+
+            draw_squiggle(base_pos + start, char_length * char_width, RayLib::RED);
+        }
+    }
+}
+
 void TextEdit::draw_selection() {
     if (selection.state == SelectionState::CRITICAL_STATE) return;
     if (selection.empty()) return;
@@ -284,6 +341,7 @@ void TextEdit::draw_text() {
     Vector2 base_pos = get_draw_position();
 
     draw_selection();
+    draw_squiggles();
 
     // Nodes
     Vector2 pointer = base_pos;

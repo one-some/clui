@@ -147,12 +147,37 @@ void LSPClient::process_lsp_response(String body) {
     auto method = object->get<JSONString>("method")->value;
 
     if (method == "textDocument/publishDiagnostics") {
-        auto diagnostics = object->get<JSONObject>("params")->get<JSONArray>("diagnostics");
+        printf("%s\n", object->to_string().as_c());
+        auto params = object->get<JSONObject>("params");
 
-        diagnostic_messages.perform_on([&diagnostics](auto& messages) {
+        auto diagnostics = params->get<JSONArray>("diagnostics");
+        auto uri = params->get<JSONString>("uri")->value;
+
+        diagnostic_messages.perform_on([&diagnostics, uri](auto& messages) {
             for (auto& v : *(diagnostics->data)) {
-                auto message = v->as<JSONObject>()->get<JSONString>("message")->value;
-                messages.push_back(message.as_c());
+                auto v_obj = v->as<JSONObject>();
+                auto message = v_obj->get<JSONString>("message")->value;
+
+                auto range_obj = v_obj->get<JSONObject>("range");
+                auto range_start_obj = range_obj->get<JSONObject>("start");
+                auto range_end_obj = range_obj->get<JSONObject>("end");
+
+                TextCoordinate range_start = {
+                    range_start_obj->get<JSONNumber>("line")->value,
+                    range_start_obj->get<JSONNumber>("character")->value,
+                };
+
+                TextCoordinate range_end = {
+                    range_end_obj->get<JSONNumber>("line")->value,
+                    range_end_obj->get<JSONNumber>("character")->value,
+                };
+
+                messages.push_back(EditorDiagnostic(
+                    message,
+                    uri,
+                    range_start,
+                    range_end
+                ));
                 // printf("diag: %s\n", message.as_c());
             }
         });

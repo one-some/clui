@@ -13,6 +13,7 @@
 #include "Claire/String.h"
 #include "Claire/JSON/JSON.h"
 #include "Claire/FamousResource.h"
+#include "UI/TextEdit/TextEdit.h"
 
 class LSPClient {
 private:
@@ -35,7 +36,7 @@ public:
     HANDLE to_lsp_write = NULL;
     HANDLE from_lsp_read = NULL;
 #endif
-    FamousResource<std::vector<String>, FamousLocking::Mutex> diagnostic_messages;
+    FamousResource<std::vector<EditorDiagnostic>, FamousLocking::Mutex> diagnostic_messages;
 
     static LSPClient& the() {
         static LSPClient real_deal;
