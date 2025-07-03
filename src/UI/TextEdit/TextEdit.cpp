@@ -501,3 +501,7 @@ void TextEdit::set_caret_index(size_t index) {
     caret_blink_timer = 0;
     caret_index = index;
 }
+
+void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
+    printf("YO WE STARTED TO HOVER");
+}

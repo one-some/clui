@@ -14,6 +14,7 @@ namespace FamousLocking {
     };
 }
 
+
 // Remember to manually notify for anything in place. Or die
 template <typename T, typename LockingPolicy = FamousLocking::None>
 class FamousResource {

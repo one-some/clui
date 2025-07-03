@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "UI/Container/Container.h"
+#include "vector2.h"
 
 // FIXME:
 class Container;
@@ -73,3 +73,29 @@ public:
 };
 
 class TabFocusEvent : public Event { };
+
+class MouseHoverEvent : public Event {
+public:
+    // TODO: make it MS
+    static const int32_t hover_time_frames;
+    static int32_t hover_start_frame;
+    // FIXME: Should this even be here rofl
+    static Vector2 old_position;
+    static bool done;
+
+    static void update_mouse_pos(Vector2 pos, int32_t frame_no) {
+        if (pos == old_position) return;
+        done = false;
+        old_position = pos;
+        hover_start_frame = frame_no;
+    }
+
+    static bool should_propagate(int32_t frame_no) {
+        if (done) return false;
+        if (frame_no - hover_start_frame < hover_time_frames) return false;
+        done = true;
+        return true;
+    }
+};
+
+#include "UI/Container/Container.h"

@@ -97,6 +97,7 @@ class TextEdit : public Container {
             register_class_handler<MouseUpEvent, TextEdit>(&TextEdit::on_mouse_up);
             register_class_handler<MouseMoveEvent, TextEdit>(&TextEdit::on_mouse_move);
             register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
+            register_class_handler<MouseHoverEvent, TextEdit>(&TextEdit::on_mouse_hover);
 
             scroll_behavior = ScrollBehavior::VERTICAL;
 
@@ -117,6 +118,7 @@ class TextEdit : public Container {
         void on_mouse_move(MouseMoveEvent& event);
         void on_wheel(WheelEvent& event);
         void on_tab_focus(TabFocusEvent& event);
+        void on_mouse_hover(MouseHoverEvent& event);
 
         void on_input() override;
         void draw_text();

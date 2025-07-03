@@ -136,8 +136,15 @@ int main(int argc, char *argv[], char *envp[]) {
             reload_self(argc, argv, envp);
         }
 
-        auto motion_event = MouseMoveEvent(RayLib::GetMouseX(), RayLib::GetMouseY());
+        Vector2 mouse_pos = {RayLib::GetMouseX(), RayLib::GetMouseY()};
+        auto motion_event = MouseMoveEvent(mouse_pos.x, mouse_pos.y);
         root.dispatch_event(motion_event);
+
+        MouseHoverEvent::update_mouse_pos(mouse_pos, frames);
+        if (MouseHoverEvent::should_propagate(frames)) {
+            auto hover_event = MouseHoverEvent();
+            root.dispatch_event(hover_event);
+        }
 
         if (RayLib::IsMouseButtonPressed(RayLib::MOUSE_BUTTON_LEFT)) {
             auto click_event = MouseDownEvent(MouseButton::LEFT);
