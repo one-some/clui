@@ -75,27 +75,25 @@ public:
 class TabFocusEvent : public Event { };
 
 class MouseHoverEvent : public Event {
-public:
+private:
     // TODO: make it MS
     static const int32_t hover_time_frames;
-    static int32_t hover_start_frame;
     // FIXME: Should this even be here rofl
     static Vector2 old_position;
-    static bool done;
+    static int32_t hover_start_frame;
 
-    static void update_mouse_pos(Vector2 pos, int32_t frame_no) {
-        if (pos == old_position) return;
-        done = false;
-        old_position = pos;
-        hover_start_frame = frame_no;
-    }
+public:
+    // Courtesy of JAMIE.
+    static bool dead_mouse;
+    bool hovering;
 
-    static bool should_propagate(int32_t frame_no) {
-        if (done) return false;
-        if (frame_no - hover_start_frame < hover_time_frames) return false;
-        done = true;
-        return true;
-    }
+    MouseHoverEvent(bool hovering) : hovering(hovering) { };
+
+    static void maybe_propagate(
+        Container* cont,
+        Vector2 mouse_pos,
+        int32_t frame_no
+    );
 };
 
 #include "UI/Container/Container.h"

@@ -503,5 +503,5 @@ void TextEdit::set_caret_index(size_t index) {
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
-    printf("YO WE STARTED TO HOVER");
+    printf("YO WE STARTED TO HOVER %b\n", event.hovering);
 }

@@ -26,6 +26,10 @@ struct Vector2 {
         return x || y;
     }
 
+    bool operator==(const Vector2& that) const {
+        return x == that.x && y == that.y;
+    }
+
     bool in_rectangle(Vector2 pos, Vector2 size) {
         if (this->y - pos.y < 0) return false;
         if (this->y - pos.y > size.y) return false;
