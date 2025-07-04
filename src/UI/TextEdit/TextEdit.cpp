@@ -120,76 +120,6 @@ String TextEdit::get_selected_text() {
     return text.slice(rectified.start, rectified.end);
 }
 
-void TextEdit::on_input() {
-    bool changes_made = false;
-
-    if (RayLib::IsKeyDown(RayLib::KEY_LEFT_CONTROL)) {
-        if (RayLib::IsKeyPressed(RayLib::KEY_S)) {
-            printf("Save! %s\n", file.get_path().as_c());
-            save_to_file();
-        }
-
-        if (RayLib::IsKeyPressed(RayLib::KEY_C)) {
-            auto selected_text = get_selected_text();
-            RayLib::SetClipboardText(selected_text.as_c());
-        }
-
-        if (RayLib::IsKeyPressed(RayLib::KEY_V)) {
-            String clipboard = RayLib::GetClipboardText();
-
-            text.insert(clipboard, caret_index);
-            set_caret_index(caret_index + clipboard.length());
-            changes_made = true;
-        }
-    }
-
-    char c = '\0';
-    while ((c = (char)RayLib::GetCharPressed())) {
-        if (!selection.empty()) delete_selected_text();
-
-        text.insert(c, caret_index);
-        changes_made = true;
-        set_caret_index(caret_index + 1);
-    }
-
-    if (RayLib::IsKeyTyped(RayLib::KEY_DELETE)) {
-        text.remove(caret_index);
-        changes_made = true;
-    }
-
-    if (RayLib::IsKeyTyped(RayLib::KEY_BACKSPACE)) {
-        handle_backspace();
-        changes_made = true;
-    }
-
-    if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
-        text.insert('\n', caret_index);
-        changes_made = true;
-        move_caret({1, 0});
-    }
-
-    if (RayLib::IsKeyTyped(RayLib::KEY_TAB)) {
-        text.insert("    ", caret_index);
-        set_caret_index(caret_index + 4);
-        changes_made = true;
-    }
-
-    Vector2 caret_delta = Vector2::zero();
-    if (RayLib::IsKeyTyped(RayLib::KEY_LEFT))   caret_delta.x--;
-    if (RayLib::IsKeyTyped(RayLib::KEY_RIGHT))  caret_delta.x++;
-    if (RayLib::IsKeyTyped(RayLib::KEY_UP))     caret_delta.y--;
-    if (RayLib::IsKeyTyped(RayLib::KEY_DOWN))   caret_delta.y++;
-    if (caret_delta.x || caret_delta.y) move_caret(caret_delta);
-
-    if (changes_made) {
-        caret_blink_timer = 0;
-        parser.parse();
-    }
-
-
-    // RayLib::GetCharPressed();
-}
-
 void TextEdit::draw_self() {
     caret_blink_timer++;
 
@@ -205,10 +135,19 @@ void TextEdit::draw_self() {
 
     Vector2 pos = get_draw_position();
     if (caret_visible && is_focused()) {
+        int32_t caret_width = 2;
+        int32_t caret_offset = 1;
+
+        if (edit_mode == EditMode::NORMAL) {
+            // HACK
+            caret_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
+            caret_offset = 3;
+        }
+
         RayLib::DrawRectangle(
-            pos.x + caret_position_px.x + 1,
+            pos.x + caret_position_px.x + caret_offset,
             pos.y + caret_position_px.y,
-            2,
+            caret_width,
             font_size_px,
             Colors::FG.to_ray()
         );
@@ -359,11 +298,14 @@ void TextEdit::draw_text() {
 
                 switch (node.text.hash()) {
                     case String::hash("int32_t"):
+                    case String::hash("int"):
+                    case String::hash("size_t"):
                     case String::hash("switch"):
                     case String::hash("case"):
                     case String::hash("if"):
                     case String::hash("else"):
                     case String::hash("class"):
+                    case String::hash("auto"):
                     case String::hash("public"):
                     case String::hash("static"):
                     case String::hash("private"):

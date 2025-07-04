@@ -11,6 +11,11 @@
 #include "LSPClient/LSPClient.h"
 #include "UI/TextEdit/EditorDiagnostic.h"
 
+enum class EditMode {
+    NORMAL,
+    INSERT,
+};
+
 enum class SelectionState {
     NORMAL,
     // CRITICAL_STATE: We've clicked, but the mouse has not yet moved, so end hasn't updated.
@@ -55,6 +60,7 @@ class TextEdit : public Container {
     public:
         String text;
         File file;
+        EditMode edit_mode = EditMode::NORMAL;
 
         //String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
         RayLib::Font font = Font::the();
@@ -99,6 +105,14 @@ class TextEdit : public Container {
 
         void on_input() override;
         void draw_text();
+
+        void on_input_insert_mode();
+        void on_input_normal_mode();
+
+        void set_edit_mode(EditMode mode) {
+            caret_blink_timer = 0;
+            edit_mode = mode;
+        }
 
         size_t move_caret_to_mouse();
         void draw_selection();

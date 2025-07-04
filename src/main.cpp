@@ -56,6 +56,7 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::SetTraceLogLevel(RayLib::LOG_ERROR);
     RayLib::SetConfigFlags(RayLib::FLAG_WINDOW_RESIZABLE);
     RayLib::InitWindow(500, 500, "clui test");
+    RayLib::SetExitKey(RayLib::KEY_NULL);                               // Set a custom key to exit program (default is ESC)
 
     auto icon = RayLib::SmartImage(Path::exec_relative("claire_head.png").as_c());
     RayLib::SetWindowIcon(icon.image);
