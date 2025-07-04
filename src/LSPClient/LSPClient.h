@@ -13,7 +13,7 @@
 #include "Claire/String.h"
 #include "Claire/JSON/JSON.h"
 #include "Claire/FamousResource.h"
-#include "UI/TextEdit/TextEdit.h"
+#include "UI/TextEdit/EditorDiagnostic.h"
 
 class LSPClient {
 private:
@@ -41,6 +41,20 @@ public:
     static LSPClient& the() {
         static LSPClient real_deal;
         return real_deal;
+    }
+
+    std::vector<EditorDiagnostic> diagnostics_for(String path) {
+        std::vector<EditorDiagnostic> out;
+
+        // Is this the lazy way? Yaaa
+        path = "file://" + path;
+
+        for (auto diag : *(diagnostic_messages.get())) {
+            if (path != diag.file_path) continue;
+            out.push_back(std::move(diag));
+        }
+
+        return out;
     }
 
     void open_pipes();

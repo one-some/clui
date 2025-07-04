@@ -256,7 +256,7 @@ void TextEdit::draw_squiggles() {
     // NEEDLESSLY EXPENSIVE!!! THIS RUNS EVERY FRAME BUT WHATEVER MAN...
     auto lines = text.split('\n');
 
-    for (auto diag : get_diagnostics()) {
+    for (auto& diag : get_diagnostics()) {
         for (int line = diag.range_start.line; line <= diag.range_end.line; line++) {
             int32_t char_length = lines[line].length();
             Vector2 start = { 0, ((line + 1) * font_size_px) - 4 };
