@@ -96,7 +96,7 @@ void TextEdit::on_input_normal_mode() {
             set_edit_mode(EditMode::INSERT);
             break;
         case 'Z':
-            exit(0);
+            RayLib::CloseWindow();
             break;
     }
 }
