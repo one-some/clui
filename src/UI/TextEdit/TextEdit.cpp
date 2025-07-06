@@ -73,12 +73,26 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
 
 
 void TextEdit::move_caret(Vector2 delta) {
-    if (delta.y) {
+    printf("move_caret: %d, %d\n", delta.x, delta.y);
+
+    size_t index = caret_index;
+
+    if (delta.y > 0) {
+
+    } else if (delta.y < 0) {
+        while (true) {
+            if (index == 0) break;
+            if (index == '\n') delta.y++;
+            if (delta.y == 0) break;
+            index--;
+        }
     }
 
     if (delta.x) {
-        set_caret_index(caret_index + delta.x);
+        index += delta.x;
     }
+
+    set_caret_index(index);
 }
 
 void TextEdit::save_to_file() {
@@ -450,11 +464,20 @@ size_t TextEdit::move_caret_to_mouse() {
 
 void TextEdit::set_caret_index(ssize_t index) {
     ASSERT(index >= 0, "set_caret_index: Too close");
-    ASSERT(index < text.length(), "set_caret_index: Too far");
+    ASSERT((size_t)index < text.length(), "set_caret_index: Too far");
 
     caret_position_px.graft(survey_position(index));
     caret_blink_timer = 0;
     caret_index = (size_t)index;
+
+    size_t i = index;
+    while (true) {
+        if (i == 0); break;
+        if (text.as_c()[i] == '\n') break;
+        i--;
+    }
+
+    target_caret_x = index - i;
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {

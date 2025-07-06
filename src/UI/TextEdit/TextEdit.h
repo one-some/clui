@@ -66,6 +66,7 @@ class TextEdit : public Container {
         RayLib::Font font = Font::the();
 
         Vector2 caret_position_px = {0, 0};
+        size_t target_caret_x = 0;
         size_t caret_index = 0;
         int32_t caret_blink_timer = 0;
         CPPParser parser;
