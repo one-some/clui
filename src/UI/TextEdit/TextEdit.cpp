@@ -82,15 +82,34 @@ void TextEdit::move_caret(Vector2 delta) {
     } else if (delta.y < 0) {
         while (true) {
             if (index == 0) break;
-            if (index == '\n') delta.y++;
-            if (delta.y == 0) break;
+            if (text.as_c()[index] == '\n') delta.y++;
+            if (delta.y == 1) break;
             index--;
         }
+
+        index += 1 + target_caret_x;
     }
 
     if (delta.x) {
         index += delta.x;
+
+        size_t i = index;
+        while (true) {
+            printf("%d - '%c'\n", i, text.as_c()[i]);
+            if (i == 0) break;
+            if (text.as_c()[i] == '\n') {
+                printf("Stop at %d\n", i);
+                break;
+            }
+            i--;
+        }
+
+
+        target_caret_x = index - i - 1;
+        printf("Hi Whats the deal: %d :: %d\n", target_caret_x, index);
     }
+
+    printf("Ended up with %d\n", index);
 
     set_caret_index(index);
 }
@@ -469,15 +488,6 @@ void TextEdit::set_caret_index(ssize_t index) {
     caret_position_px.graft(survey_position(index));
     caret_blink_timer = 0;
     caret_index = (size_t)index;
-
-    size_t i = index;
-    while (true) {
-        if (i == 0); break;
-        if (text.as_c()[i] == '\n') break;
-        i--;
-    }
-
-    target_caret_x = index - i;
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
