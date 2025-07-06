@@ -117,7 +117,7 @@ class TextEdit : public Container {
         size_t move_caret_to_mouse();
         void draw_selection();
         void delete_selected_text();
-        void set_caret_index(size_t index);
+        void set_caret_index(ssize_t index);
         String get_selected_text();
 
         void handle_backspace();
