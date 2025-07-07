@@ -96,6 +96,8 @@ class TextEdit : public Container {
         static size_t str_index_from_vec2(const char* text, Vector2 vec);
     
     private:
+        int desired_x = 0;
+
         void on_mouse_down(MouseDownEvent& event);
         void on_mouse_up(MouseUpEvent& event);
         void on_mouse_move(MouseMoveEvent& event);
@@ -117,7 +119,7 @@ class TextEdit : public Container {
         size_t move_caret_to_mouse();
         void draw_selection();
         void delete_selected_text();
-        void set_caret_index(ssize_t index);
+        void set_caret_index(int index, bool set_desired_x = false);
         String get_selected_text();
 
         void handle_backspace();

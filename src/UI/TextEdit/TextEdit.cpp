@@ -72,14 +72,93 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
 // }
 
 
+
+
+
+
+
+
 void TextEdit::move_caret(Vector2 delta) {
-    if (delta.y) {
+    // Let's work on migrating caret stuff to int.
+    const int text_length = text.length();
+    int working_index = caret_index;
+    int line_start = caret_index;
+
+    while (text.as_c()[line_start] != '\n') {
+        line_start--;
+        if (line_start == 0) break;
     }
 
+    int line_length = *(text.find("\n", line_start + 1)) - line_start - 1;
+
     if (delta.x) {
-        set_caret_index(caret_index + delta.x);
+        working_index += delta.x;
+        desired_x = working_index - line_start - 1;
+
+        printf("Line length: %d, DesX: %d\n", line_length, desired_x);
+
+        if (desired_x < 0) {
+            desired_x = 0;
+            working_index -= delta.x;
+        } else if (desired_x > line_length) {
+            desired_x = line_length;
+            working_index -= delta.x;
+        }
     }
+
+    if (delta.y > 0) {
+        // Down
+
+        while (delta.y > 0) {
+            if (text.as_c()[working_index] == '\n') delta.y--;
+            working_index++;
+            if (working_index == text_length) break;
+        }
+
+        working_index += desired_x;
+    }
+
+    if (delta.y < 0) {
+        // Up
+
+        // We've gotta meet two newlines
+        delta.y--;
+
+        while (working_index > 0) {
+            if (text.as_c()[working_index] == '\n') delta.y++;
+            if (delta.y >= 0) {
+                working_index++;
+                break;
+            }
+            working_index--;
+        }
+        working_index += desired_x;
+    }
+
+    set_caret_index(working_index);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void TextEdit::save_to_file() {
     file.write(text);
@@ -206,7 +285,7 @@ void TextEdit::draw_squiggles() {
     auto lines = text.split('\n');
 
     for (auto& diag : get_diagnostics()) {
-        for (int line = diag.range_start.line; line <= diag.range_end.line; line++) {
+        for (size_t line = diag.range_start.line; line <= diag.range_end.line; line++) {
             int32_t char_length = lines[line].length();
             Vector2 start = { 0, ((line + 1) * font_size_px) - 4 };
 
@@ -444,19 +523,29 @@ size_t TextEdit::move_caret_to_mouse() {
         i++;
     }
 
-    set_caret_index(i);
+    set_caret_index(i, true);
     return i;
 }
 
-void TextEdit::set_caret_index(ssize_t index) {
-    ASSERT(index >= 0, "set_caret_index: Too close");
-    ASSERT(index < text.length(), "set_caret_index: Too far");
+void TextEdit::set_caret_index(int index, bool set_desired_x) {
+    ASSERT(index < (int)text.length(), "set_caret_index: Too far");
 
     caret_position_px.graft(survey_position(index));
     caret_blink_timer = 0;
-    caret_index = (size_t)index;
+    caret_index = index;
+
+    if (set_desired_x) {
+        int line_start = caret_index;
+
+        while (text.as_c()[line_start] != '\n') {
+            line_start--;
+            if (line_start == 0) break;
+        }
+
+        desired_x = caret_index - line_start - 1;
+        if (desired_x < 0) desired_x = 0;
+    }
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
-    printf("YO WE STARTED TO HOVER %b\n", event.hovering);
 }
