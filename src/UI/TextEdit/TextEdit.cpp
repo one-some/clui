@@ -26,63 +26,11 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
     return 0;
 }
 
-// void TextEdit::move_caret(Vector2 delta) {
-//     char c = '\0';
-
-//     while ((c = text.as_c()[caret_index])) {
-//         if (delta.y) {
-//             if (caret_index == 0 && delta.y < 0) {
-//                 delta.y = 0;
-//                 continue;
-//             }
-
-//             // printf("Okay! Let's deal with delta y... Dy: %i, Sign: %i\n", delta.y, SIGN(delta.y));
-//             // printf("k.... derlta y is now %i\n", delta.y);
-//             caret_index += SIGN(delta.y);
-//             if (c == '\n') delta.y -= SIGN(delta.y);
-//             // printf("&.... carret indx is now %li\n", caret_index);
-//             continue;
-//         }
-
-//         if (delta.x) {
-//             if (caret_index == 0 && delta.x < 0) {
-//                 delta.x = 0;
-//                 continue;
-//             }
-
-//             caret_index += SIGN(delta.x);
-//             delta.x -= SIGN(delta.x);
-//         }
-
-//         break;
-//     }
-
-//     caret_position_px.graft(survey_position(caret_index));
-//     caret_blink_timer = 0;
-
-//     auto editor_height = size->get().y;
-//     auto caret_base = caret_position_px.y + font_size_px;
-//     auto the_line_tm = editor_height - scroll_offset->y;
-
-//     if (caret_position_px.y < -scroll_offset->y) {
-//         scroll_offset->y = -caret_position_px.y;
-//     } else if (caret_base >= the_line_tm) {
-//         scroll_offset->y = editor_height - caret_base;
-//     }
-// }
-
-
-
-
-
-
-
-
 void TextEdit::move_caret(Vector2 delta) {
     // Let's work on migrating caret stuff to int.
     const int text_length = text.length();
     int working_index = caret_index;
-    int line_start = caret_index;
+    int line_start = caret_index - 1;
 
     while (text.as_c()[line_start] != '\n') {
         line_start--;
@@ -137,28 +85,6 @@ void TextEdit::move_caret(Vector2 delta) {
 
     set_caret_index(working_index);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void TextEdit::save_to_file() {
     file.write(text);
