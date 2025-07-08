@@ -14,18 +14,9 @@
 
 class String {
 public:
-
-    void print_state(const char* event) const {
-	return;
-        fprintf(stderr, "[Test STRING EVENT] %-20s | Addr: %p | Cap: %-4zu | Len: %-4zu | Data: \"%s\"\n",
-            event, (void*)this, capacity, length(), c_str ? c_str : "null");
-    }
-
     String() {
         capacity = 16;
         c_str = (char*)calloc(capacity, 1);
-
-        print_state("Default const");
     }
 
     String(char c) {
@@ -33,23 +24,18 @@ public:
         c_str = (char*)calloc(capacity, 1);
         c_str[0] = c;
         c_str[1] = '\0';
-
-        print_state("Char const");
     }
 
     String(const char* in_c_str) {
         if (!in_c_str) {
             capacity = 16;
             c_str = (char*) calloc(capacity, 1);
-            print_state("const char* null");
             return;
         }
 
         capacity = strlen(in_c_str) + 1;
         c_str = (char*)calloc(capacity, 1);
         strcpy(c_str, in_c_str);
-
-        print_state("const char* const");
     }
 
     String(const String& that) {
@@ -60,7 +46,6 @@ public:
         ASSERT(c_str, "Can't allocate");
 
         strcpy(c_str, that.c_str);
-        print_state("Copy const deep");
     }
 
     String(String&& that) noexcept : String() {
@@ -68,8 +53,6 @@ public:
 
         std::swap(capacity, that.capacity);
         std::swap(c_str, that.c_str);
-
-        print_state("Move const");
     }
 
     String& operator=(String that) noexcept {
@@ -77,13 +60,11 @@ public:
         ASSERT(that.c_str, "No dest cstr");
         std::swap(c_str, that.c_str);
         std::swap(capacity, that.capacity);
-        print_state("Assignment");
         return *this;
     }
 
     ~String() {
         ASSERT(c_str, "Destroying corrupt string");
-        print_state("GONE");
         free(c_str);
     }
 
@@ -132,7 +113,7 @@ public:
         // return out;
     }
     
-    char operator[](size_t index) {
+    char operator[](size_t index) const {
         return c_str[index];
     }
 
@@ -409,7 +390,6 @@ private:
     size_t capacity = 0;
 
     String(char* stolen_ptr, size_t stolen_capacity) : c_str(stolen_ptr), capacity(stolen_capacity) {
-        print_state("Private move_from const");
     }
 
     void expand_for(size_t extra_chars) {

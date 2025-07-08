@@ -26,44 +26,51 @@ size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
     return 0;
 }
 
+int find_line_start(const String& string, int index) {
+    while (index > 0 && string[index - 1] != '\n') {
+        index--;
+    }
+    return index;
+}
+
 void TextEdit::move_caret(Vector2 delta) {
     // Let's work on migrating caret stuff to int.
     const int text_length = text.length();
     int working_index = caret_index;
-    int line_start = caret_index - 1;
+    int line_start = find_line_start(text, caret_index);
+    
+    printf("\n\nLinestart: %d. Working index (start): %d '%c'\n", line_start, working_index, text[working_index]);
 
-    while (text.as_c()[line_start] != '\n') {
-        line_start--;
-        if (line_start == 0) break;
-    }
+    int line_length = *(text.find("\n", line_start + 1)) - line_start;
 
-    int line_length = *(text.find("\n", line_start + 1)) - line_start - 1;
-
-    if (delta.x) {
-        working_index += delta.x;
-        desired_x = working_index - line_start - 1;
-
-        printf("Line length: %d, DesX: %d\n", line_length, desired_x);
+    if (text[working_index] == '\n' && delta.x > 0) {
+        // JUST THE WORST HACK ON EARTH!!!!!! HELP I CANT CODE!!!!!
+    } else if (delta.x) {
+        desired_x = working_index - line_start + delta.x;
 
         if (desired_x < 0) {
+            // Too left
             desired_x = 0;
-            working_index -= delta.x;
-        } else if (desired_x > line_length) {
+        } else if (desired_x >= line_length) {
+            // Too right
             desired_x = line_length;
-            working_index -= delta.x;
         }
+
+        working_index = line_start + desired_x;
     }
 
     if (delta.y > 0) {
         // Down
 
         while (delta.y > 0) {
-            if (text.as_c()[working_index] == '\n') delta.y--;
+            if (text[working_index] == '\n') delta.y--;
             working_index++;
             if (working_index == text_length) break;
         }
 
-        working_index += desired_x;
+        for (int i = 0; i < desired_x; i++) {
+            if (text[++working_index] == '\n') break;
+        }
     }
 
     if (delta.y < 0) {
@@ -71,16 +78,20 @@ void TextEdit::move_caret(Vector2 delta) {
 
         // We've gotta meet two newlines
         delta.y--;
+        if (text[working_index] == '\n') delta.y--;
 
         while (working_index > 0) {
-            if (text.as_c()[working_index] == '\n') delta.y++;
+            if (text[working_index] == '\n') delta.y++;
             if (delta.y >= 0) {
                 working_index++;
                 break;
             }
             working_index--;
         }
-        working_index += desired_x;
+
+        for (int i = 0; i < desired_x; i++) {
+            if (text[++working_index] == '\n') break;
+        }
     }
 
     set_caret_index(working_index);
