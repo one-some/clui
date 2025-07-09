@@ -27,6 +27,8 @@ private:
 
     void shutdown();
 
+    std::map<int, String> request_id_methods = {};
+
 public:
 #ifdef __linux__
     int to_lsp_pipe[2];
@@ -67,14 +69,19 @@ public:
         thread.daemonify();
     }
 
-    String build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params);
-    void send_lsp_message(const String payload);
+    void send_lsp_message(
+        String method,
+        Optional<int> id,
+        std::unique_ptr<JSONObject> params
+    );
 
     void poll_lsp();
     void process_lsp_response(String body);
 
     String await_lsp_response();
+
     void file_did_open(String path);
+    void file_did_hover(String path, int line, int col);
 
     [[noreturn]] void lsp_thread();
 };

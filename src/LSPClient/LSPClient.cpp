@@ -82,9 +82,9 @@ void LSPClient::open_pipes() {
 void LSPClient::shutdown() {
     printf("Say goodbye to LSP!\n");
     
-    send_lsp_message(build_request("shutdown", 777, nullptr));
+    send_lsp_message("shutdown", 777, nullptr);
     await_lsp_response();
-    send_lsp_message(build_request("exit", Optional<int>(), nullptr));
+    send_lsp_message("exit", Optional<int>(), nullptr);
 
     close(to_lsp_pipe[1]);
 
@@ -96,26 +96,27 @@ void LSPClient::shutdown() {
     close(from_lsp_pipe[0]);
 }
 
-String LSPClient::build_request(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
+void LSPClient::send_lsp_message(String method, Optional<int> id, std::unique_ptr<JSONObject> params) {
     auto object = JSONObject();
 
     object.set("jsonrpc", "2.0");
-    if (id) object.set("id", *id);
+    if (id) {
+        object.set("id", *id);
+        request_id_methods[*id] = method;
+    }
     object.set("method", method);
     if (params) object.set("params", std::move(params));
 
-    return object.to_string();
-}
-
-void LSPClient::send_lsp_message(String payload) {
-    size_t len = payload.length();
+    String payload = object.to_string();
+    int len = payload.length();
 
     String in = "Content-Length: ";
-    in.append(String::from_int((int)len));
+    in.append(String::from_int(len));
     in.append("\r\n\r\n");
     in.append(payload);
 
     printf("Payload: %s\n", payload.truncated().as_c());
+    // printf("Payload: %s\n", payload.as_c());
 
     write(to_lsp_pipe[1], in.as_c(), in.length());
     // printf("Done writing\n");
@@ -144,7 +145,16 @@ void LSPClient::process_lsp_response(String body) {
     //     printf("%s\n", pair.first.as_c());
     // }
 
-    auto method = object->get<JSONString>("method")->value;
+    String method;
+    if (object->has("id")) {
+        int id = object->get<JSONNumber>("id")->value;
+        ASSERT(request_id_methods.contains(id), "We are making some bold assumptions that are actually bogus.");
+
+        method = request_id_methods[id];
+        request_id_methods.erase(id);
+    } else {
+        method = object->get<JSONString>("method")->value;
+    }
 
     if (method == "textDocument/publishDiagnostics") {
         printf("%s\n", object->to_string().as_c());
@@ -181,7 +191,16 @@ void LSPClient::process_lsp_response(String body) {
                 // printf("diag: %s\n", message.as_c());
             }
         });
+    } else if (method == "textDocument/hover") {
+        // If result doesn't exist something has gone wrong... oops!
+        auto result = object->get<JSONObject>("result");
+        auto contents = result->get<JSONObject>("contents");
 
+        String type = contents->get<JSONString>("kind")->value;
+        ASSERT(type == "plaintext", "hover: Ok idk what that type '%s' is", type.as_c());
+
+        String value = contents->get<JSONString>("value")->value;
+        printf("%s\n", value.as_c());
     } else {
         printf("Unknown method '%s'\n", method.as_c());
     }
@@ -227,19 +246,6 @@ String LSPClient::await_lsp_response() {
     return body;
 }
 
-void LSPClient::file_did_open(String path) {
-    auto file_type = path.split(".").back();
-
-    auto params = std::make_unique<JSONObject>();
-    auto text_document = params->set_new<JSONObject>("textDocument");
-    text_document->set_new<JSONString>("uri", "file://" + path);
-    text_document->set_new<JSONString>("languageId", file_type);
-    text_document->set_new<JSONNumber>("version", 1);
-    text_document->set_new<JSONString>("text", File(path).read());
-
-    send_lsp_message(build_request("textDocument/didOpen", Optional<int>(), std::move(params)));
-}
-
 [[noreturn]] void LSPClient::lsp_thread() {
     printf("[lsp] hey from lsp thread\n");
 
@@ -257,15 +263,40 @@ void LSPClient::file_did_open(String path) {
     capabilities_window->set_new<JSONBoolean>("workDoneProgress", true);
 
 
-    send_lsp_message(build_request("initialize", 0, std::move(params)));
+    send_lsp_message("initialize", 0, std::move(params));
     auto response = await_lsp_response();
     // printf("%s\n", response.as_c());
 
     params = std::make_unique<JSONObject>();
-    send_lsp_message(build_request("initialized", Optional<int>(), std::move(params)));
+    send_lsp_message("initialized", Optional<int>(), std::move(params));
 
     while (true) {
         Time::sleep_ms(10);
         poll_lsp();
     }
+}
+
+void LSPClient::file_did_open(String path) {
+    auto file_type = path.split(".").back();
+
+    auto params = std::make_unique<JSONObject>();
+    auto text_document = params->set_new<JSONObject>("textDocument");
+    text_document->set_new<JSONString>("uri", "file://" + path);
+    text_document->set_new<JSONString>("languageId", file_type);
+    text_document->set_new<JSONNumber>("version", 1);
+    text_document->set_new<JSONString>("text", File(path).read());
+
+    send_lsp_message("textDocument/didOpen", Optional<int>(), std::move(params));
+}
+
+void LSPClient::file_did_hover(String path, int line, int col) {
+    auto params = std::make_unique<JSONObject>();
+    auto doc = params->set_new<JSONObject>("textDocument");
+    doc->set_new<JSONString>("uri", "file://" + path);
+
+    auto position = params->set_new<JSONObject>("position");
+    position->set_new<JSONNumber>("line", line);
+    position->set_new<JSONNumber>("character", line);
+
+    send_lsp_message("textDocument/hover", Optional<int>(99), std::move(params));
 }

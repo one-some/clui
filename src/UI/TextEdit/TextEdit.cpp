@@ -485,4 +485,22 @@ void TextEdit::set_caret_index(int index, bool set_desired_x) {
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
+    if (!event.hovering) return;
+
+    Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
+    mouse_pos = mouse_pos - get_draw_position();
+
+    if (mouse_pos.y < 0) return;
+    if (mouse_pos.x < 0) return;
+
+    // HACK
+    float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
+
+    // It seems there's often a little bit of leeway added to make selection easier
+    float biased_mouse_pos = mouse_pos.x - (char_width / 2.0f);
+    biased_mouse_pos = max(0.0f, biased_mouse_pos);
+
+    int column = round(biased_mouse_pos / char_width);
+    int line = mouse_pos.y / font_size_px;
+    LSPClient::the().file_did_hover(file.get_path(), line, column);
 }

@@ -36,6 +36,9 @@ public:
     void set(const String& key, std::unique_ptr<JSONValue> val);
     void set(const String& key, String val);
     void set(const String& key, double val);
+    bool has(const String& key) {
+        return data->contains(key) > 0;
+    }
 
     template<JSONValueDerivative T, typename... Args>
     T* set_new(const String& key, Args&&... args) {
