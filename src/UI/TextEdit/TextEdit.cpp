@@ -1,4 +1,5 @@
 #include <cstring>
+#include <cstddef>
 #include <stdio.h>
 #include "color.h"
 #include "UI/TextEdit/TextEdit.h"

@@ -135,7 +135,7 @@ void LSPClient::poll_lsp() {
 }
 
 void LSPClient::process_lsp_response(String body) {
-    // printf("%s\n", body.as_c());
+    printf("%s\n", body.as_c());
 
     // I HATE THIS. FIX THIS SOON.
     auto _object = JSONParser(body).parse();
@@ -193,14 +193,19 @@ void LSPClient::process_lsp_response(String body) {
         });
     } else if (method == "textDocument/hover") {
         // If result doesn't exist something has gone wrong... oops!
-        auto result = object->get<JSONObject>("result");
+        auto result_ambigious = object->get("result");
+
+        // Not the best but idk any other way to do it
+        if (result_ambigious->is<JSONNull>()) return;
+
+        auto result = result_ambigious->as<JSONObject>();
         auto contents = result->get<JSONObject>("contents");
 
         String type = contents->get<JSONString>("kind")->value;
         ASSERT(type == "plaintext", "hover: Ok idk what that type '%s' is", type.as_c());
 
         String value = contents->get<JSONString>("value")->value;
-        printf("%s\n", value.as_c());
+        printf("\nXXX\n%s\n\n", value.as_c());
     } else {
         printf("Unknown method '%s'\n", method.as_c());
     }

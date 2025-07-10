@@ -31,11 +31,23 @@ void Container::remove_child(Container* child) {
     );
 }
 
-void Container::draw_decorations() {
+void Container::draw_decorations(bool pre = false) {
     if (!decoration) return;
-
     Vector2 pos = get_draw_position();
     Vector2 s = size->get();
+
+    if (pre) {
+        if (!decoration->enable_bg) return;
+        RayLib::DrawRectangle(
+            pos.x,
+            pos.y,
+            s.x,
+            s.y,
+            decoration->bg_color.to_ray()
+        );
+
+        return;
+    }
 
     if (decoration->border_top_px) {
         RayLib::DrawRectangle(
@@ -113,8 +125,9 @@ void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
     // }
 
     // if (!clip) {
+        draw_decorations(true);
         draw_self();
-        draw_decorations();
+        draw_decorations(false);
     // }
 
     RayLib::EndScissorMode();

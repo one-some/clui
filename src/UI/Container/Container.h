@@ -33,6 +33,9 @@ public:
     int32_t border_right_px = 0;
 
     Color border_color = Color(0xAAAAAA);
+
+    bool enable_bg = false;
+    Color bg_color = Color(0xFF00FF);
 };
 
 class Container {
@@ -206,5 +209,5 @@ private:
         }
     }
 
-    void draw_decorations();
+    void draw_decorations(bool pre);
 };

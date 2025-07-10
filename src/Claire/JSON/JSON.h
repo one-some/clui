@@ -25,6 +25,11 @@ public:
         ASSERT(ptr, "(.as<x>) Unable to cast JSON value to %s", typeid(T).name());
         return ptr;
     }
+
+    template<JSONValueDerivative T>
+    bool is() {
+        return !!dynamic_cast<T*>(this);
+    }
 };
 
 class JSONObject : public JSONValue {

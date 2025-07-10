@@ -10,6 +10,7 @@
 #include "fontglobal.h"
 #include "LSPClient/LSPClient.h"
 #include "UI/TextEdit/EditorDiagnostic.h"
+#include "UI/TextLabel/TextLabel.h"
 
 enum class EditMode {
     NORMAL,
@@ -82,8 +83,17 @@ class TextEdit : public Container {
             register_class_handler<MouseMoveEvent, TextEdit>(&TextEdit::on_mouse_move);
             register_class_handler<TabFocusEvent, TextEdit>(&TextEdit::on_tab_focus);
             register_class_handler<MouseHoverEvent, TextEdit>(&TextEdit::on_mouse_hover);
-
             scroll_behavior = ScrollBehavior::VERTICAL;
+
+            hover_info = create_child<Container>();
+            hover_info->decoration = std::make_unique<ContainerDecoration>();
+            hover_info->decoration->enable_bg = true;
+            hover_info->decoration->bg_color = Color(0x181818);
+            hover_info->size->set_raw({100, 100});
+
+            auto hover_label = hover_info->create_child<TextLabel>("Hello");
+            hover_label->color = Colors::FG.to_ray();
+            hover_label->font_size = font_size_px;
 
             // printf("Waiiit....Hello from crazy world... '%s'\n", file.get_path().as_c());
             text = file.read();
@@ -98,6 +108,8 @@ class TextEdit : public Container {
     
     private:
         int desired_x = 0;
+
+        Container* hover_info = nullptr;
 
         void on_mouse_down(MouseDownEvent& event);
         void on_mouse_up(MouseUpEvent& event);
