@@ -15,6 +15,11 @@
 #include "Claire/FamousResource.h"
 #include "UI/TextEdit/EditorDiagnostic.h"
 
+struct PendingRequest {
+    String method;
+    std::function<void(const JSONObject&)> callback;
+};
+
 class LSPClient {
 private:
     LSPClient() {
@@ -27,7 +32,13 @@ private:
 
     void shutdown();
 
-    std::map<int, String> request_id_methods = {};
+    static int request_id;
+
+    static int get_new_request_id() {
+        return request_id++;
+    }
+
+    std::map<int, PendingRequest> pending_requests = {};
 
 public:
 #ifdef __linux__
@@ -72,7 +83,8 @@ public:
     void send_lsp_message(
         String method,
         Optional<int> id,
-        std::unique_ptr<JSONObject> params
+        std::unique_ptr<JSONObject> params,
+        std::function<void(const JSONObject&)> callback
     );
 
     void poll_lsp();
@@ -81,7 +93,12 @@ public:
     String await_lsp_response();
 
     void file_did_open(String path);
-    void file_did_hover(String path, int line, int col);
+    void file_did_hover(
+        String path,
+        int line,
+        int col,
+        std::function<void(const JSONObject&)> callback
+    );
 
     [[noreturn]] void lsp_thread();
 };

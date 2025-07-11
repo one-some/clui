@@ -91,7 +91,7 @@ class TextEdit : public Container {
             hover_info->decoration->bg_color = Color(0x181818);
             hover_info->size->set_raw({100, 100});
 
-            auto hover_label = hover_info->create_child<TextLabel>("Hello");
+            hover_label = hover_info->create_child<TextLabel>("Hello");
             hover_label->color = Colors::FG.to_ray();
             hover_label->font_size = font_size_px;
 
@@ -110,6 +110,7 @@ class TextEdit : public Container {
         int desired_x = 0;
 
         Container* hover_info = nullptr;
+        TextLabel* hover_label = nullptr;
 
         void on_mouse_down(MouseDownEvent& event);
         void on_mouse_up(MouseUpEvent& event);

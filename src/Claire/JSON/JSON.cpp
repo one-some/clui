@@ -31,7 +31,7 @@ void JSONObject::set(const String& key, double val) {
     set(key, std::make_unique<JSONNumber>(val));
 }
 
-String JSONObject::to_string() {
+String JSONObject::to_string() const {
     String out = "{";
 
     auto iterator = data->begin();
@@ -51,7 +51,7 @@ String JSONObject::to_string() {
     return out;
 }
 
-String JSONArray::to_string() {
+String JSONArray::to_string() const {
     String out = "[";
 
     auto iterator = data->begin();

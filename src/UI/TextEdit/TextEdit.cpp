@@ -486,13 +486,24 @@ void TextEdit::set_caret_index(int index, bool set_desired_x) {
 }
 
 void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
-    if (!event.hovering) return;
+    if (!event.hovering) {
+        hover_info->self_visible = false;
+        return;
+    }
 
     Vector2 mouse_pos = Vector2::from_ray(RayLib::GetMousePosition());
     mouse_pos = mouse_pos - get_draw_position();
 
     if (mouse_pos.y < 0) return;
     if (mouse_pos.x < 0) return;
+
+
+    hover_label->text = "...";
+    hover_info->self_visible = true;
+    hover_info->position->set_raw({
+        mouse_pos.x + 10,
+        mouse_pos.y
+    });
 
     // HACK
     float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
@@ -503,5 +514,28 @@ void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
 
     int column = round(biased_mouse_pos / char_width);
     int line = mouse_pos.y / font_size_px;
-    LSPClient::the().file_did_hover(file.get_path(), line, column);
+    LSPClient::the().file_did_hover(
+        file.get_path(),
+        line,
+        column,
+        // Maybe pass a callback here?
+        [this](const JSONObject& object) {
+            printf("%sAAHHHH\n", object.to_string().as_c());
+            // If result doesn't exist something has gone wrong... oops!
+            auto result_ambigious = object.get("result");
+
+            // Not the best but idk any other way to do it
+            if (result_ambigious->is<JSONNull>()) return;
+
+            auto result = result_ambigious->as<JSONObject>();
+            auto contents = result->get<JSONObject>("contents");
+
+            String type = contents->get<JSONString>("kind")->value;
+            ASSERT(type == "plaintext", "hover: Ok idk what that type '%s' is", type.as_c());
+
+            String value = contents->get<JSONString>("value")->value;
+            printf("\nXXX\n%s\n\n", value.as_c());
+            hover_label->text = value;
+        }
+    );
 }

@@ -124,11 +124,11 @@ void Container::draw_tree(Optional<RayLib::Rectangle> parent_scissor) {
     //     if (pos.x > parent_size.x || pos.y > parent_size.y) clip = true;
     // }
 
-    // if (!clip) {
+    if (is_visible()) {
         draw_decorations(true);
         draw_self();
         draw_decorations(false);
-    // }
+    }
 
     RayLib::EndScissorMode();
 

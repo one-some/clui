@@ -17,7 +17,7 @@ class JSONValue {
 public:
     virtual ~JSONValue() = default;
 
-    virtual String to_string() = 0;
+    virtual String to_string() const = 0;
     
     template<JSONValueDerivative T>
     T* as() {
@@ -60,7 +60,7 @@ public:
         return get(key)->as<T>();
     }
 
-    String to_string() override;
+    String to_string() const override;
 };
 
 class JSONArray : public JSONValue {
@@ -76,7 +76,7 @@ public:
         return (*data)[index]->as<T>();
     }
 
-    String to_string() override;
+    String to_string() const override;
 };
 
 class JSONString : public JSONValue {
@@ -101,7 +101,7 @@ public:
         return out;
     }
 
-    String to_string() override {
+    String to_string() const override {
         return JSONString::to_string(value);
     }
 };
@@ -112,7 +112,7 @@ public:
     
     JSONNumber(double val): value(val) { }
 
-    String to_string() override {
+    String to_string() const override {
         // HACK for JSON-RPC for LSP (id SHOULD NOT have a fractional part)
         return String::from_number_klutz(value);
     }
@@ -120,7 +120,7 @@ public:
 
 class JSONNull : public JSONValue {
 public:
-    String to_string() override {
+    String to_string() const override {
         return "null";
     }
 };
@@ -131,7 +131,7 @@ public:
 
     JSONBoolean(bool val): value(val) { }
 
-    String to_string() override {
+    String to_string() const override {
         return value ? "true" : "false";
     }
 };

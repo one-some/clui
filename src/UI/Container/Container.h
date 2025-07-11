@@ -53,6 +53,7 @@ public:
     Container* parent = nullptr;
     std::vector<std::unique_ptr<Container>> children;
     String debug_name;
+    bool self_visible = true;
 
     static Container* focused_element;
 
@@ -80,7 +81,7 @@ public:
         }
 
         // TODO: if (!visible) return false
-        return true;
+        return self_visible;
     }
 
     virtual bool is_child_visible(Container* child) { return true; }
