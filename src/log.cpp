@@ -1,6 +1,8 @@
 #include "log.h"
 #include "color.h"
 
+#define DONT_EAT_LOG
+
 #ifdef __linux__
     #include <sys/mman.h>
     #include <sys/stat.h>

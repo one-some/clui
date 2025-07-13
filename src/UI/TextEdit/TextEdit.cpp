@@ -187,7 +187,7 @@ void TextEdit::draw_self() {
 
 void draw_squiggle(Vector2 start, int32_t target_length, RayLib::Color color) {
     // This is the worst code ive ever written.
-    ASSERT(target_length > 1, "be so fr.");
+    if (target_length < 1) return;
 
     Vector2 pointer = Vector2(start);
 
@@ -504,6 +504,7 @@ void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
         mouse_pos.x + 10,
         mouse_pos.y
     });
+    hover_info->size->set_raw({50, 50});
 
     // HACK
     float char_width = RayLib::MeasureTextEx(font, "X", font_size_px, 0).x;
@@ -534,8 +535,13 @@ void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
             ASSERT(type == "plaintext", "hover: Ok idk what that type '%s' is", type.as_c());
 
             String value = contents->get<JSONString>("value")->value;
-            printf("\nXXX\n%s\n\n", value.as_c());
             hover_label->text = value;
+
+            Vector2 text_size = hover_label->text_bounds();
+            hover_info->size->set_raw({
+                max(50, text_size.x),
+                max(50, text_size.y)
+            });
         }
     );
 }
