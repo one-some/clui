@@ -3,7 +3,7 @@
 #include "UI/Events/Events.h"
 #include "vector2.h"
 
-const int32_t MouseHoverEvent::hover_time_frames = 30;
+const int32_t MouseHoverEvent::hover_time_frames = 20;
 int32_t MouseHoverEvent::hover_start_frame = 0;
 Vector2 MouseHoverEvent::old_position = Vector2::zero();
 bool MouseHoverEvent::dead_mouse = false;

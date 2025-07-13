@@ -98,6 +98,10 @@ void TextEdit::on_input_normal_mode() {
         case 'Z':
             RayLib::CloseWindow();
             break;
+        case 'w':
+            // Advance word
+            advance_caret_word();
+            break;
     }
 }
 

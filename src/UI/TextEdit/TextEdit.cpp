@@ -8,6 +8,8 @@
 #include "Claire/Math.h"
 #include <vector>
 
+RayLib::Font TextEdit::font = {0};
+
 size_t TextEdit::str_index_from_vec2(const char* text, Vector2 vec) {
     for (size_t i = 0; text[i]; i++) {
         if (vec.y) {
@@ -148,6 +150,11 @@ String TextEdit::get_selected_text() {
 }
 
 void TextEdit::draw_self() {
+    if (!font.baseSize) {
+        // Why here of all places!?! WHYY
+        TextEdit::font = RayLib::LoadFontEx(Path::exec_relative("ibm.ttf").as_c(), font_size_px, 0, 0);
+    }
+
     caret_blink_timer++;
 
     bool caret_visible = true;
@@ -465,6 +472,21 @@ size_t TextEdit::move_caret_to_mouse() {
     return i;
 }
 
+bool TextEdit::caret_at_end() {
+    return caret_index >= text.length();
+}
+
+void TextEdit::advance_caret_word() {
+    if (caret_at_end()) return;
+
+    while (true) {
+        set_caret_index(caret_index + 1);
+        char c = text.as_c()[caret_index];
+        if (caret_at_end()) return;
+        if (!(String::is_letter(c) || String::is_number(c))) return;
+    }
+}
+
 void TextEdit::set_caret_index(int index, bool set_desired_x) {
     ASSERT(index < (int)text.length(), "set_caret_index: Too far");
 
@@ -499,7 +521,7 @@ void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
 
 
     hover_label->text = "...";
-    hover_info->self_visible = true;
+    //hover_info->self_visible = true;
     hover_info->position->set_raw({
         mouse_pos.x + 10,
         mouse_pos.y
@@ -542,6 +564,7 @@ void TextEdit::on_mouse_hover(MouseHoverEvent& event) {
                 max(50, text_size.x),
                 max(50, text_size.y)
             });
+            hover_info->self_visible = true;
         }
     );
 }

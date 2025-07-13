@@ -64,7 +64,7 @@ class TextEdit : public Container {
         EditMode edit_mode = EditMode::NORMAL;
 
         //String("Hello Folks\nFus Ro Dah.\nClaire speaking.\nLet's code something fantastic....!!!\nLove u jamie");
-        RayLib::Font font = Font::the();
+        static RayLib::Font font;
 
         Vector2 caret_position_px = {0, 0};
         size_t target_caret_x = 0;
@@ -90,6 +90,7 @@ class TextEdit : public Container {
             hover_info->decoration->enable_bg = true;
             hover_info->decoration->bg_color = Color(0x181818);
             hover_info->size->set_raw({100, 100});
+            hover_info->self_visible = false;
 
             hover_label = hover_info->create_child<TextLabel>("Hello");
             hover_label->color = Colors::FG.to_ray();
@@ -134,6 +135,8 @@ class TextEdit : public Container {
         void draw_selection();
         void delete_selected_text();
         void set_caret_index(int index, bool set_desired_x = false);
+        void advance_caret_word();
+        bool caret_at_end();
         String get_selected_text();
 
         void handle_backspace();
