@@ -190,6 +190,16 @@ void TextEdit::draw_self() {
     if (is_hovered()) {
         FrameManager::set_frame_cursor(RayLib::MOUSE_CURSOR_IBEAM);
     }
+
+    if (edit_mode == EditMode::COMMAND) {        
+        RayLib::DrawRectangle(
+            pos.x,
+            pos.y - 16,
+            size->get().x,
+            16,
+            RayLib::RED
+        );
+    }
 }
 
 void draw_squiggle(Vector2 start, int32_t target_length, RayLib::Color color) {
@@ -331,6 +341,7 @@ void TextEdit::draw_text() {
             case TokenType::SYMBOL:
 
                 switch (node.text.hash()) {
+                    case String::hash("enum"):
                     case String::hash("int32_t"):
                     case String::hash("int"):
                     case String::hash("size_t"):

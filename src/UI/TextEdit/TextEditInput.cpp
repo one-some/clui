@@ -71,6 +71,11 @@ void TextEdit::on_input_insert_mode() {
     }
 }
 
+void TextEdit::on_input_command_mode() {
+    char c = (char)RayLib::GetCharPressed();
+    printf("%c\n", c);
+}
+
 void TextEdit::on_input_normal_mode() {
     // FIXME: We should read all in the buffer. We don't.
     char c = (char)RayLib::GetCharPressed();
@@ -90,6 +95,9 @@ void TextEdit::on_input_normal_mode() {
             break;
         case 'i':
             set_edit_mode(EditMode::INSERT);
+            break;
+        case ':':
+            set_edit_mode(EditMode::COMMAND);
             break;
         case 'a':
             move_caret({1, 0});
@@ -112,6 +120,9 @@ void TextEdit::on_input() {
             return;
         case EditMode::INSERT:
             on_input_insert_mode();
+            return;
+        case EditMode::COMMAND:
+            on_input_command_mode();
             return;
     }
 }

@@ -15,6 +15,7 @@
 enum class EditMode {
     NORMAL,
     INSERT,
+    COMMAND,
 };
 
 enum class SelectionState {
@@ -125,6 +126,7 @@ class TextEdit : public Container {
 
         void on_input_insert_mode();
         void on_input_normal_mode();
+        void on_input_command_mode();
 
         void set_edit_mode(EditMode mode) {
             caret_blink_timer = 0;
