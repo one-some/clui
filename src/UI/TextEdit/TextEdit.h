@@ -137,9 +137,13 @@ class TextEdit : public Container {
         void draw_selection();
         void delete_selected_text();
         void set_caret_index(int index, bool set_desired_x = false);
-        void advance_caret_word();
         bool caret_at_end();
         String get_selected_text();
+
+        void advance_caret_word();
+        void advance_until_last_line_char();
+        void regress_until_first_legit_char();
+        void regress_until_line_start();
 
         void handle_backspace();
 

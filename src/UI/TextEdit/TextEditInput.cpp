@@ -45,7 +45,7 @@ void TextEdit::on_input_insert_mode() {
     if (RayLib::IsKeyTyped(RayLib::KEY_ENTER)) {
         text.insert('\n', caret_index);
         changes_made = true;
-        move_caret({1, 0});
+        move_caret({0, 1});
     }
 
     if (RayLib::IsKeyTyped(RayLib::KEY_TAB)) {
@@ -78,6 +78,7 @@ void TextEdit::on_input_command_mode() {
 
 void TextEdit::on_input_normal_mode() {
     // FIXME: We should read all in the buffer. We don't.
+    bool changes_made = false;
     char c = (char)RayLib::GetCharPressed();
 
     switch (c) {
@@ -103,6 +104,14 @@ void TextEdit::on_input_normal_mode() {
             move_caret({1, 0});
             set_edit_mode(EditMode::INSERT);
             break;
+        case 'I':
+            regress_until_first_legit_char();
+            set_edit_mode(EditMode::INSERT);
+            break;
+        case 'A':
+            advance_until_last_line_char();
+            set_edit_mode(EditMode::INSERT);
+            break;
         case 'Z':
             RayLib::CloseWindow();
             break;
@@ -110,6 +119,23 @@ void TextEdit::on_input_normal_mode() {
             // Advance word
             advance_caret_word();
             break;
+        case 'o':
+            advance_until_last_line_char();
+            text.insert('\n', caret_index);
+            changes_made = true;
+            move_caret({0, 1});
+            break;
+        case 'O':
+            regress_until_line_start();
+            text.insert('\n', caret_index);
+            changes_made = true;
+            move_caret({0, -1});
+            break;
+    }
+
+    if (changes_made) {
+        caret_blink_timer = 0;
+        parser.parse();
     }
 }
 

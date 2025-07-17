@@ -487,6 +487,32 @@ bool TextEdit::caret_at_end() {
     return caret_index >= text.length();
 }
 
+void TextEdit::advance_until_last_line_char() {
+    while (true) {
+        if (text[caret_index] == '\n') return;
+        if (caret_at_end()) return;
+
+        set_caret_index(caret_index + 1);
+    }
+}
+
+void TextEdit::regress_until_first_legit_char() {
+    const int text_length = text.length();
+    int line_start = find_line_start(text, caret_index);
+    printf("%d\n", line_start);
+
+    for (int i = line_start; i < text_length; i++) {
+        if (text[i] == ' ') continue;
+        if (text[i] == '\n') break;
+        set_caret_index(i);
+        break;
+    }
+}
+
+void TextEdit::regress_until_line_start() {
+    set_caret_index(find_line_start(text, caret_index));
+}
+
 void TextEdit::advance_caret_word() {
     if (caret_at_end()) return;
 
