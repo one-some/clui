@@ -152,7 +152,7 @@ String TextEdit::get_selected_text() {
 void TextEdit::draw_self() {
     if (!font.baseSize) {
         // Why here of all places!?! WHYY
-        TextEdit::font = RayLib::LoadFontEx(Path::exec_relative("ibm.ttf").as_c(), font_size_px, 0, 0);
+        TextEdit::font = RayLib::LoadFontEx(Path::exec_relative("static/ibm.ttf").as_c(), font_size_px, 0, 0);
     }
 
     caret_blink_timer++;

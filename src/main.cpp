@@ -58,7 +58,7 @@ int main(int argc, char *argv[], char *envp[]) {
     RayLib::InitWindow(500, 500, "clui test");
     RayLib::SetExitKey(RayLib::KEY_NULL);                               // Set a custom key to exit program (default is ESC)
 
-    auto icon = RayLib::SmartImage(Path::exec_relative("claire_head.png").as_c());
+    auto icon = RayLib::SmartImage(Path::exec_relative("static/claire_head.png").as_c());
     RayLib::SetWindowIcon(icon.image);
 
     RayLib::SetTargetFPS(60);

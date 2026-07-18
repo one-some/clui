@@ -16,7 +16,7 @@ class Font {
         static RayLib::Font the() {
             if (!the_raw) {
                 // Copy to heap and reset ptr to preserve deleter
-                the_raw.reset(new RayLib::Font(RayLib::LoadFont(Path::exec_relative("ibm.ttf").as_c())));
+                the_raw.reset(new RayLib::Font(RayLib::LoadFont(Path::exec_relative("static/ibm.ttf").as_c())));
             }
             return *the_raw;
         }
